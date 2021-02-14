@@ -12,7 +12,7 @@
   - **Important: In the instructions found in the next step, only follow instructions up to "Setup a database user"**
   - Follow the steps found here: https://codeburst.io/installing-and-configuring-mysql-with-django-a7b54b0f27ce
   - MySQL installation and running instructions are for Mac, lookup installation instructions for Windows
-  - To rescan servers, right click on MySQL Workbench
+  - Make sure the MySQL server is running before rescanning servers in MySQL Workbench (to rescan, right click on Workbench under MySQL Connections)
   - Create a .env file inside 'ftf-re-api/reporting_engine/'
      - Add these lines to the file:
      ```
