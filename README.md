@@ -5,7 +5,7 @@
 3. In the terminal:
   - After cloning the repo, navigate to its directory (ftf-re-api) and create a virtual environment (make sure that the environment is called 'venv')
     - Run: `python3 -m venv venv`
-  - Activate the environment by running `source venv/bin/activate`
+  - Activate the environment by running Mac: `source venv/bin/activate`, Windows: `./venv/scripts/activate`
   - Install dependencies with pip
     - `pip install -r requirements.txt`
 4. Setup MySql to run in local machine and setup credentials in .env file
