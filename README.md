@@ -11,7 +11,7 @@
 4. Setup MySql to run in local machine and setup credentials in .env file
   - **Important: In the instructions found in the next step, only follow instructions up to "Setup a database user"**
   - Follow the steps found here: https://codeburst.io/installing-and-configuring-mysql-with-django-a7b54b0f27ce
-  - Installation and running instructions are for Mac, lookup installation instructions for Windows
+  - MySQL installation and running instructions are for Mac, lookup installation instructions for Windows
   - To rescan servers, right click on MySQL Workbench
   - Create a .env file inside 'ftf-re-api/reporting_engine/'
      - Add these lines to the file:
