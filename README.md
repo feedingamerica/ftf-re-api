@@ -20,8 +20,9 @@
        export DB_USER='[db user name you created]'
        export DB_PW='[db user password you created]'
        export DB_HOST='127.0.0.1'
-       export DB_PORT='3306' ```
-       *Replace what's in square brackets - example: '[db name...]' -> 'reports_beta'*
+       export DB_PORT='3306'
+      ```
+     *Replace what's in square brackets - example: '[db name...]' -> 'reports_beta'*
 5. Connect Django to DB and start Django Server
   - Navigate to 'ftf-re-api/reporting-engine/'
   - Make sure MySQL server is running
