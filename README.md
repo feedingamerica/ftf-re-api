@@ -27,7 +27,7 @@
        export DB_HOST='127.0.0.1'
        export DB_PORT='3306'
       ```
-     *Replace what's in square brackets - example: '[db name...]' -> 'reports_beta'*
+     *Replace what's in square brackets, including the square brackets - example: '[db name...]' -> 'reports_beta'*
 5. Connect Django to DB and start Django Server
   - Navigate to 'ftf-re-api/reporting-engine/'
   - Make sure MySQL server is running
