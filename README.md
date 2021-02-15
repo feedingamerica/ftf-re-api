@@ -8,7 +8,7 @@
   - Activate the environment by running Mac: `source venv/bin/activate`, Windows: `./venv/scripts/activate`
   - Install dependencies with pip
     - `pip install -r requirements.txt`
-4. Setup MySql to run in local machine and setup credentials in .env file (adapted from: https://codeburst.io/installing-and-configuring-mysql-with-django-a7b54b0f27ce)
+4. Setup MySql to run in local machine and setup credentials in .env file (steps below adapted from: https://codeburst.io/installing-and-configuring-mysql-with-django-a7b54b0f27ce)
   - Mac users:
     - MySQL install with homebrew: `brew install mysql`
     - Start MySQL with homebrew: `brew services start mysql`
