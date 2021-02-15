@@ -8,33 +8,48 @@
   - Activate the environment by running Mac: `source venv/bin/activate`, Windows: `./venv/scripts/activate`
   - Install dependencies with pip
     - `pip install -r requirements.txt`
-4. Setup MySql to run in local machine and setup credentials in .env file
-  - **Important: In the instructions found in the next step, only follow instructions up to "Setup a database user"**
-  - Follow the steps found here: https://codeburst.io/installing-and-configuring-mysql-with-django-a7b54b0f27ce
-  - MySQL installation and running instructions are for Mac.
-  - Notes for windows: You can download MySQLInstaller from https://dev.mysql.com/downloads/installer/.
-  - If you have already installed mySQLWorkbench use the installer to remove this program
-  - After removing this, click "Add ..." and select the developer kit. Use all the defaults for this and install
-  - Once everything is installed click "reconfigure" on the MySQLServer install. Give a name to this server and start it.
-  - Open MySQLWorkbench for the remainder of the walkthrough
-  - Make sure the MySQL server is running before rescanning servers in MySQL Workbench (to rescan, right click on Workbench under MySQL Connections)
-  - Create a .env file inside 'ftf-re-api/reporting_engine/'
+4. Setup MySql to run in local machine and setup credentials in .env file (adapted from: https://codeburst.io/installing-and-configuring-mysql-with-django-a7b54b0f27ce)
+  - Mac users:
+    - MySQL install with homebrew: `brew install mysql`
+    - Start MySQL with homebrew: `brew services start mysql`
+    - Open MySQL Workbench
+  - Windows users:
+    - Download MySQLInstaller: https://dev.mysql.com/downloads/installer/
+    - If you installed MySQLWorkbench before MySQLInstaller, remove MySQLWorkbench with MySQLInstaller
+    - Click "Add.." in MySQLInstaller
+    - Select the developer kit, leave defaults as is and install
+    - Once everything is installed, click "reconfigure" on the MySQLServer install
+    - Give a name to the MySQL Server and start it
+    - Open MySQL Workbench
+  - In MySQL Workbench, under connections, right click and rescan servers
+  - Double click on the local instance connection just created
+  - Create a new Schema
+    - Click the Schema tab
+    - Right-click in the Schema list and select Create Schema
+    - Give it a name and follow the prompts to create it
+  - Setup a database user
+    - Select the Administration tab
+    - Select Users and Privileges
+    - Click Add Account
+    - Give your user a name and password
+    - Assign Administrative Roles and Schema Privileges
+5. Create a .env file inside 'ftf-re-api/reporting_engine/'
      - Add these lines to the file:
      ```
-       export DB_NAME='[db name you assigned to the schema in step (b)]'
+       export DB_NAME='[db name you assigned to the schema you created in workbench]'
        export DB_USER='[db user name you created]'
        export DB_PW='[db user password you created]'
        export DB_HOST='127.0.0.1'
        export DB_PORT='3306'
       ```
      *Replace what's in square brackets, including the square brackets - example: '[db name...]' -> 'reports_beta'*
-5. Connect Django to DB and start Django Server
+6. Connect Django to DB and start Django Server
   - Navigate to 'ftf-re-api/reporting-engine/'
   - Make sure MySQL server is running
   - Run: `python manage.py migrate`
   - Start django server: `python manage.py runserver`
-6. If everything was successful, you should be able to navigate to http://localhost:8000 and see django's default index page
-7. To navigate to the admin site visit: 'http://localhost:8000/admin'
+7. If everything was successful, you should be able to navigate to http://localhost:8000 and see django's default index page
+8. To navigate to the admin site visit: 'http://localhost:8000/admin'
   - Josean Martinez has the credentials for the super user, let him know to see how he can get that to you.
   - If not, you could also create your own admin superuser
     - Run: `python manage.py createsuperuser`
@@ -42,7 +57,3 @@
   - The Django admin is a user interface to see the entries in the database and manage them (modify, delete, add, etc...)
   
 **After these steps are finished, all you have to do when coming back to work on the project is to activate the python environment: `source ./venv/bin/activate` and then you can start the django server**
-
-  
-  
-  
