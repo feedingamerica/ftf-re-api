@@ -36,7 +36,7 @@
     - ![alt text](https://miro.medium.com/max/875/1*02UwfaPiNr8mWqSqb3akdg.png)
     
     *If you press on the DBA checkmark it should check all of them, and you're good to go*
-5. Create a .env file inside 'ftf-re-api/reporting_engine/'
+5. Create a file inside 'ftf-re-api/reporting_engine/' called '.env'
      - Add these lines to the file:
      ```
        export DB_NAME='[db name you assigned to the schema you created in workbench]'
