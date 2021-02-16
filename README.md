@@ -58,4 +58,4 @@
     - With the username and password you specify here, you can access the django admin
   - The Django admin is a user interface to see the entries in the database and manage them (modify, delete, add, etc...)
   
-**After these steps are finished, all you have to do when coming back to work on the project is to activate the python environment: `source ./venv/bin/activate` (Mac) or `.\venv\scripts\activate` (Windows) and then you can start the django server**
+**After these steps are finished, all you have to do when coming back to work on the project is to activate the python environment: `source ./venv/bin/activate` (Mac) or `.\venv\scripts\activate` (Windows) and then you can start the django server: `python manage.py runserver`**
