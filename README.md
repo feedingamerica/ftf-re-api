@@ -47,16 +47,15 @@
       ```
      *Replace what's in square brackets, including the square brackets - example: '[db name...]' -> 'reports_beta'*
 6. Connect Django to DB and start Django Server
-  - Navigate to 'ftf-re-api/reporting-engine/'
+  - Navigate to 'ftf-re-api/reporting_engine/'
   - Make sure MySQL server is running
   - Run: `python manage.py migrate`
   - Start django server: `python manage.py runserver`
 7. If everything was successful, you should be able to navigate to http://localhost:8000 and see django's default index page
 8. To navigate to the admin site visit: 'http://localhost:8000/admin'
-  - Josean Martinez has the credentials for the super user, let him know to see how he can get that to you.
-  - If not, you could also create your own admin superuser
+  - Create your own admin superuser
     - Run: `python manage.py createsuperuser`
     - With the username and password you specify here, you can access the django admin
   - The Django admin is a user interface to see the entries in the database and manage them (modify, delete, add, etc...)
   
-**After these steps are finished, all you have to do when coming back to work on the project is to activate the python environment: `source ./venv/bin/activate` and then you can start the django server**
+**After these steps are finished, all you have to do when coming back to work on the project is to activate the python environment: `source ./venv/bin/activate` (Mac) or `.\venv\scripts\activate` (Windows) and then you can start the django server**
