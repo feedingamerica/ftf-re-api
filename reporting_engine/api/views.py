@@ -14,7 +14,3 @@ class ReportViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
 
 # Create your views here.
-
-
-def index(request):
-    return HttpResponse("API testing homepage")
