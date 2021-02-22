@@ -1,117 +1,147 @@
 from django.db import models
 
 # Create your models here.
-class addin_manager(models.Model):
-    id = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=255, null=True)
-    reporting_dictionary_id = models.PositiveIntegerField(null=True)
-    report_scope_id = models.PositiveIntegerField(null=True)
-    report_scope_value = models.PositiveIntegerField(null=True)
+class TimeFrameType(models.Model):
+    name = models.CharField(max_length = 255, blank = True)
+    dim_dates_reference = models.TextField(blank = True)
+    current_start_date = models.DateField(null = True, blank = True)
+    current_end_date = models.DateField(null = True, blank = True)
+    class Meta:
+        db_table = 'time_frame_types'
+    def __str__(self):
+        return self.name
 
-class control_types(models.Model):
-    id = models.IntegerField(primary_key=True)
-    name = models.CharField(max_length=255,null=True)
-    notes = models.CharField(max_length=255,null=True)
-    sql_ready_statement = models.TextField(null=True)
+class ControlType(models.Model):
+    name = models.CharField(max_length = 255, blank = True)
+    notes = models.CharField(max_length = 255, blank = True)
+    class Meta:
+        db_table = 'control_types'
+    def __str__(self):
+        return self.name
 
-class data_definitions(models.Model):
-    id = models.IntegerField(primary_key=True)
-    name = models.CharField(max_length=255,null=True)
-    definition_public = models.CharField(max_length = 255,null=True)
-    calculation_notes = models.CharField(max_length = 255,null=True)
-    interpretation_notes = models.CharField(max_length = 255, null=True)
-    data_definition_type_id = models.CharField(max_length = 255,null=True)
+class DataDefinitionType(models.Model):
+    name = models.CharField(max_length = 20, blank = True)
+    class Meta:
+        db_table = 'data_definition_types'
+    def __str__(self):
+        return self.name
 
-class data_defintition_types(models.Model):
-    id = models.SmallAutoField(primary_key=True)
-    name = models.CharField(max_length=20,null=True)
+class DataDefinition(models.Model):
+    name = models.CharField(max_length = 255, blank = True)
+    definition_public = models.CharField(max_length = 255, blank = True)
+    calculation_notes = models.CharField(max_length = 255, blank = True)
+    interpretation_notes = models.CharField(max_length = 255, blank = True)
+    data_definition_type = models.ForeignKey(DataDefinitionType, on_delete = models.CASCADE, null = True, blank = True)
+    class Meta:
+        db_table = 'data_definitions'
+    def __str__(self):
+        return self.name
 
-class report_data_float(models.Model):
-    id = models.IntegerField(primary_key=True)
-    report_id= models.IntegerField(null=True)
-    data_definition= models.IntegerField(null=True)
-    float_value= models.FloatField(null=True)
+class ReportScope(models.Model):
+    type = models.CharField(max_length = 255, blank = True)
+    name = models.CharField(max_length = 255, blank = True)
+    field_reference = models.CharField(max_length = 255, blank = True)
+    class Meta:
+        db_table = 'report_scopes'
+    def __str__(self):
+        return self.name
 
-class report_data_int(models.Model):
-    id = models.AutoField(primary_key=True)
-    report_id= models.PositiveIntegerField(null=True)
-    data_definition_id= models.PositiveIntegerField(null=True)
-    int_value= models.PositiveIntegerField(null=True)
+class ReportingDictionary(models.Model):
+    name = models.CharField(max_length = 255, blank = True)
+    definition = models.CharField(max_length = 255, blank = True)
+    class Meta:
+        db_table = 'reporting_dictionaries'
+    def __str__(self):
+        return self.name
 
-class report_data_json(models.Model):
-    id = models.AutoField(primary_key=True)
-    report_id= models.IntegerField()
-    data_definition_id= models.IntegerField()
-    json_object = models.JSONField(null=True)
+class ReportingDictionarySection(models.Model):
+    name = models.CharField(max_length = 255, blank = True)
+    reporting_dictionary = models.ForeignKey(ReportingDictionary, on_delete = models.CASCADE, null = True, blank = True)
+    class Meta:
+        db_table = 'reporting_dictionary_sections'
+    def __str__(self):
+        return self.name
 
-class Meta:
-    unique_together = (('id', 'report_id', 'data_definition_id'),)
+class ReportingDictionaryDefinition(models.Model):
+    report_dictionary = models.ForeignKey(ReportingDictionary, on_delete = models.CASCADE, null = True, blank = True)
+    data_definition = models.ForeignKey(DataDefinition, on_delete = models.CASCADE, null = True, blank = True)
+    section = models.ForeignKey(ReportingDictionarySection, on_delete = models.CASCADE)
+    class Meta:
+        unique_together = (('id', 'section_id'), )
+        db_table = 'reporting_dictionary_definitions'
+    def __str__(self):
+        return self.name
 
-class report_schedules(models.Model):
-    id = models.IntegerField(primary_key=True)
-    run_type_id = models.IntegerField()
-    timeframe_type_id = models.IntegerField()
-    report_scope_id = models.IntegerField()
-    report_scope_value = models.CharField(max_length = 255, null=True)
-    control_type_id = models.IntegerField()
-    reporting_dictionary_id = models.IntegerField()
+class RunType(models.Model):
+    name = models.CharField(max_length = 255, blank = True)
+    class Meta:
+        db_table = 'run_types'
+    def __str__(self):
+        return self.name
+
+class ReportSchedule(models.Model):
+    run_type = models.ForeignKey(RunType, on_delete = models.CASCADE)
+    timeframe_type = models.ForeignKey(TimeFrameType, on_delete = models.CASCADE)
+    report_scope = models.ForeignKey(ReportScope, on_delete = models.CASCADE)
+    report_scope_value = models.CharField(max_length = 255, blank = True)
+    control_type = models.ForeignKey(ControlType, on_delete = models.CASCADE)
+    reporting_dictionary = models.ForeignKey(ReportingDictionary, on_delete = models.CASCADE)
     control_age_group_id = models.IntegerField()
-    date_scheduled = models.DateTimeField()
-    date_custom_start = models.DateTimeField(null=True)
-    date_custom_end = models.DateTimeField(null=True)
-    addin_state_report = models.PositiveIntegerField(null=True)
-    addin_foodbank_report = models.PositiveIntegerField(null=True)
+    date_scheduled = models.DateField()
+    date_custom_start = models.DateField(null = True, blank = True)
+    date_custom_end = models.DateField(null = True, blank = True)
+    addin_state_report = models.ForeignKey(ReportingDictionary, related_name = 'addin_state', on_delete = models.CASCADE, null = True, blank = True)
+    addin_foodbank_report = models.ForeignKey(ReportingDictionary, related_name = 'addin_foodbank', on_delete = models.CASCADE, null = True, blank = True)
+    class Meta:
+        db_table = 'report_schedules'
+    def __str__(self):
+        return self.name
 
-class report_scopes(models.Model):
-    id = models.IntegerField(primary_key=True)
-    type = models.CharField(max_length = 255, null = True)
-    name = models.CharField(max_length = 255, null = True)
-    field_reference = models.CharField(max_length = 255, null = True)
+class Report(models.Model):
+    report_schedule = models.ForeignKey(ReportSchedule, on_delete = models.CASCADE)
+    start_date = models.DateField(null = True, blank = True)
+    end_date = models.DateField(null = True, blank = True)
+    date_completed = models.DateField(null = True, blank = True)
+    class Meta:
+        db_table = 'reports'
+    def __str__(self):
+        return self.name
 
-class reporting_dictionaries(models.Model):
-    id = models.IntegerField(primary_key=True)
-    name = models.CharField(max_length = 255, null = True)
-    definition = models.CharField(max_length = 255, null = True)
+class AddinManager(models.Model):
+    name = models.CharField(max_length = 255, null = True, blank = True)
+    reporting_dictionary = models.ForeignKey(ReportingDictionary, on_delete = models.CASCADE, null = True, blank = True)
+    report_scope = models.ForeignKey(ReportScope, on_delete = models.CASCADE, null = True, blank = True)
+    report_scope_value = models.PositiveIntegerField(null = True, blank = True)
+    control_type = models.ForeignKey(ControlType, on_delete = models.CASCADE, null = True, blank = True)
+    class Meta:
+        db_table = 'addin_manager'
+    def __str__(self):
+        return self.name
 
-class reporting_dictionary_definitions(models.Model):
-    id = models.IntegerField(primary_key=True)
-    report_dictionary_id = models.IntegerField(null = True)
-    data_definition_id = models.IntegerField(null = True)
-    section_id = models.IntegerField()
-	
-class Meta:
-    unique_together = (('id', 'section_id'),)
+class ReportDataFloat(models.Model):
+    report = models.ForeignKey(Report, on_delete = models.CASCADE, null = True, blank = True)
+    data_definition = models.ForeignKey(DataDefinition, on_delete = models.CASCADE, null = True, blank = True)
+    float_value = models.FloatField(null = True, blank = True)
+    class Meta:
+        db_table = 'report_data_float'
+    def __str__(self):
+        return self.name
 
-class reporting_dictionary_sections(models.Model):
-    id = models.IntegerField(primary_key=True)
-    name = models.CharField(max_length = 255, null = True)
-    reporting_dictionary_id = models.IntegerField(null = True)
+class ReportDataInt(models.Model):
+    report = models.ForeignKey(Report, on_delete = models.CASCADE, null = True, blank = True)
+    data_definition = models.ForeignKey(DataDefinition, on_delete = models.CASCADE, null = True, blank = True)
+    int_value =  models.PositiveIntegerField(null = True, blank = True)
+    class Meta:
+        db_table = 'report_data_int'
+    def __str__(self):
+        return self.name
 
-class reports(models.Model):
-    id = models.AutoField(primary_key=True)
-    report_schedule_id = models.PositiveIntegerField() 
-    run_type_id = models.IntegerField()
-    timeframe_type_id = models.IntegerField()
-    report_scope_id = models.IntegerField()
-    report_scope_value = models.CharField(max_length= 255, null=True)
-    control_type_id = models.IntegerField()
-    reporting_dictionary_id = models.IntegerField()
-    addin_rd_state_id = models.IntegerField(null=True)
-    addin_rd_fb_id = models.IntegerField(null=True)
-    control_age_group_id = models.IntegerField()
-    date_sceduled = models.DateTimeField()
-    date_custom_start = models.DateTimeField(null=True)
-    date_custom_end = models.DateTimeField(null=True)
-    date_completed = models.DateTimeField(null=True)
-    report_status = models.SmallIntegerField(null=True)
-
-class run_types(models.Model):
-    id = models.IntegerField(primary_key=True)
-    name = models.CharField(max_length = 255, null = True)
-
-class timeframe_types(models.Model):
-    id = models.IntegerField(primary_key=True)
-    name = models.CharField(max_length = 255, null = True)
-    dim_dates_reference = models.TextField(null = True)
-    current_start_date = models.DateTimeField(null = True)
-    current_end_date = models.DateTimeField(null = True)
+class ReportDataJson(models.Model):
+    report = models.ForeignKey(Report, on_delete = models.CASCADE)
+    data_definition = models.ForeignKey(DataDefinition, on_delete = models.CASCADE)
+    json_object = models.JSONField(blank = True)
+    class Meta:
+        unique_together = (('id', 'report_id', 'data_definition_id'), )
+        db_table = 'report_data_json'
+    def __str__(self):
+        return self.name
