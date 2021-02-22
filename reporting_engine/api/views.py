@@ -5,7 +5,7 @@ from rest_framework.response import Response
 
 # Create your views here.
 
-@api_view()
+@api_view(['GET', 'POST'])
 def report_schedule(request):
     if request.method == 'POST':
         #serialize input
