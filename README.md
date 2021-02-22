@@ -5,7 +5,7 @@
 3. In the terminal:
   - After cloning the repo, navigate to its directory (ftf-re-api) and create a virtual environment (make sure that the environment is called 'venv')
     - Run: `python3 -m venv venv`
-  - Activate the environment by running Mac: `source venv/bin/activate`, Windows: `./venv/scripts/activate`
+  - Activate the environment by running Mac: `source venv/bin/activate`, Windows: `.\venv\scripts\activate`
   - Install dependencies with pip
     - `pip install -r requirements.txt`
 4. Setup MySql to run in local machine and setup credentials in .env file (steps below adapted from: https://codeburst.io/installing-and-configuring-mysql-with-django-a7b54b0f27ce)
@@ -36,7 +36,7 @@
     - ![alt text](https://miro.medium.com/max/875/1*02UwfaPiNr8mWqSqb3akdg.png)
     
     *If you press on the DBA checkmark it should check all of them, and you're good to go*
-5. Create a .env file inside 'ftf-re-api/reporting_engine/'
+5. Create a file inside 'ftf-re-api/reporting_engine/' called '.env'
      - Add these lines to the file:
      ```
        export DB_NAME='[db name you assigned to the schema you created in workbench]'
@@ -47,16 +47,15 @@
       ```
      *Replace what's in square brackets, including the square brackets - example: '[db name...]' -> 'reports_beta'*
 6. Connect Django to DB and start Django Server
-  - Navigate to 'ftf-re-api/reporting-engine/'
+  - Navigate to 'ftf-re-api/reporting_engine/'
   - Make sure MySQL server is running
   - Run: `python manage.py migrate`
   - Start django server: `python manage.py runserver`
 7. If everything was successful, you should be able to navigate to http://localhost:8000 and see django's default index page
 8. To navigate to the admin site visit: 'http://localhost:8000/admin'
-  - Josean Martinez has the credentials for the super user, let him know to see how he can get that to you.
-  - If not, you could also create your own admin superuser
+  - Create your own admin superuser
     - Run: `python manage.py createsuperuser`
     - With the username and password you specify here, you can access the django admin
   - The Django admin is a user interface to see the entries in the database and manage them (modify, delete, add, etc...)
   
-**After these steps are finished, all you have to do when coming back to work on the project is to activate the python environment: `source ./venv/bin/activate` and then you can start the django server**
+**After these steps are finished, all you have to do when coming back to work on the project is to activate the python environment: `source ./venv/bin/activate` (Mac) or `.\venv\scripts\activate` (Windows) and then you can start the django server: `python manage.py runserver`**
