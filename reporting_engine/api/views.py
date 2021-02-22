@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.views import View
 from rest_framework.decorators import api_view
+from rest_framework.response import Response
 
 # Create your views here.
 
@@ -9,6 +10,7 @@ def report_schedule(request):
     if request.method == 'POST':
         #serialize input
         data = request.data
+        #determine if report exists
         #send data to functions to process report schedule
         return Response({"message": "Got some data for new report schedule!", "data": request.data})
     else:
