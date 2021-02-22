@@ -1,7 +1,24 @@
+"""
+models.py
+
+This file contains definitions for tables in the reports database. These definitions
+are used by Django to create migrations. These migrations are then used by Django to
+create or modify tables in the mySQL database whose connection is defined in ../.env.
+
+Each class defines a table. The name of the class is the name used to access the table
+via python. Each class has a Meta subclass. This is used to define the name of the table
+in the mySQL data base. The name defined in Meta matches the names used in the ERD provided
+my MOFC. The class name is a singular PascalCase version of this name.
+
+To access a table, use `from api.models import <ClassName1>, <ClassName2>, ...`.
+
+Written by Joy Lin, Nick Biederman, Alli Hornyak, and Emily Robinson
+"""
+
 from django.db import models
 
-# Create your models here.
 class TimeFrameType(models.Model):
+	"""Defines TimeFrameType table (named time_frame_types in mysql database)"""
     name = models.CharField(max_length = 255, blank = True)
     dim_dates_reference = models.TextField(blank = True)
     current_start_date = models.DateField(null = True, blank = True)
@@ -12,6 +29,7 @@ class TimeFrameType(models.Model):
         return self.name
 
 class ControlType(models.Model):
+	"""Defines ControlType table (control_types in mysql database)"""
     name = models.CharField(max_length = 255, blank = True)
     notes = models.CharField(max_length = 255, blank = True)
     class Meta:
@@ -20,6 +38,7 @@ class ControlType(models.Model):
         return self.name
 
 class DataDefinitionType(models.Model):
+	"""Defines DataDefinitionType table (data_definition_types in mysql database)"""
     name = models.CharField(max_length = 20, blank = True)
     class Meta:
         db_table = 'data_definition_types'
@@ -27,6 +46,7 @@ class DataDefinitionType(models.Model):
         return self.name
 
 class DataDefinition(models.Model):
+	"""Defines DataDefinition table (data_definitions in mysql database)"""
     name = models.CharField(max_length = 255, blank = True)
     definition_public = models.CharField(max_length = 255, blank = True)
     calculation_notes = models.CharField(max_length = 255, blank = True)
@@ -38,6 +58,7 @@ class DataDefinition(models.Model):
         return self.name
 
 class ReportScope(models.Model):
+	"""Defines ReportScope table (report_scopes in mysql database)"""
     type = models.CharField(max_length = 255, blank = True)
     name = models.CharField(max_length = 255, blank = True)
     field_reference = models.CharField(max_length = 255, blank = True)
@@ -47,6 +68,7 @@ class ReportScope(models.Model):
         return self.name
 
 class ReportingDictionary(models.Model):
+	"""Defines ReportingDictionary table (reporting_dictionaries in mysql database)"""
     name = models.CharField(max_length = 255, blank = True)
     definition = models.CharField(max_length = 255, blank = True)
     class Meta:
@@ -55,6 +77,7 @@ class ReportingDictionary(models.Model):
         return self.name
 
 class ReportingDictionarySection(models.Model):
+	"""Defines ReportingDictionarySection table (reporting_dictionary_sections in mysql database)"""
     name = models.CharField(max_length = 255, blank = True)
     reporting_dictionary = models.ForeignKey(ReportingDictionary, on_delete = models.CASCADE, null = True, blank = True)
     class Meta:
@@ -63,6 +86,7 @@ class ReportingDictionarySection(models.Model):
         return self.name
 
 class ReportingDictionaryDefinition(models.Model):
+	"""Defines ReportingDictionaryDefinition table (reporting_dictionary_definitions in mysql database)"""
     report_dictionary = models.ForeignKey(ReportingDictionary, on_delete = models.CASCADE, null = True, blank = True)
     data_definition = models.ForeignKey(DataDefinition, on_delete = models.CASCADE, null = True, blank = True)
     section = models.ForeignKey(ReportingDictionarySection, on_delete = models.CASCADE)
@@ -73,6 +97,7 @@ class ReportingDictionaryDefinition(models.Model):
         return self.name
 
 class RunType(models.Model):
+	"""Defines RunType table (run_types in mysql database)"""
     name = models.CharField(max_length = 255, blank = True)
     class Meta:
         db_table = 'run_types'
@@ -80,6 +105,7 @@ class RunType(models.Model):
         return self.name
 
 class ReportSchedule(models.Model):
+	"""Defines ReportSchedule table (report_schedules in mysql database)"""
     run_type = models.ForeignKey(RunType, on_delete = models.CASCADE)
     timeframe_type = models.ForeignKey(TimeFrameType, on_delete = models.CASCADE)
     report_scope = models.ForeignKey(ReportScope, on_delete = models.CASCADE)
@@ -98,6 +124,7 @@ class ReportSchedule(models.Model):
         return self.name
 
 class Report(models.Model):
+	"""Defines Report table (reports in mysql database)"""
     report_schedule = models.ForeignKey(ReportSchedule, on_delete = models.CASCADE)
     start_date = models.DateField(null = True, blank = True)
     end_date = models.DateField(null = True, blank = True)
@@ -108,6 +135,7 @@ class Report(models.Model):
         return self.name
 
 class AddinManager(models.Model):
+	"""Defines AddinManager table (addin_manager in mysql database)"""
     name = models.CharField(max_length = 255, null = True, blank = True)
     reporting_dictionary = models.ForeignKey(ReportingDictionary, on_delete = models.CASCADE, null = True, blank = True)
     report_scope = models.ForeignKey(ReportScope, on_delete = models.CASCADE, null = True, blank = True)
@@ -119,6 +147,7 @@ class AddinManager(models.Model):
         return self.name
 
 class ReportDataFloat(models.Model):
+	"""Defines ReportDataFloat table (report_data_float in mysql database)"""
     report = models.ForeignKey(Report, on_delete = models.CASCADE, null = True, blank = True)
     data_definition = models.ForeignKey(DataDefinition, on_delete = models.CASCADE, null = True, blank = True)
     float_value = models.FloatField(null = True, blank = True)
@@ -128,6 +157,7 @@ class ReportDataFloat(models.Model):
         return self.name
 
 class ReportDataInt(models.Model):
+	"""Defines ReportDataInt table (report_data_int in mysql database)"""
     report = models.ForeignKey(Report, on_delete = models.CASCADE, null = True, blank = True)
     data_definition = models.ForeignKey(DataDefinition, on_delete = models.CASCADE, null = True, blank = True)
     int_value =  models.PositiveIntegerField(null = True, blank = True)
@@ -137,6 +167,7 @@ class ReportDataInt(models.Model):
         return self.name
 
 class ReportDataJson(models.Model):
+	"""Defines ReportDataJson table (report_data_json in mysql database)"""
     report = models.ForeignKey(Report, on_delete = models.CASCADE)
     data_definition = models.ForeignKey(DataDefinition, on_delete = models.CASCADE)
     json_object = models.JSONField(blank = True)
