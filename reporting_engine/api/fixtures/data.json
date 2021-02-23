@@ -440,7 +440,7 @@
     "fields": {
       "report_dictionary_id": 1,
       "data_definition_id": 1,
-      "section_id": 2
+      "section_id": 1
     }
   },
   {
@@ -449,7 +449,7 @@
     "fields": {
       "report_dictionary_id": 1,
       "data_definition_id": 2,
-      "section_id": 2
+      "section_id": 1
     }
   },
   {
@@ -458,7 +458,7 @@
     "fields": {
       "report_dictionary_id": 1,
       "data_definition_id": 3,
-      "section_id": 2
+      "section_id": 1
     }
   },
   {
@@ -467,7 +467,7 @@
     "fields": {
       "report_dictionary_id": 1,
       "data_definition_id": 4,
-      "section_id": 2
+      "section_id": 1
     }
   },
   {
@@ -476,7 +476,7 @@
     "fields": {
       "report_dictionary_id": 2,
       "data_definition_id": 5,
-      "section_id": 2
+      "section_id": 8
     }
   },
   {
@@ -485,7 +485,7 @@
     "fields": {
       "report_dictionary_id": 2,
       "data_definition_id": 6,
-      "section_id": 2
+      "section_id": 8
     }
   },
   {
@@ -494,7 +494,7 @@
     "fields": {
       "report_dictionary_id": 2,
       "data_definition_id": 7,
-      "section_id": 2
+      "section_id": 8
     }
   },
   {
@@ -503,7 +503,7 @@
     "fields": {
       "report_dictionary_id": 2,
       "data_definition_id": 8,
-      "section_id": 2
+      "section_id": 8
     }
   },
   {
@@ -512,7 +512,7 @@
     "fields": {
       "report_dictionary_id": 2,
       "data_definition_id": 9,
-      "section_id": 2
+      "section_id": 8
     }
   },
   {
@@ -521,7 +521,7 @@
     "fields": {
       "report_dictionary_id": 2,
       "data_definition_id": 10,
-      "section_id": 2
+      "section_id": 8
     }
   },
   {
@@ -530,7 +530,7 @@
     "fields": {
       "report_dictionary_id": 2,
       "data_definition_id": 11,
-      "section_id": 2
+      "section_id": 8
     }
   },
   {
@@ -539,7 +539,7 @@
     "fields": {
       "report_dictionary_id": 2,
       "data_definition_id": 12,
-      "section_id": 2
+      "section_id": 8
     }
   },
   {
@@ -548,7 +548,7 @@
     "fields": {
       "report_dictionary_id": 2,
       "data_definition_id": 13,
-      "section_id": 2
+      "section_id": 8
     }
   },
   {
@@ -557,7 +557,7 @@
     "fields": {
       "report_dictionary_id": 2,
       "data_definition_id": 14,
-      "section_id": 2
+      "section_id": 8
     }
   },
   {
@@ -566,7 +566,7 @@
     "fields": {
       "report_dictionary_id": 2,
       "data_definition_id": 15,
-      "section_id": 2
+      "section_id": 8
     }
   },
   {
@@ -575,7 +575,7 @@
     "fields": {
       "report_dictionary_id": 2,
       "data_definition_id": 16,
-      "section_id": 2
+      "section_id": 8
     }
   },
   {
@@ -584,7 +584,7 @@
     "fields": {
       "report_dictionary_id": 2,
       "data_definition_id": 17,
-      "section_id": 2
+      "section_id": 8
     }
   },
   {
@@ -593,7 +593,7 @@
     "fields": {
       "report_dictionary_id": 2,
       "data_definition_id": 18,
-      "section_id": 2
+      "section_id": 8
     }
   },
   {
@@ -602,7 +602,7 @@
     "fields": {
       "report_dictionary_id": 2,
       "data_definition_id": 19,
-      "section_id": 2
+      "section_id": 8
     }
   },
   {
@@ -611,7 +611,7 @@
     "fields": {
       "report_dictionary_id": 3,
       "data_definition_id": 20,
-      "section_id": 2
+      "section_id": 9
     }
   },
   {
@@ -620,7 +620,7 @@
     "fields": {
       "report_dictionary_id": 3,
       "data_definition_id": 21,
-      "section_id": 2
+      "section_id": 9
     }
   },
   {
@@ -629,7 +629,7 @@
     "fields": {
       "report_dictionary_id": 3,
       "data_definition_id": 7,
-      "section_id": 2
+      "section_id": 9
     }
   },
   {
@@ -638,7 +638,7 @@
     "fields": {
       "report_dictionary_id": 3,
       "data_definition_id": 22,
-      "section_id": 2
+      "section_id": 9
     }
   },
   {
@@ -664,8 +664,8 @@
         "current_start_date" : "2021-01-01",
         "current_end_date": "2021-01-31"
     }
-},
-{
+  },
+  {
     "model":"api.TimeFrameType",
     "pk":2,
     "fields":{
@@ -674,8 +674,8 @@
         "current_start_date" : "2020-02-01",
         "current_end_date": "2021-01-31"
     }
-},
-{
+  },
+  {
     "model":"api.TimeFrameType",
     "pk":3,
     "fields":{
@@ -684,8 +684,8 @@
         "current_start_date" : "2020-01-01",
         "current_end_date": "2021-01-31"
     }
-},
-{
+  },
+  {
     "model":"api.TimeFrameType",
     "pk":4,
     "fields":{
@@ -694,8 +694,8 @@
         "current_start_date" : "2020-07-01",
         "current_end_date": "2021-01-31"
     }
-},
-{
+  },
+  {
     "model":"api.TimeFrameType",
     "pk":5,
     "fields":{
@@ -736,11 +736,77 @@
     "report_scope_value": 51,
     "control_type_id" : 5
   }
+},
+{
+  "model": "api.ReportingDictionarySection",
+  "pk": 1,
+  "fields": {
+      "name": "Big Numbers",
+      "reporting_dictionary_id": 1
+  }
+},
+{
+  "model": "api.ReportingDictionarySection",
+  "pk": 2,
+  "fields": {
+      "name": "Service",
+      "reporting_dictionary_id": 1
+  }
+},
+{
+  "model": "api.ReportingDictionarySection",
+  "pk": 3,
+  "fields": {
+      "name": "Families",
+      "reporting_dictionary_id": 1
+  }
+},
+{
+  "model": "api.ReportingDictionarySection",
+  "pk": 4,
+  "fields": {
+      "name": "New Families",
+      "reporting_dictionary_id": 1
+  }
+},
+{
+  "model": "api.ReportingDictionarySection",
+  "pk": 5,
+  "fields": {
+      "name": "Geographic Origin",
+      "reporting_dictionary_id": 1
+  }
+},
+{
+  "model": "api.ReportingDictionarySection",
+  "pk": 6,
+  "fields": {
+      "name": "Family Members",
+      "reporting_dictionary_id": 1
+  }
+},
+{
+  "model": "api.ReportingDictionarySection",
+  "pk": 7,
+  "fields": {
+      "name": "Trends",
+      "reporting_dictionary_id": 1
+  }
+},
+{
+  "model": "api.ReportingDictionarySection",
+  "pk": 8,
+  "fields": {
+      "name": "Ohio Add-in",
+      "reporting_dictionary_id": 2
+  }
+},
+{
+  "model": "api.ReportingDictionarySection",
+  "pk": 9,
+  "fields": {
+      "name": "MOFC Add-in",
+      "reporting_dictionary_id": 3
+  }
 }
 ]
-
-
-
-
-
-
