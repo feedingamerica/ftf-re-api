@@ -20,8 +20,6 @@ def report_schedule(request):
             #send data to functions to process report schedule
             return (serializer.data, status = status.HTTP_201_CREATED)
         return (serializer.errors, status = status.HTTP_400_BAD_REQUEST)
-        
-        return Response({"message": "Got some data for new report schedule!", "data": request.data})
     else:
         #to be filled in later
         return Response({"message": "GET request to report schedule"})
