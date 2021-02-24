@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from .models import Report
+from api.models import Report
 from rest_framework import viewsets, permissions
 from .serializers import ReportSerializer
 
