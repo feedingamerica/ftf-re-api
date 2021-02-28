@@ -49,7 +49,9 @@
 6. Connect Django to DB and start Django Server
   - Navigate to 'ftf-re-api/reporting_engine/'
   - Make sure MySQL server is running
-  - Run: `python manage.py migrate`
+  - Create migrations: `python manage.py makemigrations`
+  - Run migrations: `python manage.py migrate`
+  - Load source data: `python manage.py loaddata data.json`
   - Start django server: `python manage.py runserver`
 7. If everything was successful, you should be able to navigate to http://localhost:8000 and see django's default index page
 8. To navigate to the admin site visit: 'http://localhost:8000/admin'
