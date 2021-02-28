@@ -5,6 +5,12 @@ from rest_framework import routers
 router = routers.DefaultRouter()
 router.register(r'reports', views.ReportViewSet)
 router.register(r'report_schedules', views.ReportScheduleViewSet)
+router.register(r'run_types', views.RunTypeViewSet)
+router.register(r'timeframe_types', views.TimeFrameTypeViewSet)
+router.register(r'report_scopes', views.ReportScopeViewSet)
+router.register(r'control_types', views.ControlTypeViewSet)
+router.register(r'reporting_dictionaries', views.ReportingDictionaryViewSet)
+
 
 urlpatterns = [
     path('', include(router.urls)),

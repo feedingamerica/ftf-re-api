@@ -158,8 +158,11 @@ class ReportSchedule(models.Model):
     class Meta:
         db_table = 'report_schedules'
 
+    """
     def __str__(self):
         return self.name
+
+    """
 
 
 class Report(models.Model):
@@ -173,8 +176,11 @@ class Report(models.Model):
     class Meta:
         db_table = 'reports'
 
+    """
     def __str__(self):
         return self.name
+
+    """
 
 
 class AddinManager(models.Model):
