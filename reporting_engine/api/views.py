@@ -2,6 +2,7 @@ from django.http import HttpResponse
 from api.models import Report, ReportSchedule, RunType, TimeFrameType, ReportScope, ControlType, ReportingDictionary
 from rest_framework import viewsets, permissions
 from .serializers import *
+from rest_framework.decorators import api_view
 
 
 class ReportViewSet(viewsets.ModelViewSet):
