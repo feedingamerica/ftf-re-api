@@ -17,14 +17,14 @@ Written by Joy Lin, Nick Biederman, Alli Hornyak, and Emily Robinson
 
 from django.db import models
 
-class TimeFrameType(models.Model):
-	"""Defines TimeFrameType table (named time_frame_types in mysql database)"""
+class TimeframeType(models.Model):
+	"""Defines TimeframeType table (named time_frame_types in mysql database)"""
 	name = models.CharField(max_length = 255, blank = True)
 	dim_dates_reference = models.TextField(blank = True)
 	current_start_date = models.DateField(null = True, blank = True)
 	current_end_date = models.DateField(null = True, blank = True)
 	class Meta:
-		db_table = 'time_frame_types'
+		db_table = 'timeframe_types'
 	def __str__(self):
 		return self.name
 
@@ -107,7 +107,7 @@ class RunType(models.Model):
 class ReportSchedule(models.Model):
 	"""Defines ReportSchedule table (report_schedules in mysql database)"""
 	run_type = models.ForeignKey(RunType, on_delete = models.CASCADE)
-	timeframe_type = models.ForeignKey(TimeFrameType, on_delete = models.CASCADE)
+	timeframe_type = models.ForeignKey(TimeframeType, on_delete = models.CASCADE)
 	report_scope = models.ForeignKey(ReportScope, on_delete = models.CASCADE)
 	report_scope_value = models.CharField(max_length = 255, blank = True)
 	control_type = models.ForeignKey(ControlType, on_delete = models.CASCADE)

@@ -656,7 +656,7 @@
     }
   },
   {
-    "model":"api.TimeFrameType",
+    "model":"api.TimeframeType",
     "pk":1,
     "fields":{
         "name" : "Last Month",
@@ -666,7 +666,7 @@
     }
   },
   {
-    "model":"api.TimeFrameType",
+    "model":"api.TimeframeType",
     "pk":2,
     "fields":{
         "name" : "Rolling 12 Months",
@@ -676,7 +676,7 @@
     }
   },
   {
-    "model":"api.TimeFrameType",
+    "model":"api.TimeframeType",
     "pk":3,
     "fields":{
         "name" : "CY To Date",
@@ -686,7 +686,7 @@
     }
   },
   {
-    "model":"api.TimeFrameType",
+    "model":"api.TimeframeType",
     "pk":4,
     "fields":{
         "name" : "Fiscal year to date",
@@ -696,7 +696,7 @@
     }
   },
   {
-    "model":"api.TimeFrameType",
+    "model":"api.TimeframeType",
     "pk":5,
     "fields":{
         "name" : "Custom Date Range",
