@@ -4,7 +4,7 @@
     "pk": 1,
     "fields": {
       "name": "integer"
-     }
+    }
   },
   {
     "model": "api.DataDefinitionType",
@@ -61,149 +61,149 @@
     }
   },
   {
-		"model":"api.ReportScope",
-		"pk":1,
-		"fields":{
-			"type" : "Hierarchy",
-			"name" : "Event",
-			"field_reference" : "event_id"
-		}
-	},
-	{
-		"model":"api.ReportScope",
-		"pk":2,
-		"fields":{
-			"type" : "Hierarchy",
-			"name" : "Location",
-			"field_reference" : "loc_id"
-		}
-	},	
-	{
-		"model":"api.ReportScope",
-		"pk":3,
-		"fields":{
-			"type" : "Hierarchy",
-			"name" : "Organization",
-			"field_reference" : "org_id"
-		}
-	},
-	{
-		"model":"api.ReportScope",
-		"pk":4,
-		"fields":{
-			"type" : "Hierarchy",
-			"name" : "County",
-			"field_reference" : "cnty_id"
-		}
-	},
-	{
-		"model":"api.ReportScope",
-		"pk":5,
-		"fields":{
-			"type" : "Hierarchy",
-			"name" : "Foodbank",
-			"field_reference" : "fb_id"
-		}
-	},
-	{
-		"model":"api.ReportScope",
-		"pk":6,
-		"fields":{
-			"type" : "Hierarchy",
-			"name" : "State",
-			"field_reference" : "state_id"
-		}
-	},
-	{
-		"model":"api.ReportScope",
-		"pk":7,
-		"fields":{
-			"type" : "Hierarchy",
-			"name" : "Multi-Event",
-			"field_reference" : "ra_id"
-		}
-	},
-	{
-		"model":"api.ReportScope",
-		"pk":8,
-		"fields":{
-			"type" : "Hierarchy",
-			"name" : "Multi-Location",
-			"field_reference" : "cluster_id"
-		}
-	},
-	{
-		"model":"api.ReportScope",
-		"pk":9,
-		"fields":{
-			"type" : "Geography",
-			"name" : "State",
-			"field_reference" : "fips_state"
-		}
-	},
-	{
-		"model":"api.ReportScope",
-		"pk":10,
-		"fields":{
-			"type" : "Geography",
-			"name" : "County",
-			"field_reference" : "fips_cnty"
-		}
-	},
-	{
-		"model":"api.ReportScope",
-		"pk":11,
-		"fields":{
-			"type" : "Geography",
-			"name" : "Tract",
-			"field_reference" : "fips_tract"
-		}
-	},
-	{
-		"model":"api.ReportScope",
-		"pk":12,
-		"fields":{
-			"type" : "Geography",
-			"name" : "Zip Code Area",
-			"field_reference" : "fips_zcta"
-		}
-	},
-	{
-		"model":"api.ReportScope",
-		"pk":13,
-		"fields":{
-			"type" : "Geography",
-			"name" : "State Congressional District",
-			"field_reference" : "fips_sldl"
-		}
-	},
-	{
-		"model":"api.ReportScope",
-		"pk":14,
-		"fields":{
-			"type" : "Geography",
-			"name" : "State Senate",
-			"field_reference" : "fips_sldu"
-		}
-	},
-	{
-		"model":"api.ReportScope",
-		"pk":15,
-		"fields":{
-			"type" : "Geography",
-			"name" : "Federal Congressional District",
-			"field_reference" : "fips_cd"
-		}
-	},
-	{
-		"model":"api.ReportScope",
-		"pk":16,
-		"fields":{
-			"type" : "Geography",
-			"name" : "School District",
-			"field_reference" : "fips_unsd"
-		}
-	},
+    "model": "api.ReportScope",
+    "pk": 1,
+    "fields": {
+      "type": "Hierarchy",
+      "name": "Event",
+      "field_reference": "event_id"
+    }
+  },
+  {
+    "model": "api.ReportScope",
+    "pk": 2,
+    "fields": {
+      "type": "Hierarchy",
+      "name": "Location",
+      "field_reference": "loc_id"
+    }
+  },
+  {
+    "model": "api.ReportScope",
+    "pk": 3,
+    "fields": {
+      "type": "Hierarchy",
+      "name": "Organization",
+      "field_reference": "org_id"
+    }
+  },
+  {
+    "model": "api.ReportScope",
+    "pk": 4,
+    "fields": {
+      "type": "Hierarchy",
+      "name": "County",
+      "field_reference": "cnty_id"
+    }
+  },
+  {
+    "model": "api.ReportScope",
+    "pk": 5,
+    "fields": {
+      "type": "Hierarchy",
+      "name": "Foodbank",
+      "field_reference": "fb_id"
+    }
+  },
+  {
+    "model": "api.ReportScope",
+    "pk": 6,
+    "fields": {
+      "type": "Hierarchy",
+      "name": "State",
+      "field_reference": "state_id"
+    }
+  },
+  {
+    "model": "api.ReportScope",
+    "pk": 7,
+    "fields": {
+      "type": "Hierarchy",
+      "name": "Multi-Event",
+      "field_reference": "ra_id"
+    }
+  },
+  {
+    "model": "api.ReportScope",
+    "pk": 8,
+    "fields": {
+      "type": "Hierarchy",
+      "name": "Multi-Location",
+      "field_reference": "cluster_id"
+    }
+  },
+  {
+    "model": "api.ReportScope",
+    "pk": 9,
+    "fields": {
+      "type": "Geography",
+      "name": "State",
+      "field_reference": "fips_state"
+    }
+  },
+  {
+    "model": "api.ReportScope",
+    "pk": 10,
+    "fields": {
+      "type": "Geography",
+      "name": "County",
+      "field_reference": "fips_cnty"
+    }
+  },
+  {
+    "model": "api.ReportScope",
+    "pk": 11,
+    "fields": {
+      "type": "Geography",
+      "name": "Tract",
+      "field_reference": "fips_tract"
+    }
+  },
+  {
+    "model": "api.ReportScope",
+    "pk": 12,
+    "fields": {
+      "type": "Geography",
+      "name": "Zip Code Area",
+      "field_reference": "fips_zcta"
+    }
+  },
+  {
+    "model": "api.ReportScope",
+    "pk": 13,
+    "fields": {
+      "type": "Geography",
+      "name": "State Congressional District",
+      "field_reference": "fips_sldl"
+    }
+  },
+  {
+    "model": "api.ReportScope",
+    "pk": 14,
+    "fields": {
+      "type": "Geography",
+      "name": "State Senate",
+      "field_reference": "fips_sldu"
+    }
+  },
+  {
+    "model": "api.ReportScope",
+    "pk": 15,
+    "fields": {
+      "type": "Geography",
+      "name": "Federal Congressional District",
+      "field_reference": "fips_cd"
+    }
+  },
+  {
+    "model": "api.ReportScope",
+    "pk": 16,
+    "fields": {
+      "type": "Geography",
+      "name": "School District",
+      "field_reference": "fips_unsd"
+    }
+  },
   {
     "model": "api.ReportingDictionary",
     "pk": 1,
@@ -656,91 +656,84 @@
     }
   },
   {
-    "model":"api.TimeFrameType",
-    "pk":1,
-    "fields":{
-        "name" : "Last Month",
-        "dim_dates_reference" : "NA",
-        "current_start_date" : "2021-01-01",
-        "current_end_date": "2021-01-31"
+    "model": "api.TimeFrameType",
+    "pk": 1,
+    "fields": {
+      "name": "Last Month",
+      "dim_dates_reference": "NA",
+      "current_start_date": "2021-01-01",
+      "current_end_date": "2021-01-31"
     }
-},
-{
-    "model":"api.TimeFrameType",
-    "pk":2,
-    "fields":{
-        "name" : "Rolling 12 Months",
-        "dim_dates_reference" : "NA",
-        "current_start_date" : "2020-02-01",
-        "current_end_date": "2021-01-31"
+  },
+  {
+    "model": "api.TimeFrameType",
+    "pk": 2,
+    "fields": {
+      "name": "Rolling 12 Months",
+      "dim_dates_reference": "NA",
+      "current_start_date": "2020-02-01",
+      "current_end_date": "2021-01-31"
     }
-},
-{
-    "model":"api.TimeFrameType",
-    "pk":3,
-    "fields":{
-        "name" : "CY To Date",
-        "dim_dates_reference" : "CalendarYear",
-        "current_start_date" : "2020-01-01",
-        "current_end_date": "2021-01-31"
+  },
+  {
+    "model": "api.TimeFrameType",
+    "pk": 3,
+    "fields": {
+      "name": "CY To Date",
+      "dim_dates_reference": "CalendarYear",
+      "current_start_date": "2020-01-01",
+      "current_end_date": "2021-01-31"
     }
-},
-{
-    "model":"api.TimeFrameType",
-    "pk":4,
-    "fields":{
-        "name" : "Fiscal year to date",
-        "dim_dates_reference" : "JulFiscalYear",
-        "current_start_date" : "2020-07-01",
-        "current_end_date": "2021-01-31"
+  },
+  {
+    "model": "api.TimeFrameType",
+    "pk": 4,
+    "fields": {
+      "name": "Fiscal year to date",
+      "dim_dates_reference": "JulFiscalYear",
+      "current_start_date": "2020-07-01",
+      "current_end_date": "2021-01-31"
     }
-},
-{
-    "model":"api.TimeFrameType",
-    "pk":5,
-    "fields":{
-        "name" : "Custom Date Range",
-        "dim_dates_reference" : "NA"
+  },
+  {
+    "model": "api.TimeFrameType",
+    "pk": 5,
+    "fields": {
+      "name": "Custom Date Range",
+      "dim_dates_reference": "NA"
     }
-},
-{
-  "model": "api.AddinManager",
-  "pk": 1,
-  "fields": {
-    "name": "Ohio Addin",
-    "reporting_dictionary_id": 3,
-    "report_scope_id": 6,
-    "report_scope_value": 39,
-    "control_type_id" : 1
-
-   }
-},
-{
-  "model": "api.AddinManager",
-  "pk": 2,
-  "fields": {
-    "name": "MOFC Addin",
-    "reporting_dictionary_id": 4,
-    "report_scope_id": 5,
-    "report_scope_value": 21,
-    "control_type_id" : 1
+  },
+  {
+    "model": "api.AddinManager",
+    "pk": 1,
+    "fields": {
+      "name": "Ohio Addin",
+      "reporting_dictionary_id": 3,
+      "report_scope_id": 6,
+      "report_scope_value": 39,
+      "control_type_id": 1
+    }
+  },
+  {
+    "model": "api.AddinManager",
+    "pk": 2,
+    "fields": {
+      "name": "MOFC Addin",
+      "reporting_dictionary_id": 4,
+      "report_scope_id": 5,
+      "report_scope_value": 21,
+      "control_type_id": 1
+    }
+  },
+  {
+    "model": "api.AddinManager",
+    "pk": 3,
+    "fields": {
+      "name": "Virginia Addin",
+      "reporting_dictionary_id": 2,
+      "report_scope_id": 6,
+      "report_scope_value": 51,
+      "control_type_id": 5
+    }
   }
-},
-{
-  "model": "api.AddinManager",
-  "pk": 3,
-  "fields": {
-    "name": "Virginia Addin",
-    "reporting_dictionary_id": 2,
-    "report_scope_id": 6,
-    "report_scope_value": 51,
-    "control_type_id" : 5
-  }
-}
 ]
-
-
-
-
-
-

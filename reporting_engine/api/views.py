@@ -1,4 +1,3 @@
-from django.shortcuts import render
 from django.http import HttpResponse
 from api.models import Report, ReportSchedule, RunType, TimeFrameType, ReportScope, ControlType, ReportingDictionary
 from rest_framework import viewsets, permissions
@@ -50,3 +49,21 @@ class ReportingDictionaryViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
 
 # Create your views here.
+
+
+@api_view(['GET', 'POST'])
+def report_schedule(request):
+    if request.method == 'POST':
+        # serialize input, within serializer determine if report exists
+        serializer = ReportScheduleSerializer(data=request.data)
+        # serializer.is_valid() should return true if report does not already exist
+        if serializer.is_valid():
+            serializer.save()
+            # send data to functions to process report schedule
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    elif request.method == 'GET':
+        report_schedules = ReportSchedule.objects.all()
+        serializer = ReportScheduleSerializer(report_schedules, many=True)
+        # to be filled in later
+        return Response(serializer.data)
