@@ -242,7 +242,8 @@
     "fields": {
       "name": "service_total",
       "definition_public": "big_numbers",
-      "calculation_notes": "Count of fact-services entries"
+      "calculation_notes": "Count of fact-services entries",
+      "data_definition_type_id": 1
     }
   },
   {
@@ -251,7 +252,8 @@
     "fields": {
       "name": "undup_hh_total",
       "definition_public": "big_numbers",
-      "calculation_notes": "Count distinct of research_family_key from fact_services entries"
+      "calculation_notes": "Count distinct of research_family_key from fact_services entries",
+      "data_definition_type_id": 1
     }
   },
   {
@@ -260,7 +262,8 @@
     "fields": {
       "name": "undup_indv_total",
       "definition_public": "big_numbers",
-      "calculation_notes": "Count distinct of research_member_key from fact_service_members entries"
+      "calculation_notes": "Count distinct of research_member_key from fact_service_members entries",
+      "data_definition_type_id": 1
     }
   },
   {
@@ -269,7 +272,8 @@
     "fields": {
       "name": "services_per_uhh_avg",
       "definition_public": "big_numbers",
-      "calculation_notes": "Quotient of services_total divided by undup_hh_total"
+      "calculation_notes": "Quotient of services_total divided by undup_hh_total",
+      "data_definition_type_id": 3
     }
   },
   {
@@ -278,7 +282,8 @@
     "fields": {
       "name": "hh_wminor",
       "definition_public": "addin_ohio",
-      "calculation_notes": "Count of fact_services entries where served_children > 0"
+      "calculation_notes": "Count of fact_services entries where served_children > 0",
+      "data_definition_type_id": 1
     }
   },
   {
@@ -287,7 +292,8 @@
     "fields": {
       "name": "hh_wominor",
       "definition_public": "addin_ohio",
-      "calculation_notes": "Count of fact_services entries where served_children == 0"
+      "calculation_notes": "Count of fact_services entries where served_children == 0",
+      "data_definition_type_id": 1
     }
   },
   {
@@ -296,7 +302,8 @@
     "fields": {
       "name": "hh_total",
       "definition_public": "addin_ohio",
-      "calculation_notes": "Count of fact-services entries"
+      "calculation_notes": "Count of fact-services entries",
+      "data_definition_type_id": 1
     }
   },
   {
@@ -305,7 +312,8 @@
     "fields": {
       "name": "indv_sen_hh_wminor",
       "definition_public": "addin_ohio",
-      "calculation_notes": "Sum of fact_services.served_seniors where served_children > 0"
+      "calculation_notes": "Sum of fact_services.served_seniors where served_children > 0",
+      "data_definition_type_id": 1
     }
   },
   {
@@ -314,7 +322,8 @@
     "fields": {
       "name": "indv_sen_hh_wominor",
       "definition_public": "addin_ohio",
-      "calculation_notes": "Sum of fact_services.served_seniors where served_children == 0"
+      "calculation_notes": "Sum of fact_services.served_seniors where served_children == 0",
+      "data_definition_type_id": 1
     }
   },
   {
@@ -323,7 +332,8 @@
     "fields": {
       "name": "indv_sen_total",
       "definition_public": "addin_ohio",
-      "calculation_notes": "Sum of fact_services.served_seniors"
+      "calculation_notes": "Sum of fact_services.served_seniors",
+      "data_definition_type_id": 1
     }
   },
   {
@@ -332,7 +342,8 @@
     "fields": {
       "name": "indv_adult_hh_wminor",
       "definition_public": "addin_ohio",
-      "calculation_notes": "Sum of fact_services.served_adult where served_children > 0"
+      "calculation_notes": "Sum of fact_services.served_adult where served_children > 0",
+      "data_definition_type_id": 1
     }
   },
   {
@@ -341,7 +352,8 @@
     "fields": {
       "name": "indv_adult_hh_wominor",
       "definition_public": "addin_ohio",
-      "calculation_notes": "Sum of fact_services.served_adult where served_children == 0"
+      "calculation_notes": "Sum of fact_services.served_adult where served_children == 0",
+      "data_definition_type_id": 1
     }
   },
   {
@@ -350,7 +362,8 @@
     "fields": {
       "name": "indv_adult_total",
       "definition_public": "addin_ohio",
-      "calculation_notes": "Sum of fact_services.served_adult "
+      "calculation_notes": "Sum of fact_services.served_adult",
+      "data_definition_type_id": 1
     }
   },
   {
@@ -359,7 +372,8 @@
     "fields": {
       "name": "indv_child_hh_wminor",
       "definition_public": "addin_ohio",
-      "calculation_notes": "Sum of fact_services.served_children where served_children > 0"
+      "calculation_notes": "Sum of fact_services.served_children where served_children > 0",
+      "data_definition_type_id": 1
     }
   },
   {
@@ -368,7 +382,8 @@
     "fields": {
       "name": "indv_child_hh_wominor",
       "definition_public": "addin_ohio",
-      "calculation_notes": "Sum of fact_services.served_children where served_children == 0"
+      "calculation_notes": "Sum of fact_services.served_children where served_children == 0",
+      "data_definition_type_id": 1
     }
   },
   {
@@ -377,7 +392,8 @@
     "fields": {
       "name": "indv_child_total",
       "definition_public": "addin_ohio",
-      "calculation_notes": "Sum of fact_services.served_children"
+      "calculation_notes": "Sum of fact_services.served_children",
+      "data_definition_type_id": 1
     }
   },
   {
@@ -386,7 +402,8 @@
     "fields": {
       "name": "indv_total_hh_wminor",
       "definition_public": "addin_ohio",
-      "calculation_notes": "Sum of fact_services.(served_children + served_adults + served_seniors) where served_children > 0"
+      "calculation_notes": "Sum of fact_services.(served_children + served_adults + served_seniors) where served_children > 0",
+      "data_definition_type_id": 1
     }
   },
   {
@@ -395,7 +412,8 @@
     "fields": {
       "name": "indv_total_hh_wominor",
       "definition_public": "addin_ohio",
-      "calculation_notes": "Sum of fact_services.(served_children + served_adults + served_seniors) where served_children == 0"
+      "calculation_notes": "Sum of fact_services.(served_children + served_adults + served_seniors) where served_children == 0",
+      "data_definition_type_id": 1
     }
   },
   {
@@ -404,7 +422,8 @@
     "fields": {
       "name": "indv_total",
       "definition_public": "addin_ohio",
-      "calculation_notes": "Sum of fact_services.(served_children + served_adults + served_seniors)"
+      "calculation_notes": "Sum of fact_services.(served_children + served_adults + served_seniors)",
+      "data_definition_type_id": 1
     }
   },
   {
@@ -413,7 +432,8 @@
     "fields": {
       "name": "hh_wsenior",
       "definition_public": "addin_mid_ohio_foodbank",
-      "calculation_notes": "Count of fact_services entries where served_seniors > 0"
+      "calculation_notes": "Count of fact_services entries where served_seniors > 0",
+      "data_definition_type_id": 1
     }
   },
   {
@@ -422,7 +442,8 @@
     "fields": {
       "name": "hh_wosenior",
       "definition_public": "addin_mid_ohio_foodbank",
-      "calculation_notes": "Count of fact_services entries where served_seniors == 0"
+      "calculation_notes": "Count of fact_services entries where served_seniors == 0",
+      "data_definition_type_id": 1
     }
   },
   {
@@ -431,7 +452,8 @@
     "fields": {
       "name": "hh_grandparent",
       "definition_public": "addin_mid_ohio_foodbank",
-      "calculation_notes": "Count of fact_services entries where served_seniors > 0 AND served_children > 0"
+      "calculation_notes": "Count of fact_services entries where served_seniors > 0 AND served_children > 0",
+      "data_definition_type_id": 1
     }
   },
   {
