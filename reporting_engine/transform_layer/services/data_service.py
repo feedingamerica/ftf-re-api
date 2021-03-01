@@ -41,7 +41,7 @@ class Data_Service:
     ## retrieves fact_services
     @classmethod
     def __get_fact_services(cls, params):
-        conn = connections['default']
+        conn = connections['source_db']
 
         table1 = ""
         left1 = right1 = ""
