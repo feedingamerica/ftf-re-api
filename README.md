@@ -39,11 +39,17 @@
 5. Create a file inside 'ftf-re-api/reporting_engine/' called '.env'
      - Add these lines to the file:
      ```
-       export DB_NAME='[db name you assigned to the schema you created in workbench]'
-       export DB_USER='[db user name you created]'
-       export DB_PW='[db user password you created]'
-       export DB_HOST='127.0.0.1'
-       export DB_PORT='3306'
+      export DB_NAME='[db name you assigned to the schema you created in workbench]'
+      export DB_USER='[db user name you created]'
+      export DB_PW='[db user password you created]'
+      export DB_HOST='127.0.0.1'
+      export DB_PORT='3306'
+       
+      export SOURCE_DB_HOST='freshtrak-focus.cnw8nooqdydn.us-east-2.rds.amazonaws.com'
+      export SOURCE_DB_USER='[username for source db]'
+      export SOURCE_DB_PW='[password for source db]'
+      export SOURCE_DB_NAME='[name for source db]'
+      export SOURCE_DB_PORT='3306'
       ```
      *Replace what's in square brackets, including the square brackets - example: '[db name...]' -> 'reports_beta'*
 6. Connect Django to DB and start Django Server
