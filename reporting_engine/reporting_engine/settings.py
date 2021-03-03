@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'api.apps.ApiConfig',
     'rest_framework',
     'transform_layer',
+    'django_celery_beat'
 ]
 
 MIDDLEWARE = [
