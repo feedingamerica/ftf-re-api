@@ -730,7 +730,7 @@
   "pk": 1,
   "fields": {
     "name": "Ohio Addin",
-    "reporting_dictionary_id": 3,
+    "reporting_dictionary_id": 2,
     "report_scope_id": 6,
     "report_scope_value": 39,
     "control_type_id" : 1
@@ -742,7 +742,7 @@
   "pk": 2,
   "fields": {
     "name": "MOFC Addin",
-    "reporting_dictionary_id": 4,
+    "reporting_dictionary_id": 3,
     "report_scope_id": 5,
     "report_scope_value": 21,
     "control_type_id" : 1
@@ -753,7 +753,7 @@
   "pk": 3,
   "fields": {
     "name": "Virginia Addin",
-    "reporting_dictionary_id": 2,
+    "reporting_dictionary_id": 4,
     "report_scope_id": 6,
     "report_scope_value": 51,
     "control_type_id" : 5
