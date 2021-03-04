@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'api.apps.ApiConfig',
     'rest_framework',
+    'rest_framework.authtoken',
     'rest_framework_api_key',
     'transform_layer',
 ]
@@ -144,3 +145,5 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
+
+API_KEY_CUSTOM_HEADER = "HTTP_X_API_KEY"
