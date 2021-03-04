@@ -44,9 +44,15 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'api.apps.ApiConfig',
     'rest_framework',
-    'rest_framework.authtoken',
+    'rest_framework_api_key',
     'transform_layer',
 ]
+
+REST_FRAMEWORK ={
+    "DEFAULT_PERMISSION_CLASSES": [
+        "rest_framework_api_key.permissions.HasAPIKey",
+    ]
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -77,12 +83,6 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'reporting_engine.wsgi.application'
-
-REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authentication.TokenAuthentication',
-    ]
-}
 
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
