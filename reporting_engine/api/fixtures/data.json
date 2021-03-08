@@ -457,6 +457,39 @@
     }
   },
   {
+    "model": "api.DataDefinition",
+    "pk": 23,
+    "fields": {
+      "name": "service_summary_service",
+      "definition_public": "A summary of services by service type. Provides a detailed summary of network output by each type of service.",
+      "calculation_notes": "base services, group by service id, show count of services as duplicated families served, and sum of fact_services.served_total as duplicated people served.",
+      "interpretation_notes": "Will not show any variables that have zero observations.",
+      "data_definition_type_id": 2
+    }
+  },
+  {
+    "model": "api.DataDefinition",
+    "pk": 24,
+    "fields": {
+      "name": "service_summary_category",
+      "definition_public": "A summary of services by service cateogry. This provides a high-level summary of network output.",
+      "calculation_notes": "base services, group by service category name, show count of services as duplicated families served, and sum of fact_services.served_total as duplicated people served.",
+      "interpretation_notes": "Will not show any variables that have zero observations.",
+      "data_definition_type_id": 2
+    }
+  },
+  {
+    "model": "api.DataDefinition",
+    "pk": 25,
+    "fields": {
+      "name": "distribution_outlets",
+      "definition_public": "A summary of how many sites customers visited during the reporting timeframe.",
+      "calculation_notes": "base services, group by research_family_key, summarise sites visited as a count distinct of loc_id, group by sites visited, summarise unduplicated families as a count of observations.",
+      "interpretation_notes": "Will not show any variables that have zero observations, recommend reporting clients summarize data as 1, 2, 3, 4, and 5+ sites visited.",
+      "data_definition_type_id": 2
+    }
+  },
+  {
     "model": "api.ReportingDictionaryDefinition",
     "pk": 1,
     "fields": {
@@ -661,6 +694,33 @@
       "report_dictionary_id": 3,
       "data_definition_id": 22,
       "section_id": 9
+    }
+  },
+  {
+    "model": "api.ReportingDictionaryDefinition",
+    "pk": 24,
+    "fields": {
+      "report_dictionary_id": 1,
+      "data_definition_id": 23,
+      "section_id": 2
+    }
+  },
+  {
+    "model": "api.ReportingDictionaryDefinition",
+    "pk": 25,
+    "fields": {
+      "report_dictionary_id": 1,
+      "data_definition_id": 24,
+      "section_id": 2
+    }
+  },
+  {
+    "model": "api.ReportingDictionaryDefinition",
+    "pk": 26,
+    "fields": {
+      "report_dictionary_id": 1,
+      "data_definition_id": 25,
+      "section_id": 2
     }
   },
   {
