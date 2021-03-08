@@ -16,3 +16,12 @@ def periodic_report_generation():
         # these aren't built yet, but could be something like the below...
         # dictionary = get_dictionary(schedule.id)
         # results = call_transformation_layer(dictionary)
+        # 
+        # New report to the report
+        # new_report = Report(report_schedule = schedule, start_date = results.scope.start_date, end_date = results.scope.end_date, date_completed = date.today())
+        # new_report.save()
+        #
+        # New rows to report_data_int
+        # for values in results.ReportInfo.objects.all():
+        #   new_data_int = ReportDataInt(report = new_report, data_definition = values.dataDefId, int_value = values.value)
+        #   new_data_int.save()
