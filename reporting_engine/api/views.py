@@ -1,3 +1,5 @@
+from datetime import datetime, timezone
+
 from django.shortcuts import render
 from django.views import View
 from rest_framework.decorators import api_view, permission_classes, authentication_classes
@@ -6,6 +8,7 @@ from rest_framework import status
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.authentication import TokenAuthentication
 from rest_framework_api_key.permissions import HasAPIKey
+from rest_framework_api_key.models import APIKey
 from api.serializers import ReportScheduleSerializer
 from api.models import ReportSchedule
 
@@ -37,30 +40,20 @@ def test_api_key(request):
     In the header of the GET request, make sure to supply "X-Api-Key" as the key, and your api key as the value.
     """
     #return Response("You are authorized to access this endpoint!")
-    return Response("test_api_key worked")
+    return Response("API key worked")
 
 
 @api_view(['GET'])
 @authentication_classes([TokenAuthentication])
-@permission_classes([HasAPIKey & IsAdminUser])
-def test_api_key_and_auth(request):
+@permission_classes([IsAdminUser])
+def test_admin_token_auth(request):
     """
     Endpoint to demonstrate limiting access to only those with API Key's and who have admin tokens. Use this for admin only endpoints.
     In the header of the GET request, supply the following two key value pairs:
     "Authorization": "Token [token]",
     "X-Api-Key": "[your api key here]"
     """
-    return Response("test_api_key_and_auth worked")
+    return Response("Admin token authentication worked")
 
 
-@api_view(['GET'])
-@authentication_classes([TokenAuthentication])
-@permission_classes([HasAPIKey | IsAdminUser])
-def test_api_key_or_auth(request):
-    """
-    Endpoint to demonstrate allowing access with either an API key or an admin Token.
-    In the header of the GET request, supply either of the following two key value pairs:
-    "Authorization": "Token [token]",
-    "X-Api-Key": "[your api key here]"
-    """
-    return Response("test_api_key_or_auth worked")
+
