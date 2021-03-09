@@ -9,9 +9,9 @@ SCOPE_HIERARCHY = "hierarchy"
 SCOPE_GEOGRAPHY = "geography"
 
 class Data_Service:
-    __fact_services:DataFrame = None
     __scope:str = None
-    ##  getter and setter for fact_services based on the scope "hierarchy" or "geography" (also sets related service_types if None)
+    __fact_services:DataFrame = None
+    ##  getter and setter for __fact_services based on the scope "hierarchy" or "geography"
     ##  Columns always in services:
     ##      research_service_key
     ##      service_status
@@ -27,10 +27,28 @@ class Data_Service:
     ##      dimgeo_id - if scope_type is "geography"
     @classmethod
     def fact_services(cls,params):
-        if Data_Service.__fact_services is None or params["Scope"] != Data_Service.__scope:
-            Data_Service.__scope = copy.deepcopy(params["Scope"])
-            Data_Service.__fact_services = Data_Service.__get_fact_services(params)
-        return Data_Service.__fact_services
+        if cls.__fact_services is None or params["Scope"] != cls.__scope:
+            cls.__scope = copy.deepcopy(params["Scope"])
+            cls.__fact_services = cls.__get_fact_services(params)
+        return cls.__fact_services
+    
+    __base_services:DataFrame = None
+    ## getter and setter for __base_services
+    ##  Columns always in services:
+    ##      research_service_key
+    ##      research_family_key
+    ##      service_id
+    ##      service_name
+    ##      service_category_code
+    ##      service_category_name
+    ##      served_total
+    ##      loc_id
+    @classmethod
+    def base_services(cls,params):
+        if cls.__base_services is None or params["Scope"] != cls._scope:
+            cls.__scope = copy.deepcopy(params["Scope"])
+            cls.__base_services = cls.__get_base_services(params)
+        return cls.__base_services
 
     ## returns DataFrame for a specific data definition
     @classmethod
@@ -54,35 +72,82 @@ class Data_Service:
             left1 = "dimgeo_id"
             right1 = "id"
 
-        query = """SELECT fs.research_service_key, fs.{left1}, fs.service_status, fs.service_id,
-        fs.research_family_key, fs.served_children, fs.served_adults, fs.served_seniors, fs.served_total, fsm.research_member_key
-        FROM fact_services AS fs
-        LEFT JOIN {t1} AS t1 ON fs.{left1} = t1.{right1}
-        LEFT JOIN dim_service_statuses ON fs.service_status = dim_service_statuses.status 
-        LEFT JOIN fact_service_members AS fsm ON fs.research_service_key = fsm.research_service_key
-        """
-        where_stmt = "WHERE fs.service_status = 17"
-        where_stmt += (" AND t1.{} = {}".format(params["Scope"]["scope_field"],
-                                    params["Scope"]["scope_field_value"]) )
-
+        control_type_field = params["Scope"]["control_type_field"]
+        control_type_value = params["Scope"]["control_type_value"]
+        scope_field = params["Scope"]["scope_field"]
+        scope_value = params["Scope"]["scope_field_value"]
         start_date = cls.__date_str_to_int(params["Scope"]["startDate"])
         end_date = cls.__date_str_to_int(params["Scope"]["endDate"])
-        where_date = " AND fs.date >= {} AND fs.date <= {}".format(start_date,end_date)
-        where_stmt += where_date
-        
-        query = query.format(t1 = table1, left1 = left1, right1 = right1)
-        query += where_stmt
+
+        query = f"""
+        SELECT
+            fs.research_service_key,
+            fs.{left1},
+            fs.service_status,
+            fs.service_id,
+            fs.research_family_key,
+            fs.served_children,
+            fs.served_adults,
+            fs.served_seniors,
+            fs.served_total,
+            fsm.research_member_key
+        FROM 
+            fact_services AS fs
+            LEFT JOIN {table1} AS t1 ON fs.{left1} = t1.{right1}
+            LEFT JOIN dim_service_statuses ON fs.service_status = dim_service_statuses.status 
+            LEFT JOIN fact_service_members AS fsm ON fs.research_service_key = fsm.research_service_key
+        WHERE
+            fs.service_status = 17 AND
+            t1.{scope_field} = {scope_value} AND
+            fs.date >= {start_date} AND fs.date <= {end_date}
+        """
         
         ct = params["Scope"].get("control_type_field")
         ct_value = params["Scope"].get("control_type_value")
 
+<<<<<<< HEAD
         query_control = """SELECT id, name AS service_name, service_category_code, service_category_name, {} FROM dim_service_types""".format(ct)
+=======
+        query_control = f"""SELECT id, {ct} FROM dim_service_types"""
+>>>>>>> 9adc1a76c47d2d5eb0483ca38c63533da9af8840
 
         services = pd.read_sql(query, conn)
         service_types = pd.read_sql(query_control, conn)
         services = services.merge(service_types, how = 'left', left_on= 'service_id', right_on = 'id')
-        services = services.query('{} == {}'.format(ct, ct_value))
+        services = services.query(f'{ct} == {ct_value}')
         return services
+
+    @classmethod
+    def __get_base_services(cls, params):
+        conn = connections['source_db']
+
+        control_type_field = params["Scope"]["control_type_field"]
+        control_type_value = params["Scope"]["control_type_value"]
+        scope_field = params["Scope"]["scope_field"]
+        scope_value = params["Scope"]["scope_field_value"]
+        start_date = cls.__date_str_to_int(params["Scope"]["startDate"])
+        end_date = cls.__date_str_to_int(params["Scope"]["endDate"])
+
+        query = f"""
+        SELECT
+            dm_fs.research_service_key,
+            dm_fs.research_family_key,
+            dm_fs.service_id,
+            dim_service_types.name as service_name,
+            dm_fs.service_category_code,
+            dim_service_types.service_category_name,
+            dm_fs.served_total,
+            dm_fs.loc_id
+        FROM
+            dm_fact_services as dm_fs
+            INNER JOIN dim_service_types ON dm_fs.service_id = dim_service_types.id
+        WHERE
+            dm_fs.service_status = 17 AND
+            dm_fs.{control_type_field} = {control_type_value} AND
+            dm_fs.{scope_field} = {scope_value} AND
+            dm_fs.date >= {start_date} AND dm_fs.date <= {end_date}
+        """
+        return pd.read_sql(query, conn)
 
     @staticmethod
     def __date_str_to_int(date):
@@ -201,6 +266,7 @@ class Data_Service:
         services = Data_Service.fact_services(params).drop_duplicates(subset = 'research_service_key', inplace = False)
         return services[services['served_seniors']==0]
 
+<<<<<<< HEAD
     @staticmethod
     def __get_distribution_outlets(params):
         services = Data_Service.fact_services(params)
@@ -209,6 +275,14 @@ class Data_Service:
         #services.sort_values(by = ['sites_visited'], ascending = [True, False])
         for col in services.columns:
             print(col)
+=======
+    ## DataFrame to fulfill Data Definition 23
+    ####    Returns
+    ####    
+    @staticmethod
+    def __get_service_summary(params):
+        services = Data_Service.base_services(params)
+>>>>>>> 9adc1a76c47d2d5eb0483ca38c63533da9af8840
         return services
 
     ## error, none
@@ -243,6 +317,10 @@ class Data_Service:
             20: __get_sen.__func__,
             21: __get_wosenior.__func__,
             22: __get_sen_wminor.__func__,
+<<<<<<< HEAD
             25: __get_distribution_outlets.__func__,
+=======
+            23: __get_service_summary.__func__
+>>>>>>> 9adc1a76c47d2d5eb0483ca38c63533da9af8840
         }
 
