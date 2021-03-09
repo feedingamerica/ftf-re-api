@@ -506,3 +506,31 @@ def get_demo1_typical(request):
     context = { 'report_output': format_dict(cd.request)}
     print_dict(input_dict)
     return render(request, 'transformapi/get-report.html', context)
+
+def get_data_def_25(request):
+    input_dict = {
+        "Scope": {
+            "startDate":"01/01/2019",
+            "endDate":"12/31/2019",
+            "scope_field":"fb_id",
+            "scope_field_value":21,
+            "control_type_field":"dummy_is_grocery_service",
+            "control_type_value":1
+        },
+        "ReportInfo": [
+            {
+                "reportId":1,
+                "reportDictId":1,
+                "dataDefId":25,
+                "name":"distribution_outlets",
+                "dataDefType":"type1"
+            },
+        ]
+    }
+
+    cd = CalculationDispatcher(input_dict)
+    cd.run_calculations()
+
+    context = { 'report_output': format_dict(cd.request)}
+    print_dict(cd.request)
+    return render(request, 'transformapi/get-report.html', context)

@@ -11,4 +11,5 @@ urlpatterns = [
     path('demo1/mofc', views.get_demo1_mofc, name='get-demo1-mofc'),
     path('demo1/franklin', views.get_demo1_franklin, name='get-demo1-franklin'),
     path('demo1/typical', views.get_demo1_typical, name='get-demo1-typical'),
+    path('get-data-def-25/', views.get_data_def_25, name='get-data-def-25'),
 ]

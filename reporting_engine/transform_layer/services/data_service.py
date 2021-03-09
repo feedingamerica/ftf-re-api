@@ -76,7 +76,7 @@ class Data_Service:
         ct = params["Scope"].get("control_type_field")
         ct_value = params["Scope"].get("control_type_value")
 
-        query_control = """SELECT id, {} FROM dim_service_types""".format(ct)
+        query_control = """SELECT id, name AS service_name, service_category_code, service_category_name, {} FROM dim_service_types""".format(ct)
 
         services = pd.read_sql(query, conn)
         service_types = pd.read_sql(query_control, conn)
@@ -201,6 +201,16 @@ class Data_Service:
         services = Data_Service.fact_services(params).drop_duplicates(subset = 'research_service_key', inplace = False)
         return services[services['served_seniors']==0]
 
+    @staticmethod
+    def __get_distribution_outlets(params):
+        services = Data_Service.fact_services(params)
+        #services.groupby('research_family_key')['loc_id'].nunique().reset_index().rename(columns={'loc_id': 'sites_visited'})
+        #services.groupby('sites_visited').agg(un_duplicated_families = ('sites_visited', 'count')).reset_index()
+        #services.sort_values(by = ['sites_visited'], ascending = [True, False])
+        for col in services.columns:
+            print(col)
+        return services
+
     ## error, none
     @staticmethod
     def get_data_def_error(params):
@@ -233,5 +243,6 @@ class Data_Service:
             20: __get_sen.__func__,
             21: __get_wosenior.__func__,
             22: __get_sen_wminor.__func__,
+            25: __get_distribution_outlets.__func__,
         }
 

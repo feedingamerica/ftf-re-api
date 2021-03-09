@@ -182,6 +182,9 @@ def __get_indv_total(id, params):
     """
     return ds.get_data_for_definition(id, params)['served_total'].sum()
 
+def __get_distribution_outlets(id, params):
+    return ds.get_data_for_definition(id, params)
+
 
 ## Data Defintion Switcher
 # usage:
@@ -210,4 +213,5 @@ data_calc_function_switcher = {
         20: __get_total_hh_services,
         21: __get_total_hh_services,
         22: __get_total_hh_services,
+        25: __get_distribution_outlets,
     }
