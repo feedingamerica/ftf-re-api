@@ -1,5 +1,6 @@
 from celery import shared_task
-from api.models import ReportSchedule
+from api.models import ReportSchedule, Report, ReportDataInt
+from datetime import date
 
 @shared_task
 def test():
@@ -16,12 +17,48 @@ def periodic_report_generation():
         # these aren't built yet, but could be something like the below...
         # dictionary = get_dictionary(schedule.id)
         # results = call_transformation_layer(dictionary)
-        # 
-        # New report to the report
-        # new_report = Report(report_schedule = schedule, start_date = results.scope.start_date, end_date = results.scope.end_date, date_completed = date.today())
-        # new_report.save()
-        #
-        # New rows to report_data_int
-        # for values in results.ReportInfo.objects.all():
-        #   new_data_int = ReportDataInt(report = new_report, data_definition = values.dataDefId, int_value = values.value)
-        #   new_data_int.save()
+        # save_report(schedule, reports)
+
+def save_report(schedule, results):
+    # New report to the report
+    new_report = Report(report_schedule = schedule, start_date = results['Scope']['startDate'], end_date = results["Scope"]["endDate"], date_completed = date.today())
+    new_report.save()
+
+    #New rows to report_data_int
+    for values in results.ReportInfo:
+        if(values.dataDefType == 'integer'):
+            new_data_int = ReportDataInt(report = new_report, data_definition_id = values['dataDefId'], int_value = values['value'])
+            new_data_int.save()
+        elif(values.dataDefType == 'float'):
+            new_data_float = ReportDataInt(report = new_report, data_definition_id = values['dataDefId'], float_value = values['value'])
+            new_data_float.save()
+
+mock_dict = {
+	'Scope':  {
+		'startDate': '01/01/2019',
+		'endDate': '12/31/2019',
+		'scope_type': 'hierarchy',
+		'scope_field': 'fb_id',
+		'scope_field_value': 21,
+		'control_type_field': 'dummy_is_grocery_service',
+		'control_type_value': 1
+	},
+	'ReportInfo': [
+		{
+			'reportId': 1,
+			'reportDictId': 1, 
+			'dataDefId': 1,
+			'dataDefType': 'integer',
+			'name': 'services_total',
+			'value': 1040876
+		}, 
+		{
+			'reportId': 1,
+			'reportDictId': 1,
+			'dataDefId': 2,
+			'dataDefType': 'integer',
+			'name': 'undup_hh_total',
+			'value': 161114
+		}
+    ]
+}
