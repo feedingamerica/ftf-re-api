@@ -182,9 +182,13 @@ def __get_indv_total(id, params):
     """
     return ds.get_data_for_definition(id, params)['served_total'].sum()
 
+# data def 25
 def __get_distribution_outlets(id, params):
-    return ds.get_data_for_definition(id, params)
-
+    base_services = ds.get_data_for_definition(id, params)
+    base_services = base_services.groupby('research_family_key')['loc_id'].nunique().reset_index().rename(columns={'loc_id': 'sites_visited'})
+    base_services = base_services.groupby('sites_visited').agg(un_duplicated_families = ('sites_visited', 'count')).reset_index()
+    base_services = base_services.sort_values(by = ['sites_visited'], ascending = [True])
+    return base_services.to_json()
 
 ## Data Defintion Switcher
 # usage:

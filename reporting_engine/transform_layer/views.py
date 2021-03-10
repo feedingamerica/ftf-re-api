@@ -71,8 +71,8 @@ def test_endpoint_2(request):
 def test_data_service(request, id):
     sample_dict = {
         "Scope": {
-            "startDate":"01/01/2019",
-            "endDate":"12/31/2019",
+            "startDate":"01/01/2020",
+            "endDate":"12/31/2020",
             "scope_field":"fb_id",
             "scope_field_value":21,
             "control_type_field":"dummy_is_grocery_service",
@@ -507,11 +507,11 @@ def get_demo1_typical(request):
     print_dict(input_dict)
     return render(request, 'transformapi/get-report.html', context)
 
-def get_data_def_25(request):
+def get_distribution_outlets(request):
     input_dict = {
         "Scope": {
-            "startDate":"01/01/2019",
-            "endDate":"12/31/2019",
+            "startDate":"01/01/2020",
+            "endDate":"12/31/2020",
             "scope_field":"fb_id",
             "scope_field_value":21,
             "control_type_field":"dummy_is_grocery_service",
