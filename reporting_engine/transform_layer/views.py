@@ -524,6 +524,13 @@ def get_report_services(request):
                 "name": "service_summary_service",
                 "dataDefType":3
             },
+             {
+                "reportId":1,
+                "reportDictId":1,
+                "dataDefId":24,
+                "name": "service_summary_category",
+                "dataDefType":3
+            },
             {
                 "reportId":1,
                 "reportDictId":1,

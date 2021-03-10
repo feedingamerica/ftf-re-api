@@ -202,6 +202,13 @@ def __get_services_summary(id, params):
     base_services = base_services.reset_index().rename(columns={'research_family_key':"Families Served", 'served_total': 'People Served'})
     return base_services.to_json()
 
+# data def 24
+def __get_services_category(id, params):
+    base_services = ds.get_data_for_definition(id, params).groupby(['service_category_name'])
+    base_services = base_services.agg({'research_family_key': 'count', 'served_total': 'sum'})
+    base_services = base_services.reset_index().rename(columns={'research_family_key':"Families Served", 'served_total': 'People Served'})
+    return base_services.to_json()
+
 # data def 25
 def __get_distribution_outlets(id, params):
     base_services = ds.get_data_for_definition(id, params)
@@ -238,5 +245,6 @@ data_calc_function_switcher = {
         21: __get_total_hh_services,
         22: __get_total_hh_services,
         23: __get_services_summary,
+        24: __get_services_category,
         25: __get_distribution_outlets,
     }
