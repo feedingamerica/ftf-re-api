@@ -182,6 +182,25 @@ def __get_indv_total(id, params):
     """
     return ds.get_data_for_definition(id, params)['served_total'].sum()
 
+    # data def 23
+def __get_services_summary(id, params):
+    """Calculate number of people served DataDef 23
+
+    Arguments:
+    id - data definiton id
+    params - a dictionary of values to scope the queries
+
+    Modifies:
+    Nothing
+
+    Returns: num_served
+    num_served - number of people served
+
+    """
+    services = ds.get_data_for_definition(id, params)
+    services = services.agg({'research_family_key': 'count', 'served_total': 'sum'})
+    services = services.reset_index().rename(columns={'research_family_key':"Families Served", 'served_total': 'People Served'})
+    return services.to_json()
 
 ## Data Defintion Switcher
 # usage:
@@ -210,4 +229,5 @@ data_calc_function_switcher = {
         20: __get_total_hh_services,
         21: __get_total_hh_services,
         22: __get_total_hh_services,
+        23: __get_services_summary
     }

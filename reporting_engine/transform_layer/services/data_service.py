@@ -267,8 +267,7 @@ class Data_Service:
     ####    
     @staticmethod
     def __get_service_summary(params):
-        services = Data_Service.base_services(params)
-        return services
+        return Data_Service.base_services(params).groupby(['service_name'])
 
     ## error, none
     @staticmethod
