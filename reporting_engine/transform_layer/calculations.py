@@ -182,7 +182,7 @@ def __get_indv_total(id, params):
     """
     return ds.get_data_for_definition(id, params)['served_total'].sum()
 
-    # data def 23
+# data def 23
 def __get_services_summary(id, params):
     """Calculate number of people served DataDef 23
 
@@ -197,10 +197,18 @@ def __get_services_summary(id, params):
     num_served - number of people served
 
     """
-    services = ds.get_data_for_definition(id, params)
-    services = services.agg({'research_family_key': 'count', 'served_total': 'sum'})
-    services = services.reset_index().rename(columns={'research_family_key':"Families Served", 'served_total': 'People Served'})
-    return services.to_json()
+    base_services = ds.get_data_for_definition(id, params).groupby(['service_name'])
+    base_services = base_services.agg({'research_family_key': 'count', 'served_total': 'sum'})
+    base_services = base_services.reset_index().rename(columns={'research_family_key':"Families Served", 'served_total': 'People Served'})
+    return base_services.to_json()
+
+# data def 25
+def __get_distribution_outlets(id, params):
+    base_services = ds.get_data_for_definition(id, params)
+    base_services = base_services.groupby('research_family_key')['loc_id'].nunique().reset_index().rename(columns={'loc_id': 'sites_visited'})
+    base_services = base_services.groupby('sites_visited').agg(un_duplicated_families = ('sites_visited', 'count')).reset_index()
+    base_services = base_services.sort_values(by = ['sites_visited'], ascending = [True])
+    return base_services.to_json()
 
 ## Data Defintion Switcher
 # usage:
@@ -229,5 +237,6 @@ data_calc_function_switcher = {
         20: __get_total_hh_services,
         21: __get_total_hh_services,
         22: __get_total_hh_services,
-        23: __get_services_summary
+        23: __get_services_summary,
+        25: __get_distribution_outlets,
     }

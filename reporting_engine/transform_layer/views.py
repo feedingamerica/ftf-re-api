@@ -509,8 +509,8 @@ def get_demo1_typical(request):
 def get_report_services(request):
     input_dict = {
         "Scope": {
-            "startDate":"01/01/2019",
-            "endDate":"12/31/2019",
+            "startDate":"01/01/2020",
+            "endDate":"12/31/2020",
             "scope_field":"fb_id",
             "scope_field_value":21,
             "control_type_field":"dummy_is_grocery_service",
@@ -522,15 +522,22 @@ def get_report_services(request):
                 "reportDictId":1,
                 "dataDefId":23,
                 "name": "service_summary_service",
-                "dataDefType":"type1"
-            }
+                "dataDefType":3
+            },
+            {
+                "reportId":1,
+                "reportDictId":1,
+                "dataDefId":25,
+                "name": "distribution_outlets",
+                "dataDefType":3
+            },
+
         ]
     }
 
-    # params = parse_request(input_dict)
     cd = CalculationDispatcher(input_dict)
     cd.run_calculations()
 
     context = { 'report_output': format_dict(cd.request)}
-    print_dict(input_dict)
+    print_dict(cd.request)
     return render(request, 'transformapi/get-report.html', context)

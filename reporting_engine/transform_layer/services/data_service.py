@@ -45,7 +45,7 @@ class Data_Service:
     ##      loc_id
     @classmethod
     def base_services(cls,params):
-        if cls.__base_services is None or params["Scope"] != cls._scope:
+        if cls.__base_services is None or params["Scope"] != cls.__scope:
             cls.__scope = copy.deepcopy(params["Scope"])
             cls.__base_services = cls.__get_base_services(params)
         return cls.__base_services
@@ -262,12 +262,11 @@ class Data_Service:
         services = Data_Service.fact_services(params).drop_duplicates(subset = 'research_service_key', inplace = False)
         return services[services['served_seniors']==0]
 
-    ## DataFrame to fulfill Data Definition 23
-    ####    Returns
-    ####    
+    ## DataFrame to fulfill Data Definition 23, 24, 25
+    ####    Returns base_services
     @staticmethod
     def __get_service_summary(params):
-        return Data_Service.base_services(params).groupby(['service_name'])
+        return Data_Service.base_services(params)
 
     ## error, none
     @staticmethod
@@ -301,6 +300,8 @@ class Data_Service:
             20: __get_sen.__func__,
             21: __get_wosenior.__func__,
             22: __get_sen_wminor.__func__,
-            23: __get_service_summary.__func__
+            23: __get_service_summary.__func__,
+            24: __get_service_summary.__func__,
+            25: __get_service_summary.__func__,
         }
 
