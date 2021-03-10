@@ -21,22 +21,23 @@ def periodic_report_generation():
 
 def save_report(schedule, results):
     # New report to the report
-    new_report = Report(report_schedule = schedule, start_date = results['Scope']['startDate'], end_date = results["Scope"]["endDate"], date_completed = date.today())
+    dateCompleted = date.today().strftime('%Y-%m-%d')
+    new_report = Report(report_schedule = schedule, start_date = results['Scope']['startDate'], end_date = results['Scope']['endDate'], date_completed = dateCompleted)
     new_report.save()
 
     #New rows to report_data_int
-    for values in results.ReportInfo:
-        if(values.dataDefType == 'integer'):
+    for values in results['ReportInfo']:
+        if(values['dataDefType'] == 'integer'):
             new_data_int = ReportDataInt(report = new_report, data_definition_id = values['dataDefId'], int_value = values['value'])
             new_data_int.save()
-        elif(values.dataDefType == 'float'):
+        elif(values['dataDefType'] == 'float'):
             new_data_float = ReportDataInt(report = new_report, data_definition_id = values['dataDefId'], float_value = values['value'])
             new_data_float.save()
 
 mock_dict = {
 	'Scope':  {
-		'startDate': '01/01/2019',
-		'endDate': '12/31/2019',
+		'startDate': '2019-01-01',
+		'endDate': '2019-12-31',
 		'scope_type': 'hierarchy',
 		'scope_field': 'fb_id',
 		'scope_field_value': 21,
