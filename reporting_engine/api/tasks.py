@@ -1,5 +1,5 @@
 from celery import shared_task
-from api.models import ReportSchedule, Report, ReportDataInt
+from api.models import ReportSchedule, Report, ReportDataInt, ReportDataFloat
 from datetime import date
 
 @shared_task
@@ -31,7 +31,7 @@ def save_report(schedule, results):
             new_data_int = ReportDataInt(report = new_report, data_definition_id = values['dataDefId'], int_value = values['value'])
             new_data_int.save()
         elif(values['dataDefType'] == 'float'):
-            new_data_float = ReportDataInt(report = new_report, data_definition_id = values['dataDefId'], float_value = values['value'])
+            new_data_float = ReportDataFloat(report = new_report, data_definition_id = values['dataDefId'], float_value = values['value'])
             new_data_float.save()
 
 mock_dict = {
@@ -60,6 +60,14 @@ mock_dict = {
 			'dataDefType': 'integer',
 			'name': 'undup_hh_total',
 			'value': 161114
+		},
+        {
+			'reportId': 1,
+			'reportDictId': 1,
+			'dataDefId': 2,
+			'dataDefType': 'float',
+			'name': 'undup_hh_total',
+			'value': 1.507
 		}
     ]
 }
