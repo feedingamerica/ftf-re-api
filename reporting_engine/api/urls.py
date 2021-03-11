@@ -1,6 +1,19 @@
-from django.urls import path
+from django.urls import include, path
 from . import views
+from rest_framework import routers
+
+router = routers.DefaultRouter()
+router.register(r'reports', views.ReportViewSet)
+router.register(r'report_schedules', views.ReportScheduleViewSet)
+router.register(r'run_types', views.RunTypeViewSet)
+router.register(r'timeframe_types', views.TimeFrameTypeViewSet)
+router.register(r'report_scopes', views.ReportScopeViewSet)
+router.register(r'control_types', views.ControlTypeViewSet)
+router.register(r'reporting_dictionaries', views.ReportingDictionaryViewSet)
+
 
 urlpatterns = [
-    path('report_schedules', views.report_schedule, name = 'report_schedule')
+    path('', include(router.urls)),
+    path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+    # path('report_schedules', views.report_schedule, name='report_schedule')
 ]
