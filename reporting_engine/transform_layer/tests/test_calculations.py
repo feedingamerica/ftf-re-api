@@ -10,8 +10,8 @@ import json
 
 
 sample_scope_1 = { "Scope": {
-            "startDate":"01/01/2019",
-            "endDate":"12/31/2019",
+            "startDate":"2019-01-01",
+            "endDate":"2019-12-31",
             "scope_type": "hierarchy",
             "scope_field":"fb_id",
             "scope_field_value":21,
@@ -22,8 +22,8 @@ sample_scope_1 = { "Scope": {
 
 
 sample_scope_2 = { "Scope": {
-            "startDate":"01/01/2019",
-            "endDate":"12/31/2019",
+            "startDate":"2019-01-01",
+            "endDate":"2019-12-31",
             "scope_type": "geography",
             "scope_field":"fips_cnty",
             "scope_field_value":39049,

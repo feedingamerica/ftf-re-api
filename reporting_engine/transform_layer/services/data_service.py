@@ -27,8 +27,7 @@ class Data_Service:
     ##      dimgeo_id - if scope_type is "geography"
     @classmethod
     def fact_services(cls,params):
-        if cls.__fact_services is None or params["Scope"] != cls.__scope:
-            cls.__scope = copy.deepcopy(params["Scope"])
+        if cls.__fact_services is None:
             cls.__fact_services = cls.__get_fact_services(params)
         return cls.__fact_services
     
@@ -45,14 +44,17 @@ class Data_Service:
     ##      loc_id
     @classmethod
     def base_services(cls,params):
-        if cls.__base_services is None or params["Scope"] != cls.__scope:
-            cls.__scope = copy.deepcopy(params["Scope"])
+        if cls.__base_services is None:
             cls.__base_services = cls.__get_base_services(params)
         return cls.__base_services
 
     ## returns DataFrame for a specific data definition
     @classmethod
     def get_data_for_definition(cls, id, params):
+        if( params["Scope"] != cls.__scope):
+            cls.__fact_services = None
+            cls.__base_services = None
+            cls.__scope = copy.deepcopy(params["Scope"])
         func = cls.data_def_function_switcher.get(id, cls.get_data_def_error)
         return func(params)
 

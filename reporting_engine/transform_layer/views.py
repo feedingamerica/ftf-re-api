@@ -363,9 +363,12 @@ def get_demo1_mofc(request):
         "indv_total",
         "hh_wsenior",
         "hh_wosenior",
-        "hh_grandparent"
-
+        "hh_grandparent",
+        "service_summary_service",
+        "service_summary_category",
+        "distribution_outlets"
     ]
+    
     num_defs = len(Data_Service.data_def_function_switcher)
     for i in range(1, num_defs + 1):
         data_def = {
@@ -422,9 +425,12 @@ def get_demo1_franklin(request):
         "indv_total",
         "hh_wsenior",
         "hh_wosenior",
-        "hh_grandparent"
-
+        "hh_grandparent",
+        "service_summary_service",
+        "service_summary_category",
+        "distribution_outlets"
     ]
+
     num_defs = len(Data_Service.data_def_function_switcher)
     for i in range(1, num_defs + 1):
         data_def = {
@@ -482,8 +488,10 @@ def get_demo1_typical(request):
         "indv_total",
         "hh_wsenior",
         "hh_wosenior",
-        "hh_grandparent"
-
+        "hh_grandparent",
+        "service_summary_service",
+        "service_summary_category",
+        "distribution_outlets"
     ]
     num_defs = len(Data_Service.data_def_function_switcher)
     for i in range(1, num_defs + 1):
