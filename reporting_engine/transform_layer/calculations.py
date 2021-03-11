@@ -10,7 +10,7 @@ class CalculationDispatcher:
         # now on construction, it will automatically run parse request on the input request, so theres no extra in between step
         self.request = self.parse_request(request)
         data_list = request["ReportInfo"]
-        self.params = request
+        self.params = request["Scope"]
         self.data_dict = CalculationDispatcher.__group_by_data_def(data_list)
         
     @staticmethod
@@ -18,7 +18,8 @@ class CalculationDispatcher:
         """Returns dict of data defs grouped by reportDictid and sorted by dataDefid
         
         data_dict is a dictionary that groups the data definitions in data_list by reportDictId
-        and sorts the data definitions in each group by their dataDefId, highest to smallest
+        and sorts the data definitions in each group by their dataDefId, highest to smallest.
+        Does not modify data_list.
         data_dict = { 
             1: [{"reportDictId": 1, "dataDefId": 1 },   {"reportDictId": 1, "dataDefId": 2 }, ... ],
             2:  [{"reportDictId": 2, "dataDefId": 5 },   {"reportDictId": 2, "dataDefId": 6 }, ... ],
