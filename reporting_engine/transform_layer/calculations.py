@@ -194,7 +194,7 @@ def __get_services_summary(id, params):
     Nothing
 
     Returns: num_served
-    num_served - number of people served
+    num_served - number of people served by service name
 
     """
     base_services = ds.get_data_for_definition(id, params).groupby(['service_name'])
@@ -204,6 +204,19 @@ def __get_services_summary(id, params):
 
 # data def 24
 def __get_services_category(id, params):
+    """Calculate number of people served DataDef 24
+
+    Arguments:
+    id - data definiton id
+    params - a dictionary of values to scope the queries
+
+    Modifies:
+    Nothing
+
+    Returns: num_served
+    num_served - number of people served by service category
+
+    """
     base_services = ds.get_data_for_definition(id, params).groupby(['service_category_name'])
     base_services = base_services.agg({'research_family_key': 'count', 'served_total': 'sum'})
     base_services = base_services.reset_index().rename(columns={'research_family_key':"Families Served", 'served_total': 'People Served'})
@@ -211,6 +224,19 @@ def __get_services_category(id, params):
 
 # data def 25
 def __get_distribution_outlets(id, params):
+    """Calculate number of people served DataDef 25
+
+    Arguments:
+    id - data definiton id
+    params - a dictionary of values to scope the queries
+
+    Modifies:
+    Nothing
+
+    Returns: sites_visited
+    sites_visited - number of families that have made 1..n site visits
+
+    """
     base_services = ds.get_data_for_definition(id, params)
     base_services = base_services.groupby('research_family_key')['loc_id'].nunique().reset_index().rename(columns={'loc_id': 'sites_visited'})
     base_services = base_services.groupby('sites_visited').agg(un_duplicated_families = ('sites_visited', 'count')).reset_index()
