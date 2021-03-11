@@ -678,157 +678,157 @@
     }
   },
   {
-    "model":"api.TimeframeType",
-    "pk":1,
-    "fields":{
-        "name" : "Last Month",
-        "dim_dates_reference" : "NA",
-        "current_start_date" : "2021-01-01",
-        "current_end_date": "2021-01-31"
+    "model": "api.TimeframeType",
+    "pk": 1,
+    "fields": {
+      "name": "Last Month",
+      "dim_dates_reference": "NA",
+      "current_start_date": "2021-01-01",
+      "current_end_date": "2021-01-31"
     }
   },
   {
-    "model":"api.TimeframeType",
-    "pk":2,
-    "fields":{
-        "name" : "Rolling 12 Months",
-        "dim_dates_reference" : "NA",
-        "current_start_date" : "2020-02-01",
-        "current_end_date": "2021-01-31"
+    "model": "api.TimeframeType",
+    "pk": 2,
+    "fields": {
+      "name": "Rolling 12 Months",
+      "dim_dates_reference": "NA",
+      "current_start_date": "2020-02-01",
+      "current_end_date": "2021-01-31"
     }
   },
   {
-    "model":"api.TimeframeType",
-    "pk":3,
-    "fields":{
-        "name" : "CY To Date",
-        "dim_dates_reference" : "CalendarYear",
-        "current_start_date" : "2020-01-01",
-        "current_end_date": "2021-01-31"
+    "model": "api.TimeframeType",
+    "pk": 3,
+    "fields": {
+      "name": "CY To Date",
+      "dim_dates_reference": "CalendarYear",
+      "current_start_date": "2020-01-01",
+      "current_end_date": "2021-01-31"
     }
   },
   {
-    "model":"api.TimeframeType",
-    "pk":4,
-    "fields":{
-        "name" : "Fiscal year to date",
-        "dim_dates_reference" : "JulFiscalYear",
-        "current_start_date" : "2020-07-01",
-        "current_end_date": "2021-01-31"
+    "model": "api.TimeframeType",
+    "pk": 4,
+    "fields": {
+      "name": "Fiscal year to date",
+      "dim_dates_reference": "JulFiscalYear",
+      "current_start_date": "2020-07-01",
+      "current_end_date": "2021-01-31"
     }
   },
   {
-    "model":"api.TimeframeType",
-    "pk":5,
-    "fields":{
-        "name" : "Custom Date Range",
-        "dim_dates_reference" : "NA"
+    "model": "api.TimeframeType",
+    "pk": 5,
+    "fields": {
+      "name": "Custom Date Range",
+      "dim_dates_reference": "NA"
     }
-},
-{
-  "model": "api.AddinManager",
-  "pk": 1,
-  "fields": {
-    "name": "Ohio Addin",
-    "reporting_dictionary_id": 2,
-    "report_scope_id": 6,
-    "report_scope_value": 39,
-    "control_type_id" : 1
+  },
+  {
+    "model": "api.AddinManager",
+    "pk": 1,
+    "fields": {
+      "name": "Ohio Addin",
+      "reporting_dictionary_id": 2,
+      "report_scope_id": 6,
+      "report_scope_value": 39,
+      "control_type_id": 1
 
-   }
-},
-{
-  "model": "api.AddinManager",
-  "pk": 2,
-  "fields": {
-    "name": "MOFC Addin",
-    "reporting_dictionary_id": 3,
-    "report_scope_id": 5,
-    "report_scope_value": 21,
-    "control_type_id" : 1
-  }
-},
-{
-  "model": "api.AddinManager",
-  "pk": 3,
-  "fields": {
-    "name": "Virginia Addin",
-    "reporting_dictionary_id": 4,
-    "report_scope_id": 6,
-    "report_scope_value": 51,
-    "control_type_id" : 5
-  }
-},
-{
-  "model": "api.ReportingDictionarySection",
-  "pk": 1,
-  "fields": {
+    }
+  },
+  {
+    "model": "api.AddinManager",
+    "pk": 2,
+    "fields": {
+      "name": "MOFC Addin",
+      "reporting_dictionary_id": 3,
+      "report_scope_id": 5,
+      "report_scope_value": 21,
+      "control_type_id": 1
+    }
+  },
+  {
+    "model": "api.AddinManager",
+    "pk": 3,
+    "fields": {
+      "name": "Virginia Addin",
+      "reporting_dictionary_id": 4,
+      "report_scope_id": 6,
+      "report_scope_value": 51,
+      "control_type_id": 5
+    }
+  },
+  {
+    "model": "api.ReportingDictionarySection",
+    "pk": 1,
+    "fields": {
       "name": "Big Numbers",
       "reporting_dictionary_id": 1
-  }
-},
-{
-  "model": "api.ReportingDictionarySection",
-  "pk": 2,
-  "fields": {
+    }
+  },
+  {
+    "model": "api.ReportingDictionarySection",
+    "pk": 2,
+    "fields": {
       "name": "Service",
       "reporting_dictionary_id": 1
-  }
-},
-{
-  "model": "api.ReportingDictionarySection",
-  "pk": 3,
-  "fields": {
+    }
+  },
+  {
+    "model": "api.ReportingDictionarySection",
+    "pk": 3,
+    "fields": {
       "name": "Families",
       "reporting_dictionary_id": 1
-  }
-},
-{
-  "model": "api.ReportingDictionarySection",
-  "pk": 4,
-  "fields": {
+    }
+  },
+  {
+    "model": "api.ReportingDictionarySection",
+    "pk": 4,
+    "fields": {
       "name": "New Families",
       "reporting_dictionary_id": 1
-  }
-},
-{
-  "model": "api.ReportingDictionarySection",
-  "pk": 5,
-  "fields": {
+    }
+  },
+  {
+    "model": "api.ReportingDictionarySection",
+    "pk": 5,
+    "fields": {
       "name": "Geographic Origin",
       "reporting_dictionary_id": 1
-  }
-},
-{
-  "model": "api.ReportingDictionarySection",
-  "pk": 6,
-  "fields": {
+    }
+  },
+  {
+    "model": "api.ReportingDictionarySection",
+    "pk": 6,
+    "fields": {
       "name": "Family Members",
       "reporting_dictionary_id": 1
-  }
-},
-{
-  "model": "api.ReportingDictionarySection",
-  "pk": 7,
-  "fields": {
+    }
+  },
+  {
+    "model": "api.ReportingDictionarySection",
+    "pk": 7,
+    "fields": {
       "name": "Trends",
       "reporting_dictionary_id": 1
-  }
-},
-{
-  "model": "api.ReportingDictionarySection",
-  "pk": 8,
-  "fields": {
+    }
+  },
+  {
+    "model": "api.ReportingDictionarySection",
+    "pk": 8,
+    "fields": {
       "name": "Ohio Add-in",
       "reporting_dictionary_id": 2
-  }
-},
-{
-  "model": "api.ReportingDictionarySection",
-  "pk": 9,
-  "fields": {
+    }
+  },
+  {
+    "model": "api.ReportingDictionarySection",
+    "pk": 9,
+    "fields": {
       "name": "MOFC Add-in",
       "reporting_dictionary_id": 3
+    }
   }
-}
 ]

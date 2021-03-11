@@ -94,7 +94,7 @@ class ReportingDictionaryDefinition(models.Model):
 		unique_together = (('id', 'section_id'), )
 		db_table = 'reporting_dictionary_definitions'
 	def __str__(self):
-		return self.name
+		return self.id
 
 class RunType(models.Model):
 	"""Defines RunType table (run_types in mysql database)"""
@@ -121,7 +121,7 @@ class ReportSchedule(models.Model):
 	class Meta:
 		db_table = 'report_schedules'
 	def __str__(self):
-		return self.name
+		return self.run_type
 
 class Report(models.Model):
 	"""Defines Report table (reports in mysql database)"""
@@ -132,7 +132,7 @@ class Report(models.Model):
 	class Meta:
 		db_table = 'reports'
 	def __str__(self):
-		return self.name
+		return self.start_date
 
 class AddinManager(models.Model):
 	"""Defines AddinManager table (addin_manager in mysql database)"""
@@ -154,7 +154,7 @@ class ReportDataFloat(models.Model):
 	class Meta:
 		db_table = 'report_data_float'
 	def __str__(self):
-		return self.name
+		return self.float_value
 
 class ReportDataInt(models.Model):
 	"""Defines ReportDataInt table (report_data_int in mysql database)"""
@@ -164,7 +164,7 @@ class ReportDataInt(models.Model):
 	class Meta:
 		db_table = 'report_data_int'
 	def __str__(self):
-		return self.name
+		return self.int_value
 
 class ReportDataJson(models.Model):
 	"""Defines ReportDataJson table (report_data_json in mysql database)"""
@@ -175,4 +175,4 @@ class ReportDataJson(models.Model):
 		unique_together = (('id', 'report_id', 'data_definition_id'), )
 		db_table = 'report_data_json'
 	def __str__(self):
-		return self.name
+		return self.json_objet
