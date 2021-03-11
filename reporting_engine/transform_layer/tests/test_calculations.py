@@ -30,15 +30,14 @@ sample_scope_2 = {
     "control_type_value":1
 }
 
-base_services_scope = { "Scope": {
-            "startDate":"01/01/2020",
-            "endDate":"12/31/2020",
-            "scope_type": "hierarchy",
-            "scope_field":"fb_id",
-            "scope_field_value":21,
-            "control_type_field":"dummy_is_grocery_service",
-            "control_type_value":1
-        }
+base_services_scope = {
+    "startDate":"01/01/2020",
+    "endDate":"12/31/2020",
+    "scope_type": "hierarchy",
+    "scope_field":"fb_id",
+    "scope_field_value":21,
+    "control_type_field":"dummy_is_grocery_service",
+    "control_type_value":1
 }
 
 json_test_results = {
