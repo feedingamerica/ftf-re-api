@@ -51,10 +51,10 @@ class Data_Service:
     ## returns DataFrame for a specific data definition
     @classmethod
     def get_data_for_definition(cls, id, params):
-        if( params["Scope"] != cls.__scope):
+        if( params != cls.__scope):
             cls.__fact_services = None
             cls.__base_services = None
-            cls.__scope = copy.deepcopy(params["Scope"])
+            cls.__scope = copy.deepcopy(params)
         func = cls.data_def_function_switcher.get(id, cls.get_data_def_error)
         return func(params)
 
@@ -66,20 +66,20 @@ class Data_Service:
         table1 = ""
         left1 = right1 = ""
 
-        if params["Scope"]["scope_type"] == "hierarchy":
+        if params["scope_type"] == "hierarchy":
             table1 = "dim_hierarchies"
             left1 = right1 = "hierarchy_id"
-        elif params["Scope"]["scope_type"] == "geography":
+        elif params["scope_type"] == "geography":
             table1 = "dim_geos"
             left1 = "dimgeo_id"
             right1 = "id"
 
-        control_type_field = params["Scope"]["control_type_field"]
-        control_type_value = params["Scope"]["control_type_value"]
-        scope_field = params["Scope"]["scope_field"]
-        scope_value = params["Scope"]["scope_field_value"]
-        start_date = cls.__date_str_to_int(params["Scope"]["startDate"])
-        end_date = cls.__date_str_to_int(params["Scope"]["endDate"])
+        control_type_field = params["control_type_field"]
+        control_type_value = params["control_type_value"]
+        scope_field = params["scope_field"]
+        scope_value = params["scope_field_value"]
+        start_date = cls.__date_str_to_int(params["startDate"])
+        end_date = cls.__date_str_to_int(params["endDate"])
 
         query = f"""
         SELECT
@@ -104,8 +104,8 @@ class Data_Service:
             fs.date >= {start_date} AND fs.date <= {end_date}
         """
         
-        ct = params["Scope"].get("control_type_field")
-        ct_value = params["Scope"].get("control_type_value")
+        ct = params.get("control_type_field")
+        ct_value = params.get("control_type_value")
 
         query_control = f"""SELECT id, {ct} FROM dim_service_types"""
 
@@ -119,12 +119,12 @@ class Data_Service:
     def __get_base_services(cls, params):
         conn = connections['source_db']
 
-        control_type_field = params["Scope"]["control_type_field"]
-        control_type_value = params["Scope"]["control_type_value"]
-        scope_field = params["Scope"]["scope_field"]
-        scope_value = params["Scope"]["scope_field_value"]
-        start_date = cls.__date_str_to_int(params["Scope"]["startDate"])
-        end_date = cls.__date_str_to_int(params["Scope"]["endDate"])
+        control_type_field = params["control_type_field"]
+        control_type_value = params["control_type_value"]
+        scope_field = params["scope_field"]
+        scope_value = params["scope_field_value"]
+        start_date = cls.__date_str_to_int(params["startDate"])
+        end_date = cls.__date_str_to_int(params["endDate"])
 
         query = f"""
         SELECT
