@@ -39,11 +39,19 @@
 5. Create a file inside 'ftf-re-api/reporting_engine/' called '.env'
      - Add these lines to the file:
      ```
-       export DB_NAME='[db name you assigned to the schema you created in workbench]'
-       export DB_USER='[db user name you created]'
-       export DB_PW='[db user password you created]'
-       export DB_HOST='127.0.0.1'
-       export DB_PORT='3306'
+      DB_NAME='[db name you assigned to the schema you created in workbench]'
+      DB_USER='[db user name you created]'
+      DB_PW='[db user password you created]'
+      DB_HOST='127.0.0.1'
+      DB_PORT='3306'
+       
+      SOURCE_DB_HOST='freshtrak-focus.cnw8nooqdydn.us-east-2.rds.amazonaws.com'
+      SOURCE_DB_USER='[username for source db]'
+      SOURCE_DB_PW='[password for source db]'
+      SOURCE_DB_NAME='[name for source db]'
+      SOURCE_DB_PORT='3306'
+      PYTHONPATH =  [path of the reporting engine folder; something like C:\myname\ftf-re-api\reporting_engine]
+
       ```
      *Replace what's in square brackets, including the square brackets - example: '[db name...]' -> 'reports_beta'*
 6. Connect Django to DB and start Django Server
@@ -61,3 +69,16 @@
   - The Django admin is a user interface to see the entries in the database and manage them (modify, delete, add, etc...)
   
 **After these steps are finished, all you have to do when coming back to work on the project is to activate the python environment: `source ./venv/bin/activate` (Mac) or `.\venv\scripts\activate` (Windows) and then you can start the django server: `python manage.py runserver`**
+
+
+
+
+
+## VSCode Setup tips
+
+- To get VSCode to recognize python packages we create:
+  1. Go to File->Preferences->Settings
+  2. In the Settings window, switch to the Workspace Tab
+  3. Expand the extensions pane and select python
+  4. For Env File put the path as `${workspaceFolder}/reporting_engine/.env`
+  5. Explanation: This will have VSCode load the .env file into its own environment variables. Since we specified the PYTHONPATH in the .env file, VSCode will know where to look for our packages. Otherwise you will get warnings in the IDE when referencing custom packages, like the services package in transform_layer.
