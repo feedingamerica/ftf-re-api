@@ -16,6 +16,7 @@ Written by Joy Lin, Nick Biederman, Alli Hornyak, and Emily Robinson
 """
 
 from django.db import models
+import datetime
 
 class TimeframeType(models.Model):
 	"""Defines TimeframeType table (named time_frame_types in mysql database)"""
@@ -94,7 +95,7 @@ class ReportingDictionaryDefinition(models.Model):
 		unique_together = (('id', 'section_id'), )
 		db_table = 'reporting_dictionary_definitions'
 	def __str__(self):
-		return self.name
+		return str(self.id)
 
 class RunType(models.Model):
 	"""Defines RunType table (run_types in mysql database)"""
@@ -113,7 +114,7 @@ class ReportSchedule(models.Model):
 	control_type = models.ForeignKey(ControlType, on_delete = models.CASCADE)
 	reporting_dictionary = models.ForeignKey(ReportingDictionary, on_delete = models.CASCADE)
 	control_age_group_id = models.IntegerField()
-	date_scheduled = models.DateField()
+	date_scheduled = models.DateField(default = datetime.date.today)
 	date_custom_start = models.DateField(null = True, blank = True)
 	date_custom_end = models.DateField(null = True, blank = True)
 	addin_state_report = models.ForeignKey(ReportingDictionary, related_name = 'addin_state', on_delete = models.CASCADE, null = True, blank = True)
@@ -121,7 +122,7 @@ class ReportSchedule(models.Model):
 	class Meta:
 		db_table = 'report_schedules'
 	def __str__(self):
-		return self.name
+		return str(self.id)
 
 class Report(models.Model):
 	"""Defines Report table (reports in mysql database)"""
@@ -132,7 +133,7 @@ class Report(models.Model):
 	class Meta:
 		db_table = 'reports'
 	def __str__(self):
-		return self.name
+		return str(self.id)
 
 class AddinManager(models.Model):
 	"""Defines AddinManager table (addin_manager in mysql database)"""
@@ -154,7 +155,7 @@ class ReportDataFloat(models.Model):
 	class Meta:
 		db_table = 'report_data_float'
 	def __str__(self):
-		return self.name
+		return str(self.id)
 
 class ReportDataInt(models.Model):
 	"""Defines ReportDataInt table (report_data_int in mysql database)"""
@@ -164,7 +165,7 @@ class ReportDataInt(models.Model):
 	class Meta:
 		db_table = 'report_data_int'
 	def __str__(self):
-		return self.name
+		return str(self.id)
 
 class ReportDataJson(models.Model):
 	"""Defines ReportDataJson table (report_data_json in mysql database)"""
@@ -175,4 +176,4 @@ class ReportDataJson(models.Model):
 		unique_together = (('id', 'report_id', 'data_definition_id'), )
 		db_table = 'report_data_json'
 	def __str__(self):
-		return self.name
+		return str(self.id)
