@@ -16,6 +16,7 @@ Written by Joy Lin, Nick Biederman, Alli Hornyak, and Emily Robinson
 """
 
 from django.db import models
+import datetime
 
 class TimeframeType(models.Model):
 	"""Defines TimeframeType table (named time_frame_types in mysql database)"""
@@ -109,11 +110,11 @@ class ReportSchedule(models.Model):
 	run_type = models.ForeignKey(RunType, on_delete = models.CASCADE)
 	timeframe_type = models.ForeignKey(TimeframeType, on_delete = models.CASCADE)
 	report_scope = models.ForeignKey(ReportScope, on_delete = models.CASCADE)
-	report_scope_value = models.CharField(max_length = 255, blank = True)
+	report_scope_value = models.PositiveIntegerField()
 	control_type = models.ForeignKey(ControlType, on_delete = models.CASCADE)
 	reporting_dictionary = models.ForeignKey(ReportingDictionary, on_delete = models.CASCADE)
 	control_age_group_id = models.IntegerField()
-	date_scheduled = models.DateField()
+	date_scheduled = models.DateField(default = datetime.date.today)
 	date_custom_start = models.DateField(null = True, blank = True)
 	date_custom_end = models.DateField(null = True, blank = True)
 	addin_state_report = models.ForeignKey(ReportingDictionary, related_name = 'addin_state', on_delete = models.CASCADE, null = True, blank = True)
