@@ -37,38 +37,30 @@ def addin_helper(report_schedule_row):
 
 
 def main():
-    ReportSchedule(run_type_id=2, timeframe_type_id=2, report_scope_id=3, report_scope_value= "2",control_type_id=1, reporting_dictionary_id=1, control_age_group_id=1, date_scheduled="2021-02-25").save()
-    rs = ReportSchedule.objects.first()
-    print(rs.addin_foodbank_report_id, rs.addin_state_report_id)
-    addin_helper(rs)
-    print(rs.addin_foodbank_report_id, rs.addin_state_report_id)
+    loadTests()
+    for rs in ReportSchedule.objects.all():
+        print("_________")
+        print(rs.addin_foodbank_report_id, rs.addin_state_report_id)
+        addin_helper(rs)
+        print(rs.addin_foodbank_report_id, rs.addin_state_report_id)
 
 if __name__ == "__main__":
     main()
 
 
 
-def otherTests():
+def loadTests():
     #normal test
     ReportSchedule(run_type_id=2, timeframe_type_id=2, report_scope_id=3, report_scope_value= "2",control_type_id=1, reporting_dictionary_id=1, control_age_group_id=1, date_scheduled="2021-02-25").save()
-    rs = ReportSchedule.objects.first()
-
     #report scope id == 9 nothing should be set
     ReportSchedule(run_type_id=2, timeframe_type_id=2, report_scope_id=9, report_scope_value= "2",control_type_id=1, reporting_dictionary_id=1, control_age_group_id=1, date_scheduled="2021-02-25").save()
-    rs = ReportSchedule.objects.first()
-
     #report scope id > 9 nothing should be set
-    ReportSchedule(run_type_id=2, timeframe_type_id=2, report_scope_id=3, report_scope_value= "2",control_type_id=1, reporting_dictionary_id=1, control_age_group_id=1, date_scheduled="2021-02-25").save()
-    rs = ReportSchedule.objects.first()
-
+    ReportSchedule(run_type_id=2, timeframe_type_id=2, report_scope_id=13, report_scope_value= "2",control_type_id=1, reporting_dictionary_id=1, control_age_group_id=1, date_scheduled="2021-02-25").save()
     # report scope id == 6 ohio
     ReportSchedule(run_type_id=2, timeframe_type_id=2, report_scope_id=6, report_scope_value= "39",control_type_id=1, reporting_dictionary_id=1, control_age_group_id=1, date_scheduled="2021-02-25").save()
-    rs = ReportSchedule.objects.first()
-
     # report scope id == 6 virgina
     ReportSchedule(run_type_id=2, timeframe_type_id=2, report_scope_id=6, report_scope_value= "51",control_type_id=1, reporting_dictionary_id=1, control_age_group_id=1, date_scheduled="2021-02-25").save()
-    rs = ReportSchedule.objects.first()
-
     # report scope id == 5 MOFC
     ReportSchedule(run_type_id=2, timeframe_type_id=2, report_scope_id=5, report_scope_value= "21",control_type_id=1, reporting_dictionary_id=1, control_age_group_id=1, date_scheduled="2021-02-25").save()
-    rs = ReportSchedule.objects.first()
+    #only has one report
+    ReportSchedule(run_type_id=2, timeframe_type_id=2, report_scope_id=2, report_scope_value= "12",control_type_id=1, reporting_dictionary_id=1, control_age_group_id=1, date_scheduled="2021-02-25").save()
