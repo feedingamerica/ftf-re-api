@@ -2,7 +2,6 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.shortcuts import render
 from django.db import connections
-# from .library import parse_request
 from .calculations import CalculationDispatcher
 from .services.data_service import Data_Service
 from . import calculations as calc
@@ -72,7 +71,7 @@ def test_data_service(request, id):
     sample_dict = {
         "Scope": {
             "startDate":"01/01/2019",
-            "endDate":"12/31/2019",
+            "endDate":"1/31/2019",
             "scope_field":"fb_id",
             "scope_field_value":21,
             "control_type_field":"dummy_is_grocery_service",
@@ -328,8 +327,6 @@ def get_report_mofc(request):
     print_dict(input_dict)
     return render(request, 'transformapi/get-report.html', context)
 
-
-
 def get_demo1_mofc(request):
     input_dict = {
         "Scope": {
@@ -365,9 +362,12 @@ def get_demo1_mofc(request):
         "indv_total",
         "hh_wsenior",
         "hh_wosenior",
-        "hh_grandparent"
-
+        "hh_grandparent",
+        "service_summary_service",
+        "service_summary_category",
+        "distribution_outlets"
     ]
+    
     num_defs = len(Data_Service.data_def_function_switcher)
     for i in range(1, num_defs + 1):
         data_def = {
@@ -424,9 +424,12 @@ def get_demo1_franklin(request):
         "indv_total",
         "hh_wsenior",
         "hh_wosenior",
-        "hh_grandparent"
-
+        "hh_grandparent",
+        "service_summary_service",
+        "service_summary_category",
+        "distribution_outlets"
     ]
+
     num_defs = len(Data_Service.data_def_function_switcher)
     for i in range(1, num_defs + 1):
         data_def = {
@@ -484,8 +487,10 @@ def get_demo1_typical(request):
         "indv_total",
         "hh_wsenior",
         "hh_wosenior",
-        "hh_grandparent"
-
+        "hh_grandparent",
+        "service_summary_service",
+        "service_summary_category",
+        "distribution_outlets"
     ]
     num_defs = len(Data_Service.data_def_function_switcher)
     for i in range(1, num_defs + 1):
@@ -505,4 +510,48 @@ def get_demo1_typical(request):
 
     context = { 'report_output': format_dict(cd.request)}
     print_dict(input_dict)
+    return render(request, 'transformapi/get-report.html', context)
+
+
+def get_report_services(request):
+    input_dict = {
+        "Scope": {
+            "startDate":"01/01/2020",
+            "endDate":"12/31/2020",
+            "scope_field":"fb_id",
+            "scope_field_value":21,
+            "control_type_field":"dummy_is_grocery_service",
+            "control_type_value":1
+        },
+        "ReportInfo": [
+            {
+                "reportId":1,
+                "reportDictId":1,
+                "dataDefId":23,
+                "name": "service_summary_service",
+                "dataDefType":3
+            },
+             {
+                "reportId":1,
+                "reportDictId":1,
+                "dataDefId":24,
+                "name": "service_summary_category",
+                "dataDefType":3
+            },
+            {
+                "reportId":1,
+                "reportDictId":1,
+                "dataDefId":25,
+                "name": "distribution_outlets",
+                "dataDefType":3
+            },
+
+        ]
+    }
+
+    cd = CalculationDispatcher(input_dict)
+    cd.run_calculations()
+
+    context = { 'report_output': format_dict(cd.request)}
+    print_dict(cd.request)
     return render(request, 'transformapi/get-report.html', context)
