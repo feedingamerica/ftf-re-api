@@ -1,5 +1,5 @@
 from django.http import HttpResponse
-from api.models import Report, ReportSchedule, RunType, TimeFrameType, ReportScope, ControlType, ReportingDictionary
+from api.models import Report, ReportSchedule, RunType, TimeframeType, ReportScope, ControlType, ReportingDictionary
 from rest_framework import viewsets, permissions
 from .serializers import *
 from rest_framework.decorators import api_view
@@ -26,9 +26,9 @@ class RunTypeViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
 
 
-class TimeFrameTypeViewSet(viewsets.ModelViewSet):
-    queryset = TimeFrameType.objects.all()
-    serializer_class = TimeFrameTypeSerializer
+class TimeframeTypeViewSet(viewsets.ModelViewSet):
+    queryset = TimeframeType.objects.all()
+    serializer_class = TimeframeTypeSerializer
     permission_classes = [permissions.IsAuthenticated]
 
 
