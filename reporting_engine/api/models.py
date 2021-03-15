@@ -18,94 +18,72 @@ Written by Joy Lin, Nick Biederman, Alli Hornyak, and Emily Robinson
 from django.db import models
 
 class TimeframeType(models.Model):
-    """Defines TimeframeType table (named time_frame_types in mysql database)"""
-    name = models.CharField(max_length=255, blank=True)
-    dim_dates_reference = models.TextField(blank=True)
-    current_start_date = models.DateField(null=True, blank=True)
-    current_end_date = models.DateField(null=True, blank=True)
-
-    class Meta:
-        db_table = 'time_frame_types'
-
-    def __str__(self):
-        return self.name
+	"""Defines TimeframeType table (named time_frame_types in mysql database)"""
+	name = models.CharField(max_length = 255, blank = True)
+	dim_dates_reference = models.TextField(blank = True)
+	current_start_date = models.DateField(null = True, blank = True)
+	current_end_date = models.DateField(null = True, blank = True)
+	class Meta:
+		db_table = 'timeframe_types'
+	def __str__(self):
+		return self.name
 
 class ControlType(models.Model):
-    """Defines ControlType table (control_types in mysql database)"""
-    name = models.CharField(max_length=255, blank=True)
-    notes = models.CharField(max_length=255, blank=True)
-
-    class Meta:
-        db_table = 'control_types'
-
-    def __str__(self):
-        return self.name
-
+	"""Defines ControlType table (control_types in mysql database)"""
+	name = models.CharField(max_length = 255, blank = True)
+	notes = models.CharField(max_length = 255, blank = True)
+	class Meta:
+		db_table = 'control_types'
+	def __str__(self):
+		return self.name
 
 class DataDefinitionType(models.Model):
-    """Defines DataDefinitionType table (data_definition_types in mysql database)"""
-    name = models.CharField(max_length=20, blank=True)
-
-    class Meta:
-        db_table = 'data_definition_types'
-
-    def __str__(self):
-        return self.name
-
+	"""Defines DataDefinitionType table (data_definition_types in mysql database)"""
+	name = models.CharField(max_length = 20, blank = True)
+	class Meta:
+		db_table = 'data_definition_types'
+	def __str__(self):
+		return self.name
 
 class DataDefinition(models.Model):
-    """Defines DataDefinition table (data_definitions in mysql database)"""
-    name = models.CharField(max_length=255, blank=True)
-    definition_public = models.CharField(max_length=255, blank=True)
-    calculation_notes = models.CharField(max_length=255, blank=True)
-    interpretation_notes = models.CharField(max_length=255, blank=True)
-    data_definition_type = models.ForeignKey(
-        DataDefinitionType, on_delete=models.CASCADE, null=True, blank=True)
-
-    class Meta:
-        db_table = 'data_definitions'
-
-    def __str__(self):
-        return self.name
-
+	"""Defines DataDefinition table (data_definitions in mysql database)"""
+	name = models.CharField(max_length = 255, blank = True)
+	definition_public = models.CharField(max_length = 255, blank = True)
+	calculation_notes = models.CharField(max_length = 255, blank = True)
+	interpretation_notes = models.CharField(max_length = 255, blank = True)
+	data_definition_type = models.ForeignKey(DataDefinitionType, on_delete = models.CASCADE, null = True, blank = True)
+	class Meta:
+		db_table = 'data_definitions'
+	def __str__(self):
+		return self.name
 
 class ReportScope(models.Model):
-    """Defines ReportScope table (report_scopes in mysql database)"""
-    type = models.CharField(max_length=255, blank=True)
-    name = models.CharField(max_length=255, blank=True)
-    field_reference = models.CharField(max_length=255, blank=True)
-
-    class Meta:
-        db_table = 'report_scopes'
-
-    def __str__(self):
-        return self.name
-
+	"""Defines ReportScope table (report_scopes in mysql database)"""
+	type = models.CharField(max_length = 255, blank = True)
+	name = models.CharField(max_length = 255, blank = True)
+	field_reference = models.CharField(max_length = 255, blank = True)
+	class Meta:
+		db_table = 'report_scopes'
+	def __str__(self):
+		return self.name
 
 class ReportingDictionary(models.Model):
-    """Defines ReportingDictionary table (reporting_dictionaries in mysql database)"""
-    name = models.CharField(max_length=255, blank=True)
-    definition = models.CharField(max_length=255, blank=True)
-
-    class Meta:
-        db_table = 'reporting_dictionaries'
-
-    def __str__(self):
-        return self.name
-
+	"""Defines ReportingDictionary table (reporting_dictionaries in mysql database)"""
+	name = models.CharField(max_length = 255, blank = True)
+	definition = models.CharField(max_length = 255, blank = True)
+	class Meta:
+		db_table = 'reporting_dictionaries'
+	def __str__(self):
+		return self.name
 
 class ReportingDictionarySection(models.Model):
-    """Defines ReportingDictionarySection table (reporting_dictionary_sections in mysql database)"""
-    name = models.CharField(max_length=255, blank=True)
-    reporting_dictionary = models.ForeignKey(
-        ReportingDictionary, on_delete=models.CASCADE, null=True, blank=True)
-
-    class Meta:
-        db_table = 'reporting_dictionary_sections'
-
-    def __str__(self):
-        return self.name
-
+	"""Defines ReportingDictionarySection table (reporting_dictionary_sections in mysql database)"""
+	name = models.CharField(max_length = 255, blank = True)
+	reporting_dictionary = models.ForeignKey(ReportingDictionary, on_delete = models.CASCADE, null = True, blank = True)
+	class Meta:
+		db_table = 'reporting_dictionary_sections'
+	def __str__(self):
+		return self.name
 
 class ReportingDictionaryDefinition(models.Model):
 	"""Defines ReportingDictionaryDefinition table (reporting_dictionary_definitions in mysql database)"""
@@ -119,15 +97,12 @@ class ReportingDictionaryDefinition(models.Model):
 		return str(self.id)
 
 class RunType(models.Model):
-    """Defines RunType table (run_types in mysql database)"""
-    name = models.CharField(max_length=255, blank=True)
-
-    class Meta:
-        db_table = 'run_types'
-
-    def __str__(self):
-        return self.name
-
+	"""Defines RunType table (run_types in mysql database)"""
+	name = models.CharField(max_length = 255, blank = True)
+	class Meta:
+		db_table = 'run_types'
+	def __str__(self):
+		return self.name
 
 class ReportSchedule(models.Model):
 	"""Defines ReportSchedule table (report_schedules in mysql database)"""
@@ -160,22 +135,16 @@ class Report(models.Model):
 		return str(self.id)
 
 class AddinManager(models.Model):
-    """Defines AddinManager table (addin_manager in mysql database)"""
-    name = models.CharField(max_length=255, null=True, blank=True)
-    reporting_dictionary = models.ForeignKey(
-        ReportingDictionary, on_delete=models.CASCADE, null=True, blank=True)
-    report_scope = models.ForeignKey(
-        ReportScope, on_delete=models.CASCADE, null=True, blank=True)
-    report_scope_value = models.PositiveIntegerField(null=True, blank=True)
-    control_type = models.ForeignKey(
-        ControlType, on_delete=models.CASCADE, null=True, blank=True)
-
-    class Meta:
-        db_table = 'addin_manager'
-
-    def __str__(self):
-        return self.name
-
+	"""Defines AddinManager table (addin_manager in mysql database)"""
+	name = models.CharField(max_length = 255, null = True, blank = True)
+	reporting_dictionary = models.ForeignKey(ReportingDictionary, on_delete = models.CASCADE, null = True, blank = True)
+	report_scope = models.ForeignKey(ReportScope, on_delete = models.CASCADE, null = True, blank = True)
+	report_scope_value = models.PositiveIntegerField(null = True, blank = True)
+	control_type = models.ForeignKey(ControlType, on_delete = models.CASCADE, null = True, blank = True)
+	class Meta:
+		db_table = 'addin_manager'
+	def __str__(self):
+		return self.name
 
 class ReportDataFloat(models.Model):
 	"""Defines ReportDataFloat table (report_data_float in mysql database)"""
