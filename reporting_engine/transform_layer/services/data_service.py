@@ -11,6 +11,7 @@ SCOPE_GEOGRAPHY = "geography"
 class Data_Service:
     __scope:str = None
     __fact_services:DataFrame = None
+    __family_services:DataFrame = None
     ##  getter and setter for __fact_services based on the scope "hierarchy" or "geography"
     ##  Columns always in services:
     ##      research_service_key
@@ -48,12 +49,20 @@ class Data_Service:
             cls.__base_services = cls.__get_base_services(params)
         return cls.__base_services
 
+    ## getter for __family_services
+    @classmethod
+    def family_services(cls, params):
+        if cls.__family_services is None:
+            cls.__family_services = cls.__get_family_services(params)
+        return cls.__family_services
+
     ## returns DataFrame for a specific data definition
     @classmethod
     def get_data_for_definition(cls, id, params):
         if( params != cls.__scope):
             cls.__fact_services = None
             cls.__base_services = None
+            cls.__family_services = None
             cls.__scope = copy.deepcopy(params)
         func = cls.data_def_function_switcher.get(id, cls.get_data_def_error)
         return func(params)
@@ -119,6 +128,14 @@ class Data_Service:
     def __get_base_services(cls, params):
         conn = connections['source_db']
 
+        if params["scope_type"] == "hierarchy":
+            table1 = "dim_hierarchies"
+            left1 = right1 = "hierarchy_id"
+        elif params["scope_type"] == "geography":
+            table1 = "dim_geos"
+            left1 = "dimgeo_id"
+            right1 = "id"
+
         control_type_field = params["control_type_field"]
         control_type_value = params["control_type_value"]
         scope_field = params["scope_field"]
@@ -128,24 +145,77 @@ class Data_Service:
 
         query = f"""
         SELECT
-            dm_fs.research_service_key,
-            dm_fs.research_family_key,
-            dm_fs.service_id,
+            fact_services.research_service_key,
+            fact_services.research_family_key,
+            fact_services.service_id,
             dim_service_types.name as service_name,
-            dm_fs.service_category_code,
+            dim_service_types.service_category_code,
             dim_service_types.service_category_name,
-            dm_fs.served_total,
+            fact_services.served_total,
             dm_fs.loc_id
         FROM
-            dm_fact_services as dm_fs
-            INNER JOIN dim_service_types ON dm_fs.service_id = dim_service_types.id
+            fact_services
+            INNER JOIN dim_service_types ON fact_services.service_id = dim_service_types.id
+            INNER JOIN {table1} ON fact_services.{left1} = {table1}.{right1}
         WHERE
-            dm_fs.service_status = 17 AND
-            dm_fs.{control_type_field} = {control_type_value} AND
-            dm_fs.{scope_field} = {scope_value} AND
-            dm_fs.date >= {start_date} AND dm_fs.date <= {end_date}
+            fact_services.service_status = 17 
+            AND dim_service_types.{control_type_field} = {control_type_value}
+            AND fact_services.date >= {start_date} 
+            AND fact_services.date <= {end_date}
+            AND {table1}.{scope_field} = {scope_value}
         """
         return pd.read_sql(query, conn)
+
+    @classmethod
+    def __get_family_services(cls, params):        
+        conn = connections['source_db']
+
+        table1 = ""
+        left1 = right1 = ""
+
+        if params["scope_type"] == "hierarchy":
+            table1 = "dim_hierarchies"
+            left1 = right1 = "hierarchy_id"
+        elif params["scope_type"] == "geography":
+            table1 = "dim_geos"
+            left1 = "dimgeo_id"
+            right1 = "id"
+
+        control_type_field = params["control_type_field"]
+        control_type_value = params["control_type_value"]
+        scope_field = params["scope_field"]
+        scope_value = params["scope_field_value"]
+        start_date = cls.__date_str_to_int(params["startDate"])
+        end_date = cls.__date_str_to_int(params["endDate"])
+
+        query = f"""
+        SELECT
+            fact_services.research_family_key,
+            COUNT(fact_services.research_service_key) AS num_services,
+            AVG(fact_services.served_total) AS avg_fam_size,
+            SUM(fact_services.is_first_service_date) as timeframe_has_first_service_date,
+            AVG(fact_services.days_since_first_service) AS avg_days_since_first_service,
+            MAX(fact_services.days_since_first_service) AS max_days_since_first_service,
+            dim_family_compositions.family_composition_type
+        FROM 
+            fact_services
+            INNER JOIN dim_families ON fact_services.research_family_key = dim_families.research_family_key
+            INNER JOIN dim_family_compositions ON dim_families.family_composition_type = dim_family_compositions.id
+            INNER JOIN dim_service_types ON fact_services.service_id = dim_service_types.id
+            INNER JOIN {table1}  ON fact_services.{left1} = {table1}.{right1}
+        WHERE
+            fact_services.service_status = 17 
+            AND dim_service_types.{control_type_field} = {control_type_value}
+            AND fact_services.date >= {start_date} 
+            AND fact_services.date <= {end_date}
+            AND {table1}.{scope_field} = {scope_value}
+        GROUP BY
+            fact_services.research_family_key,
+            dim_family_compositions.family_composition_type
+        """
+        print(query)
+        return pd.read_sql(query, conn)
+
 
     @staticmethod
     def __date_str_to_int(date):
@@ -270,6 +340,12 @@ class Data_Service:
     def __get_service_summary(params):
         return Data_Service.base_services(params)
 
+    ## DataFrame to fulfill Data Definition 28, 29
+    ## Returns family_services
+    @staticmethod
+    def __get_household_composition(params):
+        return Data_Service.family_services(params)
+
     ## error, none
     @staticmethod
     def get_data_def_error(params):
@@ -305,5 +381,7 @@ class Data_Service:
             23: __get_service_summary.__func__,
             24: __get_service_summary.__func__,
             25: __get_service_summary.__func__,
+            28: __get_household_composition.__func__,
+            29: __get_household_composition.__func__
         }
 
