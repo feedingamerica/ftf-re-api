@@ -1,5 +1,8 @@
 from .services.data_service import Data_Service as ds
 
+import numpy
+
+
 BIG_NUM_NAMES = ["services_total", "undup_hh_total", "undup_indv_total", "services_per_uhh_avg"]
 DEFAULT_CTRL = "dummy_is_grocery_service"
 DEFAULT_CTRL_VAL = "1"
@@ -246,7 +249,6 @@ def __get_distribution_outlets(id, params):
 
 #data def 28
 def __get_household_composition(id, params):
-    #always write this one
     families = ds.get_data_for_definition(id, params)
     
     families = families.groupby('family_composition_type').agg(num_families = ('family_composition_type', 'count')).reset_index()
@@ -254,7 +256,21 @@ def __get_household_composition(id, params):
 
 #data def 29
 def __get_family_comp_key_insight(id, params):
-    pass
+    families = ds.get_data_for_definition(id, params)
+    families = families.groupby('family_composition_type').agg(num_families = ('family_composition_type', 'count'))
+
+    def choose_group(index_name):
+        if index_name.find("child") >= 0 or index_name.find("senior") >= 0:
+            return "has_child_senior"
+        else:
+            return "no_child_senior"
+    families = families.groupby(by = choose_group).sum().reset_index()
+    families = families.rename(columns = {"index":"family_composition_type"})
+
+
+    #reset the index at the end
+
+    return families.to_json()
 
 ## Data Defintion Switcher
 # usage:

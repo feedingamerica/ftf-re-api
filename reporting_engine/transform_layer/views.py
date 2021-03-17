@@ -573,6 +573,13 @@ def get_family_breakdown(request):
                 "dataDefId":28,
                 "name": "household_composition",
                 "dataDefType":3
+            },
+            {
+                "reportId":1,
+                "reportDictId":1,
+                "dataDefId":29,
+                "name": "household_composition",
+                "dataDefType":3
             }
         ]
     }

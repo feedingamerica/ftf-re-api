@@ -2,6 +2,8 @@ from django.test import TestCase
 import transform_layer.calculations as calc
 from transform_layer.services.data_service import Data_Service as ds
 from django.db import connections
+import pandas
+
 import unittest
 import csv
 import os 
@@ -231,6 +233,54 @@ class CalculationsTestCase(unittest.TestCase):
         result = func(25, base_services_scope)
         self.assertEqual(json.loads(result), json.loads(EXPECTED_JSON_RESULTS["distribution_outlets"]["mofc_value"]))
         
+    def test_get_household_composition(self):
+        expected = {
+            "family_composition_type": {
+                "0":"adults_and_children",
+                "1":"adults_and_seniors",
+                "2":"adults_only",
+                "3":"adults_seniors_and_children",
+                "4":"children_and_seniors",
+                "5":"children_only",
+                "6":"seniors_only"
+                },
+            "num_families":
+            {
+                "0":74123,
+                "1":17882,
+                "2":58365,
+                "3":13913,
+                "4":2492,
+                "5":434,
+                "6":30385
+            }
+        }
+        func = calc.data_calc_function_switcher[28]
+        result = func(28, base_services_scope)
+        resultDict = json.loads(result)
+        self.assertDictEqual(resultDict, expected)
+
+    def test_get_family_comp_key_insight(self):
+
+        # expected = {
+        #     "family_composition_type": ["has_child_senior"," no_child_senior"],
+        #     "num_families": [139229, 58365]
+        # }
+        expected = {
+            "family_composition_type": {
+                "0":"has_child_senior",
+                "1":"no_child_senior"
+                },
+            "num_families":
+            {
+                "0":139229,
+                "1":58365,
+            }
+        }
+        func = calc.data_calc_function_switcher[29]
+        result = func(29, base_services_scope)
+        resultDict = json.loads(result)
+        self.assertDictEqual(resultDict, expected)
 
 
 if __name__ == '__main__':
