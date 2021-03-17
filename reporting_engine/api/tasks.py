@@ -22,11 +22,12 @@ def generate_report_and_save(schedule):
 		save_report(schedule, data_def_dict)
 
 
-# generates recurring reports if they are due
+# generates recurring reports if they are due based on recurrence parameter
 @shared_task
-def periodic_report_generation():
+def periodic_report_generation(recurrence):
 	for schedule in ReportSchedule.objects.all():
-        generate_report_and_save(schedule);
+    		if(schedule.timeframe_type.recurrence == recurrence):
+    				generate_report_and_save(schedule)
 
 @shared_task
 def one_time_report_generation(schedule):
