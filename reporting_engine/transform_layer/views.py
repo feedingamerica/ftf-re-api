@@ -571,6 +571,13 @@ def get_family_breakdown(request):
             {
                 "reportId":1,
                 "reportDictId":1,
+                "dataDefId":26,
+                "name": "frequency_visits",
+                "dataDefType":3
+            },
+            {
+                "reportId":1,
+                "reportDictId":1,
                 "dataDefId":28,
                 "name": "household_composition",
                 "dataDefType":3

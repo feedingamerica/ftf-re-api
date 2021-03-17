@@ -246,6 +246,18 @@ def __get_distribution_outlets(id, params):
     base_services = base_services.sort_values(by = ['sites_visited'], ascending = [True])
     return base_services.to_json()
 
+#data def 26/27 (return same data, outputted graph just has different y axis depending on def )
+def __get_frequency_visits(id, params):
+    families = ds.get_data_for_definition(id, params)
+    families = families.groupby(['num_services'])
+    families = families.agg({'research_family_key': 'count', 'num_services': 'sum'})
+    largeSum = families.iloc[24:].sum()
+    families.at[25, 'research_family_key'] = largeSum.iloc[0]
+    families.at[25, 'num_services'] = largeSum.iloc[1]
+    families = families.rename(columns={'research_family_key' :'n_families', 'num_services':'sum_services'})
+    families = families.head(25)
+    return families.to_json()
+
 #data def 28
 def __get_household_composition(id, params):
     #always write this one
@@ -345,6 +357,8 @@ data_calc_function_switcher = {
         23: __get_services_summary,
         24: __get_services_category,
         25: __get_distribution_outlets,
+        26: __get_frequency_visits,
+        27: __get_frequency_visits,
         28: __get_household_composition,
         29: __get_family_comp_key_insight,
         30: __get_household_size_distribution_1_to_10,
