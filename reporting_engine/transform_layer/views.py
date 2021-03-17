@@ -585,6 +585,13 @@ def get_family_breakdown(request):
             {
                 "reportId":1,
                 "reportDictId":1,
+                "dataDefId":29,
+                "name": "family_composition_key_insight",
+                "dataDefType":3
+            },
+            {
+                "reportId":1,
+                "reportDictId":1,
                 "dataDefId":30,
                 "name": "household_size_distribution_1_to_10",
                 "dataDefType":3

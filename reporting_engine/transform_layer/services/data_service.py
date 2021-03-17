@@ -128,6 +128,7 @@ class Data_Service:
     def __get_base_services(cls, params):
         conn = connections['source_db']
 
+        extra_join = ""
         if params["scope_type"] == "hierarchy":
             table1 = "dim_hierarchies"
             left1 = right1 = "hierarchy_id"
@@ -135,6 +136,7 @@ class Data_Service:
             table1 = "dim_geos"
             left1 = "dimgeo_id"
             right1 = "id"
+            extra_join = """INNER JOIN dim_hierarchies ON  fact_services.hiearchy_id = dim_hiearchies.loc_id"""
 
         control_type_field = params["control_type_field"]
         control_type_value = params["control_type_value"]
@@ -152,11 +154,12 @@ class Data_Service:
             dim_service_types.service_category_code,
             dim_service_types.service_category_name,
             fact_services.served_total,
-            dm_fs.loc_id
+            dim_hierarchies.loc_id
         FROM
             fact_services
             INNER JOIN dim_service_types ON fact_services.service_id = dim_service_types.id
             INNER JOIN {table1} ON fact_services.{left1} = {table1}.{right1}
+            {extra_join if params["scope_type"] == "geography" else ""}
         WHERE
             fact_services.service_status = 17 
             AND dim_service_types.{control_type_field} = {control_type_value}
@@ -213,7 +216,7 @@ class Data_Service:
             fact_services.research_family_key,
             dim_family_compositions.family_composition_type
         """
-        print(query)
+        
         return pd.read_sql(query, conn)
 
 
