@@ -9,17 +9,16 @@ from datetime import date
 def test():
     print("hi")
 
+# given a report schedule, generates a report and then saves it to the database
 def generate_report_and_save(schedule):
-		# TODO: add functionality to check if each schedule is due or not
-		
-		# get data definitions for current schedule and perform necessary calculations to generate the report
-		data_def_dict = get_data_definitions(schedule.id)
+	# get data definitions for current schedule and perform necessary calculations to generate the report
+	data_def_dict = get_data_definitions(schedule.id)
 
-		cd = CalculationDispatcher(data_def_dict)
-		cd.run_calculations()
+	cd = CalculationDispatcher(data_def_dict)
+	cd.run_calculations()
 
-		# save the generated report to the database
-		save_report(schedule, data_def_dict)
+	# save the generated report to the database
+	save_report(schedule, data_def_dict)
 
 
 # generates recurring reports if they are due based on recurrence parameter
@@ -29,10 +28,10 @@ def periodic_report_generation(recurrence):
     		if(schedule.timeframe_type.recurrence == recurrence):
     				generate_report_and_save(schedule)
 
+# generates (and saves) a one time report if it has been requested
 @shared_task
 def one_time_report_generation(schedule):
-    generate_report_and_save(schedule);
-
+    generate_report_and_save(schedule)
 
 # saves the given calculated report to the database
 def save_report(schedule, results):
