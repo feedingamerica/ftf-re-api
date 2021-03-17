@@ -1,4 +1,5 @@
 from .services.data_service import Data_Service as ds
+import json
 
 BIG_NUM_NAMES = ["services_total", "undup_hh_total", "undup_indv_total", "services_per_uhh_avg"]
 DEFAULT_CTRL = "dummy_is_grocery_service"
@@ -260,11 +261,29 @@ def __get_family_comp_key_insight(id, params):
 def __get_household_size_distribution_classic(id, params):
     families = ds.get_data_for_definition(id, params)
 
-    families = families.groupby('avg_fam_size').round().count()
+    families = families.groupby('avg_fam_size').count()
 
+    """ for i in range(len(families)):
+         """
 
+    framework_dict = families.to_dict()
+    framework_dict = framework_dict['research_family_key']
 
-    return families.to_json()
+    return_dict = {
+        '1 - 3':0,
+        '4 - 6':0,
+        '7+':0
+    }
+
+    for key in framework_dict:
+        if key >= 1 and key <= 3:
+            return_dict['1 - 3'] = return_dict['1 - 3'] + framework_dict[key]
+        elif key > 3 and key <= 6:
+            return_dict['4 - 6'] = return_dict['4 - 6'] + framework_dict[key]
+        elif key > 6:
+            return_dict['7+'] = return_dict['7+'] + framework_dict[key]
+
+    return json.dumps(return_dict)
 
 ## Data Defintion Switcher
 # usage:

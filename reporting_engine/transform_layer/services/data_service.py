@@ -385,4 +385,3 @@ class Data_Service:
             29: __get_household_composition.__func__,
             31: __get_household_composition.__func__
         }
-
