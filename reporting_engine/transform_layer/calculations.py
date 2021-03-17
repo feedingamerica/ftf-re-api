@@ -1,3 +1,4 @@
+import numpy as np
 from .services.data_service import Data_Service as ds
 
 BIG_NUM_NAMES = ["services_total", "undup_hh_total", "undup_indv_total", "services_per_uhh_avg"]
@@ -256,6 +257,35 @@ def __get_household_composition(id, params):
 def __get_family_comp_key_insight(id, params):
     pass
 
+#data def 30
+def __get_household_size_distribution_1_to_10(id, params):
+    """Calculate Families Breakdown DataDef 30
+
+    Arguments:
+    id - data definiton id
+    params - a dictionary of values to scope the queries
+
+    Modifies:
+    Nothing
+
+    Returns: num_families
+    num_families - number of families per sizes 1 to 10
+
+    """
+
+    families = ds.get_data_for_definition(id, params)
+    families.avg_fam_size = families.avg_fam_size.round()
+    families['avg_fam_size_roll'] = np.where(families['avg_fam_size'] > 9, 10, families['avg_fam_size'])
+    families['avg_fam_size_roll'] = np.where(families['avg_fam_size_roll'] == 0, 1, families['avg_fam_size_roll'])
+    families = families.groupby('avg_fam_size_roll').agg(num_families = ('avg_fam_size_roll', 'count')).reset_index()
+
+    conditions = [(families['avg_fam_size_roll'] < 4), (families['avg_fam_size_roll'] < 7), (families['avg_fam_size_roll'] >= 7)]
+    choices = ['1 - 3', '4 - 6', '7+']
+
+    families['classic_roll'] = np.select(conditions, choices)
+
+    return families.to_json()
+
 ## Data Defintion Switcher
 # usage:
 #   func = data_calc_function_switcher.get(id)
@@ -287,5 +317,6 @@ data_calc_function_switcher = {
         24: __get_services_category,
         25: __get_distribution_outlets,
         28: __get_household_composition,
-        29: __get_family_comp_key_insight
+        29: __get_family_comp_key_insight,
+        30: __get_household_size_distribution_1_to_10,
     }

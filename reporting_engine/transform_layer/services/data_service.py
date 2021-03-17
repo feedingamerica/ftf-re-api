@@ -340,7 +340,7 @@ class Data_Service:
     def __get_service_summary(params):
         return Data_Service.base_services(params)
 
-    ## DataFrame to fulfill Data Definition 28, 29
+    ## DataFrame to fulfill Data Definition 28, 29, 30
     ## Returns family_services
     @staticmethod
     def __get_household_composition(params):
@@ -382,6 +382,7 @@ class Data_Service:
             24: __get_service_summary.__func__,
             25: __get_service_summary.__func__,
             28: __get_household_composition.__func__,
-            29: __get_household_composition.__func__
+            29: __get_household_composition.__func__,
+            30: __get_household_composition.__func__,
         }
 

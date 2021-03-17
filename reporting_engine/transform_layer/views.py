@@ -102,6 +102,7 @@ def test_data_service(request, id):
         ]
     }
     params = CalculationDispatcher.parse_request(sample_dict)
+    print_dict(params)
 
     data = Data_Service.get_data_for_definition(id, params)
     print(data)
@@ -572,6 +573,13 @@ def get_family_breakdown(request):
                 "reportDictId":1,
                 "dataDefId":28,
                 "name": "household_composition",
+                "dataDefType":3
+            },
+            {
+                "reportId":1,
+                "reportDictId":1,
+                "dataDefId":30,
+                "name": "household_size_distribution_1_to_10",
                 "dataDefType":3
             }
         ]
