@@ -102,6 +102,7 @@ def test_data_service(request, id):
         ]
     }
     params = CalculationDispatcher.parse_request(sample_dict)
+    print_dict(params)
 
     data = Data_Service.get_data_for_definition(id, params)
     print(data)
@@ -578,6 +579,41 @@ def get_family_breakdown(request):
                 "reportId":1,
                 "reportDictId":1,
                 "dataDefId":29,
+                "name": "family_composition_key_insight",
+                "dataDefType":3
+            },
+            {
+                "reportId":1,
+                "reportDictId":1,
+                "dataDefId":30,
+                "name": "household_size_distribution_1_to_10",
+                "dataDefType":3
+            }
+        ]
+    }
+
+    cd = CalculationDispatcher(input_dict)
+    cd.run_calculations()
+
+    context = { 'report_output': format_dict(cd.request)}
+    print_dict(cd.request)
+    return render(request, 'transformapi/get-report.html', context)
+
+def get_household_size_ranges_classic(request):
+    input_dict = {
+        "Scope": {
+            "startDate":"01/01/2020",
+            "endDate":"12/31/2020",
+            "scope_field":"loc_id",
+            "scope_field_value":1,
+            "control_type_field":"dummy_is_grocery_service",
+            "control_type_value":1
+        },
+        "ReportInfo": [
+            {
+                "reportId":1,
+                "reportDictId":1,
+                "dataDefId":31,
                 "name": "household_composition",
                 "dataDefType":3
             }
