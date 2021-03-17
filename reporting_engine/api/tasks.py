@@ -1,33 +1,37 @@
 from celery import shared_task
-from api.models import ReportSchedule
+from api.utils import get_data_definitions
 from transform_layer.calculations import CalculationDispatcher
 from api.models import ReportSchedule, Report, ReportDataInt, ReportDataFloat
 from datetime import date
 
+# test to ensure tasks/Celery are working
 @shared_task
 def test():
     print("hi")
 
+# generates recurring reports if they are due
 @shared_task
 def periodic_report_generation():
-    for schedule in ReportSchedule.objects.all():
-        # make sure this works:
-        print(f'Report Schedule: ID - {schedule.id}, Date Scheduled - {schedule.date_scheduled}')
-        
-        # in future, will be calling some functions to actually generate reports
-        # these aren't built yet, but could be something like the below...
-        # dictionary = get_dictionary(schedule.id)
-        cd = CalculationDispatcher(dictionary)
-        cd.run_calculations()
-        save_report(schedule, dictionary);
+	for schedule in ReportSchedule.objects.all():
+		# TODO: add functionality to check if each schedule is due or not
+		
+		# get data definitions for current schedule and perform necessary calculations to generate the report
+		data_def_dict = get_data_definitions(schedule.id)
 
+		cd = CalculationDispatcher(data_def_dict)
+		cd.run_calculations()
+
+		# save the generated report to the database
+		save_report(schedule, data_def_dict)
+
+# saves the given calculated report to the database
 def save_report(schedule, results):
     # New report to the report
     dateCompleted = date.today().strftime('%Y-%m-%d')
     new_report = Report(report_schedule = schedule, start_date = results['Scope']['startDate'], end_date = results['Scope']['endDate'], date_completed = dateCompleted)
     new_report.save()
 
-    #New rows to report_data_int
+    # New rows to report_data_int/report_data_float
     for values in results['ReportInfo']:
         if(values['dataDefType'] == 'integer'):
             new_data_int = ReportDataInt(report = new_report, data_definition_id = values['dataDefId'], int_value = values['value'])
@@ -36,6 +40,7 @@ def save_report(schedule, results):
             new_data_float = ReportDataFloat(report = new_report, data_definition_id = values['dataDefId'], float_value = values['value'])
             new_data_float.save()
 
+# used for testing purposes
 mock_dict = {
 	'Scope':  {
 		'startDate': '2019-01-01',
