@@ -256,6 +256,16 @@ def __get_household_composition(id, params):
 def __get_family_comp_key_insight(id, params):
     pass
 
+#data def 31
+def __get_household_size_distribution_classic(id, params):
+    families = ds.get_data_for_definition(id, params)
+
+    families = families.groupby('avg_fam_size').round().count()
+
+
+
+    return families.to_json()
+
 ## Data Defintion Switcher
 # usage:
 #   func = data_calc_function_switcher.get(id)
@@ -287,5 +297,6 @@ data_calc_function_switcher = {
         24: __get_services_category,
         25: __get_distribution_outlets,
         28: __get_household_composition,
-        29: __get_family_comp_key_insight
+        29: __get_family_comp_key_insight,
+        31: __get_household_size_distribution_classic
     }
