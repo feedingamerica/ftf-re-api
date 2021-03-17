@@ -9,10 +9,7 @@ from datetime import date
 def test():
     print("hi")
 
-# generates recurring reports if they are due
-@shared_task
-def periodic_report_generation():
-	for schedule in ReportSchedule.objects.all():
+def generate_report_and_save(schedule):
 		# TODO: add functionality to check if each schedule is due or not
 		
 		# get data definitions for current schedule and perform necessary calculations to generate the report
@@ -23,6 +20,18 @@ def periodic_report_generation():
 
 		# save the generated report to the database
 		save_report(schedule, data_def_dict)
+
+
+# generates recurring reports if they are due
+@shared_task
+def periodic_report_generation():
+	for schedule in ReportSchedule.objects.all():
+        generate_report_and_save(schedule);
+
+@shared_task
+def one_time_report_generation(schedule):
+    generate_report_and_save(schedule);
+
 
 # saves the given calculated report to the database
 def save_report(schedule, results):
