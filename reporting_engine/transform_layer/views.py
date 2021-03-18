@@ -15,7 +15,7 @@ def test_endpoint_2(request):
             "endDate":"12/31/2019",
             "scope_field":"fb_id",
             "scope_field_value":21,
-            "control_type_field":"dummy_is_grocery_service",
+            "control_type_name":"Is Grocery Service",
             "control_type_value":1
         },
         "ReportInfo": [
@@ -74,7 +74,7 @@ def test_data_service(request, id):
             "endDate":"1/31/2019",
             "scope_field":"fb_id",
             "scope_field_value":21,
-            "control_type_field":"dummy_is_grocery_service",
+            "control_type_name":"Is Grocery Service",
             "control_type_value":1
         },
         "ReportInfo": [
@@ -115,7 +115,7 @@ def get_report_big_numbers(request):
             "endDate":"12/31/2019",
             "scope_field":"fb_id",
             "scope_field_value":21,
-            "control_type_field":"dummy_is_grocery_service",
+            "control_type_name":"Is Grocery Service",
             "control_type_value":1
         },
         "ReportInfo": [
@@ -165,7 +165,7 @@ def get_report_ohio(request):
             "endDate":"12/31/2019",
             "scope_field":"fb_id",
             "scope_field_value":21,
-            "control_type_field":"dummy_is_grocery_service",
+            "control_type_name":"Is Grocery Service",
             "control_type_value":1
         },
         "ReportInfo": [
@@ -292,7 +292,7 @@ def get_report_mofc(request):
             "endDate":"12/31/2019",
             "scope_field":"fb_id",
             "scope_field_value":21,
-            "control_type_field":"dummy_is_grocery_service",
+            "control_type_name":"Is Grocery Service",
             "control_type_value":1
         },
         "ReportInfo": [
@@ -335,7 +335,7 @@ def get_demo1_mofc(request):
             "endDate":"12/31/2019",
             "scope_field":"fb_id",
             "scope_field_value":21,
-            "control_type_field":"dummy_is_grocery_service",
+            "control_type_name":"Is Grocery Service",
             "control_type_value":1
         },
         "ReportInfo": []
@@ -397,7 +397,7 @@ def get_demo1_franklin(request):
             "scope_type": "geography",
             "scope_field":"fips_cnty",
             "scope_field_value":39049,
-            "control_type_field":"dummy_is_grocery_service",
+            "control_type_name":"Is Grocery Service",
             "control_type_value":1
         },
         "ReportInfo": []
@@ -460,7 +460,7 @@ def get_demo1_typical(request):
             "endDate":"12/31/2019",
             "scope_field":"loc_id",
             "scope_field_value":1,
-            "control_type_field":"dummy_is_grocery_service",
+            "control_type_name":"Is Grocery Service",
             "control_type_value":1
         },
         "ReportInfo": []
@@ -521,7 +521,7 @@ def get_report_services(request):
             "endDate":"12/31/2020",
             "scope_field":"fb_id",
             "scope_field_value":21,
-            "control_type_field":"dummy_is_grocery_service",
+            "control_type_name":"Is Grocery Service",
             "control_type_value":1
         },
         "ReportInfo": [
@@ -564,7 +564,7 @@ def get_family_breakdown(request):
             "endDate":"12/31/2020",
             "scope_field":"fb_id",
             "scope_field_value":21,
-            "control_type_field":"dummy_is_grocery_service",
+            "control_type_name":"Is Grocery Service",
             "control_type_value":1
         },
         "ReportInfo": [
@@ -613,7 +613,7 @@ def get_household_size_ranges_classic(request):
             "endDate":"12/31/2020",
             "scope_field":"loc_id",
             "scope_field_value":1,
-            "control_type_field":"dummy_is_grocery_service",
+            "control_type_name":"Is Grocery Service",
             "control_type_value":1
         },
         "ReportInfo": [

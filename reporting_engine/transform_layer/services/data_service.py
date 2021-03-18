@@ -83,8 +83,8 @@ class Data_Service:
             left1 = "dimgeo_id"
             right1 = "id"
 
-        control_type_field = params["control_type_field"]
-        control_type_value = params["control_type_value"]
+        control_type_name = params["control_type_name"]
+        control_query = cls.__get_control_query(control_type_name)
         scope_field = params["scope_field"]
         scope_value = params["scope_field_value"]
         start_date = cls.__date_str_to_int(params["startDate"])
@@ -110,7 +110,7 @@ class Data_Service:
             LEFT JOIN fact_service_members AS fsm ON fs.research_service_key = fsm.research_service_key
         WHERE
             fs.service_status = 17
-            AND dim_service_types.{control_type_field} = {control_type_value}
+            AND {control_query}
             AND t1.{scope_field} = {scope_value}
             AND fs.date >= {start_date} AND fs.date <= {end_date}
         """
@@ -129,10 +129,10 @@ class Data_Service:
             table1 = "dim_geos"
             left1 = "dimgeo_id"
             right1 = "id"
-            extra_join = """INNER JOIN dim_hierarchies ON  fact_services.hiearchy_id = dim_hiearchies.loc_id"""
+            extra_join = """INNER JOIN dim_hierarchies ON fact_services.hiearchy_id = dim_hiearchies.loc_id"""
 
-        control_type_field = params["control_type_field"]
-        control_type_value = params["control_type_value"]
+        control_type_name = params["control_type_name"]
+        control_query = cls.__get_control_query(control_type_name)
         scope_field = params["scope_field"]
         scope_value = params["scope_field_value"]
         start_date = cls.__date_str_to_int(params["startDate"])
@@ -155,9 +155,8 @@ class Data_Service:
             {extra_join if params["scope_type"] == "geography" else ""}
         WHERE
             fact_services.service_status = 17 
-            AND dim_service_types.{control_type_field} = {control_type_value}
-            AND fact_services.date >= {start_date} 
-            AND fact_services.date <= {end_date}
+            AND {control_query}
+            AND fact_services.date >= {start_date} AND fact_services.date <= {end_date}
             AND {table1}.{scope_field} = {scope_value}
         """
         return pd.read_sql(query, conn)
@@ -177,8 +176,8 @@ class Data_Service:
             left1 = "dimgeo_id"
             right1 = "id"
 
-        control_type_field = params["control_type_field"]
-        control_type_value = params["control_type_value"]
+        control_type_name = params["control_type_name"]
+        control_query = cls.__get_control_query(control_type_name)
         scope_field = params["scope_field"]
         scope_value = params["scope_field_value"]
         start_date = cls.__date_str_to_int(params["startDate"])
@@ -201,9 +200,8 @@ class Data_Service:
             INNER JOIN {table1}  ON fact_services.{left1} = {table1}.{right1}
         WHERE
             fact_services.service_status = 17 
-            AND dim_service_types.{control_type_field} = {control_type_value}
-            AND fact_services.date >= {start_date} 
-            AND fact_services.date <= {end_date}
+            AND {control_query}
+            AND fact_services.date >= {start_date} AND fact_services.date <= {end_date}
             AND {table1}.{scope_field} = {scope_value}
         GROUP BY
             fact_services.research_family_key,
@@ -212,6 +210,14 @@ class Data_Service:
         
         return pd.read_sql(query, conn)
 
+    @staticmethod
+    def __get_control_query(control_type_name):
+        if (control_type_name == "Prepack & Choice only"):
+            return f"dim_service_types.service_category_code IN (10, 15)"
+        elif (control_type_name == "Produce only"):
+            return f"dim_service_types.service_category_code IN (20)"
+        else:
+            return f"dim_service_types.dummy_is_grocery_service = 1"
 
     @staticmethod
     def __date_str_to_int(date):

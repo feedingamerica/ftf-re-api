@@ -6,8 +6,7 @@ import numpy
 
 
 BIG_NUM_NAMES = ["services_total", "undup_hh_total", "undup_indv_total", "services_per_uhh_avg"]
-DEFAULT_CTRL = "dummy_is_grocery_service"
-DEFAULT_CTRL_VAL = "1"
+DEFAULT_CTRL = "Is Grocery Service"
 
 class CalculationDispatcher:
     def __init__(self, request):
@@ -71,12 +70,8 @@ class CalculationDispatcher:
             input_dict["Scope"]["scope_type"] = "hierarchy"
         
         # Setting the control type
-        if "control_type_field" not in input_dict["Scope"]:
-            input_dict["Scope"]["control_type_field"] = "dummy_is_grocery_service"
-
-        # Setting the control type value
-        if "control_type_value" not in input_dict["Scope"]:
-            input_dict["Scope"]["control_type_value"] = 1
+        if "control_type_name" not in input_dict["Scope"]:
+            input_dict["Scope"]["control_type_name"] = DEFAULT_CTRL
 
         return input_dict
 

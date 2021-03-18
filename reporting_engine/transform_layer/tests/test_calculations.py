@@ -17,8 +17,7 @@ sample_scope_1 = {
     "scope_type": "hierarchy",
     "scope_field":"fb_id",
     "scope_field_value":21,
-    "control_type_field":"dummy_is_grocery_service",
-    "control_type_value":1
+    "control_type_name":"Is Grocery Service"
 }
 
 
@@ -28,8 +27,7 @@ sample_scope_2 = {
     "scope_type": "geography",
     "scope_field":"fips_cnty",
     "scope_field_value":39049,
-    "control_type_field":"dummy_is_grocery_service",
-    "control_type_value":1
+    "control_type_name":"Is Grocery Service"
 }
 
 base_services_scope = {
@@ -38,8 +36,7 @@ base_services_scope = {
     "scope_type": "hierarchy",
     "scope_field":"fb_id",
     "scope_field_value":21,
-    "control_type_field":"dummy_is_grocery_service",
-    "control_type_value":1
+    "control_type_name":"Is Grocery Service"
 }
 
 json_test_results = {
@@ -60,7 +57,6 @@ json_test_results = {
         'Served":{"0":11712,"1":1773688,"2":860664,"3":1026005}}',
         '{"sites_visited":{"0":1,"1":2,"2":3,"3":4,"4":5,"5":6,"6":7,"7":8,"8":9,"9":10,"10":11,"11":12,"12":13,"13":14,"14":15,"15":16,"16":17,"17":18,"18":19,"19":20,"20":22,"21":23,"22":24,"23":28,"24":29},"un_duplicated_families":{"0":132981,"1":37029,"2":14403,"3":6363,"4":3072,"5":1646,"6":939,"7":489,"8":313,"9":201,"10":125,"11":79,"12":53,"13":35,"14":31,"15":22,"16":11,"17":7,"18":2,"19":5,"20":2,"21":4,"22":2,"23":1,"24":1}}'],
 }
-
 
 
 def read_expected_int():
