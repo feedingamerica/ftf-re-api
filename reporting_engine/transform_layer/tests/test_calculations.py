@@ -278,6 +278,23 @@ class CalculationsTestCase(unittest.TestCase):
         resultDict = json.loads(result)
         self.assertDictEqual(resultDict, expected)
 
+    def test_get_household_size_distribution_1_to_10(self):
+        expected = {
+            "avg_fam_size_roll": {
+                "0": 1.0, "1": 2.0, "2": 3.0, "3": 4.0, "4": 5.0, "5": 6.0, "6": 7.0, "7": 8.0, "8": 9.0, "9": 10.0
+            },
+            "num_families":{
+                "0": 56174, "1": 38967, "2": 29398, "3": 28081, "4": 20341, "5": 12336, "6": 6103, "7": 3144, "8": 1493, "9": 1557
+            },
+            "classic_roll": {
+                "0": "1 - 3", "1": "1 - 3", "2": "1 - 3", "3": "4 - 6", "4": "4 - 6", "5": "4 - 6", "6": "7+", "7": "7+", "8": "7+", "9": "7+"
+            }
+        }
+        func = calc.data_calc_function_switcher[30]
+        result = func(30, base_services_scope)
+        resultDict = json.loads(result)
+        self.assertDictEqual(resultDict, expected)
+
 
 if __name__ == '__main__':
     unittest.main()
