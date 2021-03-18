@@ -228,6 +228,23 @@ class CalculationsTestCase(unittest.TestCase):
         func = calc.data_calc_function_switcher[25]
         result = func(25, base_services_scope)
         self.assertEqual(json.loads(result), json.loads(EXPECTED_JSON_RESULTS["distribution_outlets"]["mofc_value"]))
+    
+    def test_get_frequency_visits(self):
+        expected = {
+            "n_families": {
+                "1":75530,"2":29221,"3":17037,"4":11730,"5":8713,"6":6931,"7":5698,"8":4898,"9":4115,"10":3470,"11":3181,"12":2867,"13":2342,"14":1889,
+                "15":1691,"16":1554,"17":1339,"18":1244,"19":1101,"20":1021,"21":921,"22":797,"23":747,"24":694,"25":8863
+            },
+            "sum_services" :{
+                "1":75530,"2":58442,"3":51111,"4":46920,"5":43565,"6":41586,"7":39886,"8":39184,"9":37035,"10":34700,"11":34991,"12":34404,"13":30446,
+                "14":26446,"15":25365,"16":24864,"17":22763,"18":22392,"19":20919,"20":20420,"21":19341,"22":17534,"23":17181,"24":16656,"25":366004
+            }
+        }
+        func = calc.data_calc_function_switcher[26]
+        result = func(26, base_services_scope)
+        resultDict = json.loads(result)
+        self.assertDictEqual(resultDict, expected)
+
         
     def test_get_household_composition(self):
         expected = {
