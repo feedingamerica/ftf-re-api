@@ -51,7 +51,7 @@ class DataDefinition(models.Model):
 	name = models.CharField(max_length = 255, blank = True)
 	definition_public = models.CharField(max_length = 255, blank = True)
 	calculation_notes = models.CharField(max_length = 255, blank = True)
-	interpretation_notes = models.CharField(max_length = 255, blank = True)
+	interpretation_notes = models.CharField(max_length = 300, blank = True)
 	data_definition_type = models.ForeignKey(DataDefinitionType, on_delete = models.CASCADE, null = True, blank = True)
 	class Meta:
 		db_table = 'data_definitions'
@@ -95,7 +95,7 @@ class ReportingDictionaryDefinition(models.Model):
 		unique_together = (('id', 'section_id'), )
 		db_table = 'reporting_dictionary_definitions'
 	def __str__(self):
-		return self.id
+		return str(self.id)
 
 class RunType(models.Model):
 	"""Defines RunType table (run_types in mysql database)"""
@@ -104,6 +104,13 @@ class RunType(models.Model):
 		db_table = 'run_types'
 	def __str__(self):
 		return self.name
+
+class ReportScheduleAddin(models.Model):
+	reporting_dictionary = models.ForeignKey(ReportingDictionary, on_delete=models.CASCADE, null = True, blank = True)
+	class Meta:
+		db_table = 'report_schedule_addins'
+	def __str__(self):
+		return str(self.id)
 
 class ReportSchedule(models.Model):
 	"""Defines ReportSchedule table (report_schedules in mysql database)"""
@@ -117,12 +124,11 @@ class ReportSchedule(models.Model):
 	date_scheduled = models.DateField(default = datetime.date.today)
 	date_custom_start = models.DateField(null = True, blank = True)
 	date_custom_end = models.DateField(null = True, blank = True)
-	addin_state_report = models.ForeignKey(ReportingDictionary, related_name = 'addin_state', on_delete = models.CASCADE, null = True, blank = True)
-	addin_foodbank_report = models.ForeignKey(ReportingDictionary, related_name = 'addin_foodbank', on_delete = models.CASCADE, null = True, blank = True)
+	addin_reports = models.ManyToManyField(ReportScheduleAddin, null = True, blank = True)
 	class Meta:
 		db_table = 'report_schedules'
 	def __str__(self):
-		return self.run_type
+		return str(self.id)
 
 class Report(models.Model):
 	"""Defines Report table (reports in mysql database)"""
@@ -133,7 +139,7 @@ class Report(models.Model):
 	class Meta:
 		db_table = 'reports'
 	def __str__(self):
-		return self.start_date
+		return str(self.id)
 
 class AddinManager(models.Model):
 	"""Defines AddinManager table (addin_manager in mysql database)"""
@@ -155,7 +161,7 @@ class ReportDataFloat(models.Model):
 	class Meta:
 		db_table = 'report_data_float'
 	def __str__(self):
-		return self.float_value
+		return str(self.id)
 
 class ReportDataInt(models.Model):
 	"""Defines ReportDataInt table (report_data_int in mysql database)"""
@@ -165,7 +171,7 @@ class ReportDataInt(models.Model):
 	class Meta:
 		db_table = 'report_data_int'
 	def __str__(self):
-		return self.int_value
+		return str(self.id)
 
 class ReportDataJson(models.Model):
 	"""Defines ReportDataJson table (report_data_json in mysql database)"""
@@ -176,4 +182,4 @@ class ReportDataJson(models.Model):
 		unique_together = (('id', 'report_id', 'data_definition_id'), )
 		db_table = 'report_data_json'
 	def __str__(self):
-		return self.json_objet
+		return str(self.id)
