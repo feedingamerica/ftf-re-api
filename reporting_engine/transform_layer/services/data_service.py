@@ -11,7 +11,6 @@ SCOPE_GEOGRAPHY = "geography"
 class Data_Service:
     __scope:str = None
     __fact_services:DataFrame = None
-    __family_services:DataFrame = None
     ##  getter and setter for __fact_services based on the scope "hierarchy" or "geography"
     ##  Columns always in services:
     ##      research_service_key
@@ -49,7 +48,8 @@ class Data_Service:
             cls.__base_services = cls.__get_base_services(params)
         return cls.__base_services
 
-    ## getter for __family_services
+    __family_services:DataFrame = None
+    ## getter and setter for __family_services
     @classmethod
     def family_services(cls, params):
         if cls.__family_services is None:
@@ -104,25 +104,18 @@ class Data_Service:
             fsm.research_member_key
         FROM 
             fact_services AS fs
+            INNER JOIN dim_service_types ON fs.service_id = dim_service_types.id
             LEFT JOIN {table1} AS t1 ON fs.{left1} = t1.{right1}
             LEFT JOIN dim_service_statuses ON fs.service_status = dim_service_statuses.status 
             LEFT JOIN fact_service_members AS fsm ON fs.research_service_key = fsm.research_service_key
         WHERE
-            fs.service_status = 17 AND
-            t1.{scope_field} = {scope_value} AND
-            fs.date >= {start_date} AND fs.date <= {end_date}
+            fs.service_status = 17
+            AND dim_service_types.{control_type_field} = {control_type_value}
+            AND t1.{scope_field} = {scope_value}
+            AND fs.date >= {start_date} AND fs.date <= {end_date}
         """
-        
-        ct = params.get("control_type_field")
-        ct_value = params.get("control_type_value")
 
-        query_control = f"""SELECT id, {ct} FROM dim_service_types"""
-
-        services = pd.read_sql(query, conn)
-        service_types = pd.read_sql(query_control, conn)
-        services = services.merge(service_types, how = 'left', left_on= 'service_id', right_on = 'id')
-        services = services.query(f'{ct} == {ct_value}')
-        return services
+        return pd.read_sql(query, conn)
 
     @classmethod
     def __get_base_services(cls, params):
@@ -170,7 +163,7 @@ class Data_Service:
         return pd.read_sql(query, conn)
 
     @classmethod
-    def __get_family_services(cls, params):        
+    def __get_family_services(cls, params):
         conn = connections['source_db']
 
         table1 = ""
