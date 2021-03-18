@@ -611,8 +611,8 @@ def get_household_size_ranges_classic(request):
         "Scope": {
             "startDate":"01/01/2020",
             "endDate":"12/31/2020",
-            "scope_field":"loc_id",
-            "scope_field_value":1,
+            "scope_field":"fb_id",
+            "scope_field_value":21,
             "control_type_name":"Is Grocery Service",
             "control_type_value":1
         },

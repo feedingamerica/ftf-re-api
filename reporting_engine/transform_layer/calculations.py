@@ -329,11 +329,11 @@ def __get_household_size_distribution_classic(id, params):
     }
 
     for key in framework_dict:
-        if key >= 1 and key <= 3:
+        if key >= 0 and key < 3.5:
             return_dict['1 - 3'] = return_dict['1 - 3'] + framework_dict[key]
-        elif key > 3 and key <= 6:
+        elif key >= 3.5 and key < 6.5:
             return_dict['4 - 6'] = return_dict['4 - 6'] + framework_dict[key]
-        elif key > 6:
+        elif key >= 6.5:
             return_dict['7+'] = return_dict['7+'] + framework_dict[key]
 
     return json.dumps(return_dict)

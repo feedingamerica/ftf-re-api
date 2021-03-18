@@ -295,6 +295,17 @@ class CalculationsTestCase(unittest.TestCase):
         resultDict = json.loads(result)
         self.assertDictEqual(resultDict, expected)
 
+    def test_get_household_size_distribution_classic(self):
+        expected = {
+            '1 - 3':124539,
+            '4 - 6':60758,
+            '7+':12297
+        }
+        func = calc.data_calc_function_switcher[31]
+        result = func(31, base_services_scope)
+        resultDict = json.loads(result)
+        self.assertDictEqual(resultDict, expected)
+
 
 if __name__ == '__main__':
     unittest.main()
