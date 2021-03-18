@@ -10,7 +10,7 @@ class CalculationDispatcher:
         # now on construction, it will automatically run parse request on the input request, so theres no extra in between step
         self.request = self.parse_request(request)
         data_list = request["ReportInfo"]
-        self.params = request
+        self.params = request["Scope"]
         self.data_dict = CalculationDispatcher.__group_by_data_def(data_list)
         
     @staticmethod
@@ -18,7 +18,8 @@ class CalculationDispatcher:
         """Returns dict of data defs grouped by reportDictid and sorted by dataDefid
         
         data_dict is a dictionary that groups the data definitions in data_list by reportDictId
-        and sorts the data definitions in each group by their dataDefId, highest to smallest
+        and sorts the data definitions in each group by their dataDefId, highest to smallest.
+        Does not modify data_list.
         data_dict = { 
             1: [{"reportDictId": 1, "dataDefId": 1 },   {"reportDictId": 1, "dataDefId": 2 }, ... ],
             2:  [{"reportDictId": 2, "dataDefId": 5 },   {"reportDictId": 2, "dataDefId": 6 }, ... ],
@@ -182,6 +183,66 @@ def __get_indv_total(id, params):
     """
     return ds.get_data_for_definition(id, params)['served_total'].sum()
 
+# data def 23
+def __get_services_summary(id, params):
+    """Calculate number of people served DataDef 23
+
+    Arguments:
+    id - data definiton id
+    params - a dictionary of values to scope the queries
+
+    Modifies:
+    Nothing
+
+    Returns: num_served
+    num_served - number of people served by service name
+
+    """
+    base_services = ds.get_data_for_definition(id, params).groupby(['service_name'])
+    base_services = base_services.agg({'research_family_key': 'count', 'served_total': 'sum'})
+    base_services = base_services.reset_index().rename(columns={'research_family_key':"Families Served", 'served_total': 'People Served'})
+    return base_services.to_json()
+
+# data def 24
+def __get_services_category(id, params):
+    """Calculate number of people served DataDef 24
+
+    Arguments:
+    id - data definiton id
+    params - a dictionary of values to scope the queries
+
+    Modifies:
+    Nothing
+
+    Returns: num_served
+    num_served - number of people served by service category
+
+    """
+    base_services = ds.get_data_for_definition(id, params).groupby(['service_category_name'])
+    base_services = base_services.agg({'research_family_key': 'count', 'served_total': 'sum'})
+    base_services = base_services.reset_index().rename(columns={'research_family_key':"Families Served", 'served_total': 'People Served'})
+    return base_services.to_json()
+
+# data def 25
+def __get_distribution_outlets(id, params):
+    """Calculate number of people served DataDef 25
+
+    Arguments:
+    id - data definiton id
+    params - a dictionary of values to scope the queries
+
+    Modifies:
+    Nothing
+
+    Returns: sites_visited
+    sites_visited - number of families that have made 1..n site visits
+
+    """
+    base_services = ds.get_data_for_definition(id, params)
+    base_services = base_services.groupby('research_family_key')['loc_id'].nunique().reset_index().rename(columns={'loc_id': 'sites_visited'})
+    base_services = base_services.groupby('sites_visited').agg(un_duplicated_families = ('sites_visited', 'count')).reset_index()
+    base_services = base_services.sort_values(by = ['sites_visited'], ascending = [True])
+    return base_services.to_json()
 
 ## Data Defintion Switcher
 # usage:
@@ -210,4 +271,7 @@ data_calc_function_switcher = {
         20: __get_total_hh_services,
         21: __get_total_hh_services,
         22: __get_total_hh_services,
+        23: __get_services_summary,
+        24: __get_services_category,
+        25: __get_distribution_outlets,
     }

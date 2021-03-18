@@ -11,4 +11,5 @@ urlpatterns = [
     path('demo1/mofc', views.get_demo1_mofc, name='get-demo1-mofc'),
     path('demo1/franklin', views.get_demo1_franklin, name='get-demo1-franklin'),
     path('demo1/typical', views.get_demo1_typical, name='get-demo1-typical'),
+    path('get-report-services', views.get_report_services, name='get-report-services')
 ]
