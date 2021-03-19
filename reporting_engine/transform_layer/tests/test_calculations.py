@@ -51,14 +51,14 @@ json_test_results = {
         'day","33":"Pantry - Prepack - 9 day","34":"Pantry - Prepack\\/Choice - 3 day","35":"Pantry - Prepack\\/Choice - 4 day","36":"Pantry - Prepack\\/Choice - 5 '
         'day","37":"Pantry - Special Dietary Needs - 3 day","38":"Prepack - Perishables only","39":"Produce & Protein","40":"Produce \\/ Mobile Market","41":"Produce '
         'Market","42":"Rx - Produce","43":"Snack Bag","44":"Special - Perishables only","45":"TEFAP"},"Families '
-        'Served":{"0":173,"1":6149,"2":73,"3":599,"4":4,"5":239,"6":497,"7":190,"8":368,"9":13373,"10":2173,"11":1,"12":1773,"13":29457,"14":1545,"15":1332,"16":2197,"17":65336,"18":303571,"19":35831,"20":59866,"21":6790,"22":16919,"23":2049,"24":1048,"25":3444,"26":97550,"27":2,"28":11237,"29":28965,"30":2338,"31":98123,"32":5,"33":1878,"34":596,"35":66,"36":865,"37":1,"38":5473,"39":27111,"40":191074,"41":120216,"42":1440,"43":381,"44":25638,"45":4},"People '
-        'Served":{"0":750,"1":11712,"2":272,"3":1482,"4":9,"5":895,"6":1268,"7":616,"8":1537,"9":47112,"10":3084,"11":5,"12":4765,"13":79062,"14":2309,"15":3479,"16":5849,"17":227452,"18":965629,"19":115220,"20":190225,"21":21308,"22":59012,"23":6062,"24":2649,"25":8215,"26":290223,"27":9,"28":36120,"29":105112,"30":7995,"31":340291,"32":14,"33":5996,"34":1601,"35":199,"36":2386,"37":4,"38":19428,"39":95428,"40":546296,"41":370530,"42":4833,"43":689,"44":84918,"45":19}}',
-        '{"service_category_name":{"0":"CSFP","1":"Choice Pantry","2":"Prepack Pantry","3":"Produce"},"Families ''Served":{"0":6149,"1":553053,"2":264917,"3":343841},"People '
-        'Served":{"0":11712,"1":1773688,"2":860664,"3":1026005}}',
+        'Served":{"0":173,"1":6149,"2":73,"3":599,"4":4,"5":239,"6":497,"7":190,"8":368,"9":13373,"10":2173,"11":1,"12":1773,"13":29458,"14":1545,"15":1332,"16":2197,"17":65336,"18":303571,"19":35831,"20":59866,"21":6790,"22":16919,"23":2049,"24":1048,"25":3444,"26":97550,"27":2,"28":11237,"29":28965,"30":2338,"31":98123,"32":5,"33":1878,"34":596,"35":66,"36":865,"37":1,"38":5473,"39":27111,"40":191074,"41":120216,"42":1440,"43":381,"44":25638,"45":4},"People '
+        'Served":{"0":750,"1":11712,"2":272,"3":1482,"4":9,"5":895,"6":1268,"7":616,"8":1537,"9":47112,"10":3084,"11":5,"12":4765,"13":79066,"14":2309,"15":3479,"16":5849,"17":227452,"18":965629,"19":115220,"20":190225,"21":21308,"22":59012,"23":6062,"24":2649,"25":8215,"26":290223,"27":9,"28":36120,"29":105112,"30":7995,"31":340291,"32":14,"33":5996,"34":1601,"35":199,"36":2386,"37":4,"38":19428,"39":95428,"40":546296,"41":370530,"42":4833,"43":689,"44":84918,"45":19}}',
+        '{"service_category_name":{"0":"CSFP","1":"Choice Pantry","2":"Prepack Pantry","3":"Produce"},"Families ''Served":{"0":6149,"1":553054,"2":264917,"3":343841},"People '
+        'Served":{"0":11712,"1":1773692,"2":860664,"3":1026005}}',
         '{"sites_visited":{"0":1,"1":2,"2":3,"3":4,"4":5,"5":6,"6":7,"7":8,"8":9,"9":10,"10":11,"11":12,"12":13,"13":14,"14":15,"15":16,"16":17,"17":18,"18":19,"19":20,"20":22,"21":23,"22":24,"23":28,"24":29},"un_duplicated_families":{"0":132981,"1":37029,"2":14403,"3":6363,"4":3072,"5":1646,"6":939,"7":489,"8":313,"9":201,"10":125,"11":79,"12":53,"13":35,"14":31,"15":22,"16":11,"17":7,"18":2,"19":5,"20":2,"21":4,"22":2,"23":1,"24":1}}'],
 }
 
-
+#reads int_test_results.csv and returns a dictionary of expected test results for data definitions 1-22.
 def read_expected_int():
     expected = {}
     __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
@@ -89,12 +89,7 @@ EXPECTED_JSON_RESULTS = read_expected_json()
 
 
 class CalculationsTestCase(unittest.TestCase):
-    # @classmethod
-    # def setUpClass(cls):
-    #     cls.fact_services_scope1 = ds.fact_services(sample_scope_2)
-    #     #ds.__fact_services = None
-    #     #cls.fact_services_scope2 = ds.fact_services(sample_scope_2)
-    #     #ds.__fact_services = None
+    
 
     
     def test_get_services_total(self):
@@ -217,16 +212,19 @@ class CalculationsTestCase(unittest.TestCase):
     def test_get_services_summary(self):
         func = calc.data_calc_function_switcher[23]
         result = func(23, base_services_scope)
+        self.maxDiff = None
         self.assertEqual(json.loads(result), json.loads(EXPECTED_JSON_RESULTS["service_summary_service"]["mofc_value"]))
         
     def test_get_services_category(self):
         func = calc.data_calc_function_switcher[24]
         result = func(24, base_services_scope)
+        self.maxDiff = None
         self.assertEqual(json.loads(result), json.loads(EXPECTED_JSON_RESULTS["service_category_service"]["mofc_value"]))
 
     def test_get_distribution_outlets(self):
         func = calc.data_calc_function_switcher[25]
         result = func(25, base_services_scope)
+        self.maxDiff = None
         self.assertEqual(json.loads(result), json.loads(EXPECTED_JSON_RESULTS["distribution_outlets"]["mofc_value"]))
     
     def test_get_frequency_visits(self):
