@@ -1,3 +1,16 @@
+"""
+addins.py
+
+This file contains the function addin_helper, which helps manage repoert addins, a main function for
+testing, and a loadTests() function to load data into report_schedules prior to testing.
+
+This script cannot be executed directly from the command line. The code must be copied and pasted
+into Django's shell or it must be imported into another script. 
+
+
+Written by Joy Lin, Nick Biederman, Alli Hornyak, and Emily Robinson
+"""
+
 from api.models import ReportSchedule, ReportScope, AddinManager, ReportScheduleAddin
 import json
 from django.core.serializers.json import DjangoJSONEncoder
@@ -7,9 +20,7 @@ import pandas as pd
 from django.db import connections
 
 
-#Questions
-#report schedule model should the report scope value be a char
-#do we have to be able to handle input that isnt present in the db 
+
 
 #get object if exist in AddinManager else return none
 def get_or_none(**kwargs):
@@ -48,17 +59,22 @@ def addin_helper(report_schedule_row):
 
 
 def main():
+    """Runs addin_helper on all objects in ReportSchedules. Only runs if called
+       manually or if script is caled from command line."""
     for rs in ReportSchedule.objects.all():
         print("_________")        
         addin_helper(rs)
         print(rs.addin_reports.all())        
 
 if __name__ == "__main__":
+    """Entry Point if script is called from command line"""
     main()
 
 
 
 def loadTests():
+    """Loads test data into ReportSchedule table. This should be run once, and should note be run again unless the report_schedules table is flushed. This function
+       must be called manually from the shell."""
     #normal test
     ReportSchedule(run_type_id=2, timeframe_type_id=2, report_scope_id=3, report_scope_value= 1,control_type_id=1, reporting_dictionary_id=1, control_age_group_id=1, date_scheduled="2021-02-25").save()
     #report scope id == 9 nothing should be set
