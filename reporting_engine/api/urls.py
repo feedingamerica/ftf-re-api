@@ -3,17 +3,15 @@ from . import views
 from rest_framework import routers
 
 router = routers.DefaultRouter()
-router.register(r'reports', views.ReportViewSet)
-router.register(r'report_schedules', views.ReportScheduleViewSet)
-router.register(r'run_types', views.RunTypeViewSet)
-router.register(r'timeframe_types', views.TimeframeTypeViewSet)
-router.register(r'report_scopes', views.ReportScopeViewSet)
-router.register(r'control_types', views.ControlTypeViewSet)
-router.register(r'reporting_dictionaries', views.ReportingDictionaryViewSet)
 
 
 urlpatterns = [
-    path('', include(router.urls)),
-    path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
-    # path('report_schedules', views.report_schedule, name='report_schedule')
+    path('reports', views.ReportViewSet, name='reports'),
+    path('report_schedules', views.report_schedule, name='report_schedules'),
+    path('run_types', views.RunTypeViewSet, name='run_types'),
+    path('timeframe_types', views.TimeframeTypeViewSet, name='timeframe_types'),
+    path('report_scopes', views.ReportScopeViewSet, name='report_scopes'),
+    path('control_types', views.ControlTypeViewSet, name='control_types'),
+    path('reporting_dictionaries', views.ReportingDictionaryViewSet, name='reporting_dictionaries'),
+    # path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
 ]

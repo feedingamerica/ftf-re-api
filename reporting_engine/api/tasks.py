@@ -10,27 +10,29 @@ def test():
     print("hi")
 
 def generate_report_and_save(schedule):
-		# TODO: add functionality to check if each schedule is due or not
-		
-		# get data definitions for current schedule and perform necessary calculations to generate the report
-		data_def_dict = get_data_definitions(schedule.id)
+        # TODO: add functionality to check if each schedule is due or not
+        
+        # get data definitions for current schedule and perform necessary calculations to generate the report
+        data_def_dict = get_data_definitions(schedule.id)
 
-		cd = CalculationDispatcher(data_def_dict)
-		cd.run_calculations()
+        cd = CalculationDispatcher(data_def_dict)
+        cd.run_calculations()
 
-		# save the generated report to the database
-		save_report(schedule, data_def_dict)
+        # save the generated report to the database
+        save_report(schedule, data_def_dict)
 
 
 # generates recurring reports if they are due
 @shared_task
 def periodic_report_generation():
-	for schedule in ReportSchedule.objects.all():
+    for schedule in ReportSchedule.objects.all():
         generate_report_and_save(schedule);
 
 @shared_task
-def one_time_report_generation(schedule):
-    generate_report_and_save(schedule);
+def one_time_report_generation(schedule_id):
+    schedule = ReportSchedule.objects.get(id=schedule_id)
+    print(f"Executing one off report generation for {schedule.id}...")
+    # generate_report_and_save(schedule);
 
 
 # saves the given calculated report to the database
@@ -51,39 +53,39 @@ def save_report(schedule, results):
 
 # used for testing purposes
 mock_dict = {
-	'Scope':  {
-		'startDate': '2019-01-01',
-		'endDate': '2019-12-31',
-		'scope_type': 'hierarchy',
-		'scope_field': 'fb_id',
-		'scope_field_value': 21,
-		'control_type_field': 'dummy_is_grocery_service',
-		'control_type_value': 1
-	},
-	'ReportInfo': [
-		{
-			'reportId': 1,
-			'reportDictId': 1, 
-			'dataDefId': 1,
-			'dataDefType': 'integer',
-			'name': 'services_total',
-			'value': 1040876
-		}, 
-		{
-			'reportId': 1,
-			'reportDictId': 1,
-			'dataDefId': 2,
-			'dataDefType': 'integer',
-			'name': 'undup_hh_total',
-			'value': 161114
-		},
+    'Scope':  {
+        'startDate': '2019-01-01',
+        'endDate': '2019-12-31',
+        'scope_type': 'hierarchy',
+        'scope_field': 'fb_id',
+        'scope_field_value': 21,
+        'control_type_field': 'dummy_is_grocery_service',
+        'control_type_value': 1
+    },
+    'ReportInfo': [
         {
-			'reportId': 1,
-			'reportDictId': 1,
-			'dataDefId': 2,
-			'dataDefType': 'float',
-			'name': 'undup_hh_total',
-			'value': 1.507
-		}
+            'reportId': 1,
+            'reportDictId': 1, 
+            'dataDefId': 1,
+            'dataDefType': 'integer',
+            'name': 'services_total',
+            'value': 1040876
+        }, 
+        {
+            'reportId': 1,
+            'reportDictId': 1,
+            'dataDefId': 2,
+            'dataDefType': 'integer',
+            'name': 'undup_hh_total',
+            'value': 161114
+        },
+        {
+            'reportId': 1,
+            'reportDictId': 1,
+            'dataDefId': 2,
+            'dataDefType': 'float',
+            'name': 'undup_hh_total',
+            'value': 1.507
+        }
     ]
 }

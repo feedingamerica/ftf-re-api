@@ -1,8 +1,12 @@
 from django.http import HttpResponse
 from api.models import Report, ReportSchedule, RunType, TimeframeType, ReportScope, ControlType, ReportingDictionary
 from rest_framework import viewsets, permissions
-from .serializers import *
+from rest_framework.response import Response
+from rest_framework import status
 from rest_framework.decorators import api_view
+from .serializers import *
+from .tasks import one_time_report_generation
+
 
 
 class ReportViewSet(viewsets.ModelViewSet):
@@ -56,15 +60,18 @@ class ReportingDictionaryViewSet(viewsets.ModelViewSet):
 def report_schedule(request):
     if request.method == 'POST':
         # serialize input, within serializer determine if report exists
-        serializer = ReportScheduleSerializer(data=request.data)
+        schedule_serializer = ReportScheduleSerializer(data=request.data)
         # serializer.is_valid() should return true if report does not already exist
-        if serializer.is_valid():
-            serializer.save()
+        if schedule_serializer.is_valid():
+            schedule = schedule_serializer.save()
+            if (schedule.run_type.name == "One Time"):
+                print("Executing one-off...")
+                one_time_report_generation.delay(schedule.id)
             # send data to functions to process report schedule
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            return Response(schedule_serializer.data, status=status.HTTP_201_CREATED)
+        return Response(schedule_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     elif request.method == 'GET':
         report_schedules = ReportSchedule.objects.all()
-        serializer = ReportScheduleSerializer(report_schedules, many=True)
+        schedule_serializer = ReportScheduleSerializer(report_schedules, many=True)
         # to be filled in later
-        return Response(serializer.data)
+        return Response(schedule_serializer.data)

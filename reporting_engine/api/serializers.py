@@ -11,10 +11,27 @@ class ReportSerializer(serializers.HyperlinkedModelSerializer):
                   'end_date', 'date_completed']
 
 
-class ReportScheduleSerializer(serializers.HyperlinkedModelSerializer):
+# class ReportScheduleSerializer(serializers.HyperlinkedModelSerializer):
+#     class Meta:
+#         model = ReportSchedule
+#         fields = '__all__'
+class ReportScheduleSerializer(serializers.ModelSerializer):
     class Meta:
         model = ReportSchedule
-        fields = '__all__'
+        fields = [
+                    'run_type', 
+                    'timeframe_type', 
+                    'report_scope', 
+                    'report_scope_value', 
+                    'control_type', 
+                    'reporting_dictionary', 
+                    'control_age_group_id', 
+                    'date_scheduled', 
+                    'date_custom_start', 
+                    'date_custom_end', 
+                    'addin_state_report', 
+                    'addin_foodbank_report'
+                ]
 
 
 class RunTypeSerializer(serializers.HyperlinkedModelSerializer):
