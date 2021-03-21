@@ -115,3 +115,11 @@ GitHub.sublime-settings
 !.vscode/launch.json 
 !.vscode/extensions.json 
 .history
+
+# Xcode #
+.DS_Store
+*.xcworkspace/
+env.xik
+.DS_Store
+*.xcworkspace/
+env.xib
