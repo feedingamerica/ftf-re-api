@@ -4,11 +4,6 @@ from transform_layer.calculations import CalculationDispatcher
 from api.models import ReportSchedule, Report, ReportDataInt, ReportDataFloat
 from datetime import date
 
-# test to ensure tasks/Celery are working
-@shared_task
-def test():
-    print("hi")
-
 def generate_report_and_save(schedule):
         # TODO: add functionality to check if each schedule is due or not
         
