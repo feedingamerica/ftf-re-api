@@ -454,7 +454,6 @@ def get_all_defs_typical(request):
         input_dict["ReportInfo"].append(data_def)
     
 
-    # params = parse_request(input_dict)
     start_time = time.time()
     cd = CalculationDispatcher(input_dict)
     cd.run_calculations()
@@ -564,11 +563,11 @@ def get_family_breakdown(request):
     print_dict(cd.request)
     return render(request, 'transformapi/get-report.html', context)
 
-def get_household_size_ranges_classic(request):
+def test_data_def_3_large(request):
     input_dict = {
         "Scope": {
-            "startDate":"01/01/2020",
-            "endDate":"12/31/2020",
+            "startDate":"01/01/2019",
+            "endDate":"12/31/2019",
             "scope_field":"fb_id",
             "scope_field_value":21,
             "control_type_name":"Is Grocery Service",
@@ -576,18 +575,53 @@ def get_household_size_ranges_classic(request):
         },
         "ReportInfo": [
             {
-                "reportId":1,
-                "reportDictId":1,
-                "dataDefId":31,
-                "name": "household_composition",
-                "dataDefType":3
+                "reportId":3,
+                "reportDictId":3,
+                "dataDefId":3,
+                "name":"undup_indv_total",
+                "dataDefType":"type1"
             }
         ]
     }
 
+    # params = parse_request(input_dict)
+    start_time = time.time()
     cd = CalculationDispatcher(input_dict)
     cd.run_calculations()
 
     context = { 'report_output': format_dict(cd.request)}
-    print_dict(cd.request)
+    print_dict(input_dict)
+    print(str(time.time() - start_time), ' seconds to run query')
     return render(request, 'transformapi/get-report.html', context)
+
+def test_data_def_3_typical(request):
+    input_dict = {
+        "Scope": {
+            "startDate":"01/01/2019",
+            "endDate":"12/31/2019",
+            "scope_field":"loc_id",
+            "scope_field_value":1,
+            "control_type_name":"Is Grocery Service",
+            "control_type_value":1
+        },
+        "ReportInfo": [
+            {
+                "reportId":3,
+                "reportDictId":3,
+                "dataDefId":3,
+                "name":"undup_indv_total",
+                "dataDefType":"type1"
+            }
+        ]
+    }
+
+    # params = parse_request(input_dict)
+    start_time = time.time()
+    cd = CalculationDispatcher(input_dict)
+    cd.run_calculations()
+
+    context = { 'report_output': format_dict(cd.request)}
+    print_dict(input_dict)
+    print(str(time.time() - start_time), ' seconds to run query')
+    return render(request, 'transformapi/get-report.html', context)
+

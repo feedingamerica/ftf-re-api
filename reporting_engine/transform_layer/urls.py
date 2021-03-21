@@ -8,9 +8,10 @@ urlpatterns = [
     path('get-report-big-numbers/', views.get_report_big_numbers, name='get-report-big-numbers'),
     path('get-report-ohio/', views.get_report_ohio, name='get-report-ohio'),
     path('get-report-mofc/', views.get_report_mofc, name='get-report-mofc'),
-    path('demo1/mofc', views.get_demo1_mofc, name='get-demo1-mofc'),
-    path('demo1/franklin', views.get_demo1_franklin, name='get-demo1-franklin'),
     path('get-report-services', views.get_report_services, name='get-report-services'),
     path('get-family-breakdown', views.get_family_breakdown, name = 'get-family-breakdown'),
-    path('get-household-age-ranges', views.get_household_size_ranges_classic, name = "get-household-age-ranges")
+    path('demo1/franklin', views.get_demo1_franklin, name='get-demo1-franklin'),
+    path('demo1/mofc', views.get_demo1_mofc, name='get-demo1-mofc'),
+    path('demo2/def3-large', views.test_data_def_3_large, name = 'test-data-def-3-large'),
+    path('demo2/def3-typical', views.test_data_def_3_typical, name = 'test-data-def-3-typical')
 ]
