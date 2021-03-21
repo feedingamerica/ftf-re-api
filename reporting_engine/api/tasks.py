@@ -17,18 +17,19 @@ def generate_report_and_save(schedule):
         save_report(schedule, data_def_dict)
 
 
-# generates recurring reports if they are due
+# generates recurring reports if they are due based on recurrence parameter
 @shared_task
-def periodic_report_generation():
-    for schedule in ReportSchedule.objects.all():
-        generate_report_and_save(schedule);
+def periodic_report_generation(recurrence):
+	for schedule in ReportSchedule.objects.all():
+    		if(schedule.timeframe_type.recurrence == recurrence):
+    				generate_report_and_save(schedule)
 
+# generates (and saves) a one time report if it has been requested
 @shared_task
 def one_time_report_generation(schedule_id):
     schedule = ReportSchedule.objects.get(id=schedule_id)
     print(f"Executing one off report generation for {schedule.id}...")
     # generate_report_and_save(schedule);
-
 
 # saves the given calculated report to the database
 def save_report(schedule, results):
@@ -67,8 +68,7 @@ mock_dict = {
             'value': 1040876
         }, 
         {
-            'reportId': 1,
-            'reportDictId': 1,
+            'reportId': 1, 'reportDictId': 1,
             'dataDefId': 2,
             'dataDefType': 'integer',
             'name': 'undup_hh_total',
