@@ -6,7 +6,7 @@ from django.db import connections
 from print_dict import print_dict, format_dict
 
 from .calculations import CalculationDispatcher
-from .services.data_service import Data_Service
+from .services.data_service import DataService
 
 
 

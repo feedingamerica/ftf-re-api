@@ -74,7 +74,7 @@ class FamiliesDataService:
 
 
         #data def 26/27 (return same data, outputted graph just has different y axis depending on def )
-    def __get_frequency_visits(self):
+    def get_frequency_visits(self):
         families = self.family_services()
         families = families.groupby(['num_services'])
         families = families.agg({'research_family_key': 'count', 'num_services': 'sum'})
@@ -86,14 +86,14 @@ class FamiliesDataService:
         return families.to_json()
 
     #data def 28
-    def __get_household_composition(self):
+    def get_household_composition(self):
         families = self.family_services()
         
         families = families.groupby('family_composition_type').agg(num_families = ('family_composition_type', 'count')).reset_index()
         return families.to_json()
 
     #data def 29
-    def __get_family_comp_key_insight(self):
+    def get_family_comp_key_insight(self):
         families = self.family_services()
         families = families.groupby('family_composition_type').agg(num_families = ('family_composition_type', 'count'))
 
@@ -111,7 +111,7 @@ class FamiliesDataService:
         return families.to_json()
 
     #data def 30
-    def __get_household_size_distribution_1_to_10(self):
+    def get_household_size_distribution_1_to_10(self):
         """Calculate Families Breakdown DataDef 30
 
         Arguments:
@@ -140,7 +140,7 @@ class FamiliesDataService:
         return families.to_json()
 
     #data def 31
-    def __get_household_size_distribution_classic(self):
+    def get_household_size_distribution_classic(self):
         families = self.family_services()
 
         families = families.groupby('avg_fam_size').count()
@@ -172,15 +172,15 @@ class FamiliesDataService:
 
     def get_data_for_definition(self, id):
         data_def_function_switcher = {
-            26: self.__get_frequency_visits.__name__,
-            27: self.__get_frequency_visits.__name__,
-            28: self.__get_household_composition.__name__,
-            29: self.__get_family_comp_key_insight.__name__,
-            30: self.__get_household_size_distribution_1_to_10.__name__,
-            31: self.__get_family_comp_key_insight.__name__,
+            26: self.get_frequency_visits.__name__,
+            27: self.get_frequency_visits.__name__,
+            28: self.get_household_composition.__name__,
+            29: self.get_family_comp_key_insight.__name__,
+            30: self.get_household_size_distribution_1_to_10.__name__,
+            31: self.get_family_comp_key_insight.__name__,
         }   
  
-        func = getattr(self, data_def_function_switcher[id],  lambda _: DataFrame())
+        func = getattr(self, data_def_function_switcher[id],  lambda: None)
         return func()
 
     

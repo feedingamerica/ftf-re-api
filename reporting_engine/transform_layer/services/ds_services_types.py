@@ -75,7 +75,7 @@ class ServiceTypesDataService:
 
 
     # data def 23
-    def __get_services_summary(self):
+    def get_services_summary(self):
         """Calculate number of people served DataDef 23
 
         Arguments:
@@ -95,7 +95,7 @@ class ServiceTypesDataService:
         return base_services.to_json()
 
     # data def 24
-    def __get_services_category(self):
+    def get_services_category(self):
         """Calculate number of people served DataDef 24
 
         Arguments:
@@ -115,7 +115,7 @@ class ServiceTypesDataService:
         return base_services.to_json()
 
     # data def 25
-    def __get_distribution_outlets(self):
+    def get_distribution_outlets(self):
         """Calculate number of people served DataDef 25
 
         Arguments:
@@ -138,10 +138,10 @@ class ServiceTypesDataService:
 
     def get_data_for_definition(self, id):
         data_def_function_switcher = {
-            23: self.__get_services_summary.__name__,
-            24: self.__get_services_category.__name__,
-            25: self.__get_distribution_outlets.__name__
+            23: self.get_services_summary.__name__,
+            24: self.get_services_category.__name__,
+            25: self.get_distribution_outlets.__name__
         }   
 
-        func = getattr(self, data_def_function_switcher[id],  lambda _: DataFrame())
+        func = getattr(self, data_def_function_switcher[id],  lambda : None)
         return func()

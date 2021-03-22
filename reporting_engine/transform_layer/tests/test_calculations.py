@@ -1,6 +1,6 @@
 from django.test import TestCase
 import transform_layer.calculations as calc
-from transform_layer.services.data_service import Data_Service as ds
+from transform_layer.services.data_service import DataService
 from django.db import connections
 import pandas
 
@@ -90,140 +90,139 @@ EXPECTED_JSON_RESULTS = read_expected_json()
 
 class CalculationsTestCase(unittest.TestCase):
     
-
-    
     def test_get_services_total(self):
         #how to avoid repeatedly making database requests in calculation tests?
         #might want to instantiate the data service object
         #might want to pass a connection to mock database in data_service.get_fact_service
         #make data service a singleton
-        func = calc.data_calc_function_switcher[1]
-        result = func(1,sample_scope_2)
+
+        ds = DataService(sample_scope_2)
+        result = ds.get_data_for_definition(1)
         self.assertEqual(result, EXPECTED_INT_RESULTS["services_total"]["franklin_value"])
     
     def test_get_undup_hh_total(self):
-        func = calc.data_calc_function_switcher[2]
-        result = func(2,sample_scope_2)
+        ds = DataService(sample_scope_2)
+        result = ds.get_data_for_definition(2)
         self.assertEqual(result, EXPECTED_INT_RESULTS["undup_hh_total"]["franklin_value"])
     
     def test_get_undup_indv_total(self):
-        func = calc.data_calc_function_switcher[3]
-        result = func(3,sample_scope_2)
+        ds = DataService(sample_scope_2)
+        result = ds.get_data_for_definition(3)
         self.assertEqual(result, EXPECTED_INT_RESULTS["undup_indv_total"]["franklin_value"])
     def test_get_services_per_uhh_avg(self):
-        func = calc.data_calc_function_switcher[4]
-        result = func(4,sample_scope_2)
+        ds = DataService(sample_scope_2)
+        result = ds.get_data_for_definition(4)
         self.assertAlmostEqual(result, EXPECTED_INT_RESULTS["services_per_uhh_avg"]["franklin_value"])
     
     #Ohio Addin
     def test_get_hh_wminor(self):
-        func = calc.data_calc_function_switcher[5]
-        result = func(5,sample_scope_2)
+        ds = DataService(sample_scope_2)
+        result = ds.get_data_for_definition(5)
         self.assertAlmostEqual(result, EXPECTED_INT_RESULTS["hh_wminor"]["franklin_value"])
         
 
     def test_get_hh_wominor(self):
-        func = calc.data_calc_function_switcher[6]
-        result = func(6,sample_scope_2)
+        ds = DataService(sample_scope_2)
+        result = ds.get_data_for_definition(6)
         self.assertAlmostEqual(result, EXPECTED_INT_RESULTS["hh_wominor"]["franklin_value"])
         
     def test_get_hh_total(self):
-        func = calc.data_calc_function_switcher[7]
-        result = func(7,sample_scope_2)
+        ds = DataService(sample_scope_2)
+        result = ds.get_data_for_definition(7)
         self.assertAlmostEqual(result, EXPECTED_INT_RESULTS["hh_total"]["franklin_value"])
         
     def test_get_indv_sen_hh_wminor(self):
-        func = calc.data_calc_function_switcher[8]
-        result = func(8,sample_scope_2)
+        ds = DataService(sample_scope_2)
+        result = ds.get_data_for_definition(8)
         self.assertAlmostEqual(result, EXPECTED_INT_RESULTS["indv_sen_hh_wminor"]["franklin_value"])
         
     def test_get_indv_sen_hh_wominor(self):
-        func = calc.data_calc_function_switcher[9]
-        result = func(9,sample_scope_2)
+        ds = DataService(sample_scope_2)
+        result = ds.get_data_for_definition(9)
         self.assertAlmostEqual(result, EXPECTED_INT_RESULTS["indv_sen_hh_wominor"]["franklin_value"])
         
     def test_get_indv_sen_total(self):
-        func = calc.data_calc_function_switcher[10]
-        result = func(10,sample_scope_2)
+        ds = DataService(sample_scope_2)
+        result = ds.get_data_for_definition(10)
         self.assertAlmostEqual(result, EXPECTED_INT_RESULTS["indv_sen_total"]["franklin_value"])
         
     def test_get_indv_adult_hh_wminor(self):
-        func = calc.data_calc_function_switcher[11]
-        result = func(11,sample_scope_2)
+        ds = DataService(sample_scope_2)
+        result = ds.get_data_for_definition(11)
         self.assertAlmostEqual(result, EXPECTED_INT_RESULTS["indv_adult_hh_wminor"]["franklin_value"])
         
     def test_get_indv_adult_hh_wominor(self):
-        func = calc.data_calc_function_switcher[12]
-        result = func(12,sample_scope_2)
+        ds = DataService(sample_scope_2)
+        result = ds.get_data_for_definition(12)
         self.assertAlmostEqual(result, EXPECTED_INT_RESULTS["indv_adult_hh_wominor"]["franklin_value"])
         
     def test_get_indv_adult_total(self):
-        func = calc.data_calc_function_switcher[13]
-        result = func(13,sample_scope_2)
+        ds = DataService(sample_scope_2)
+        result = ds.get_data_for_definition(13)
         self.assertAlmostEqual(result, EXPECTED_INT_RESULTS["indv_adult_total"]["franklin_value"])
         
     def test_get_indv_child_hh_wminor(self):
-        func = calc.data_calc_function_switcher[14]
-        result = func(14,sample_scope_2)
+        ds = DataService(sample_scope_2)
+        result = ds.get_data_for_definition(14)
         self.assertAlmostEqual(result, EXPECTED_INT_RESULTS["indv_child_hh_wminor"]["franklin_value"])
         
     def test_get_indv_child_hh_wominor(self):
-        func = calc.data_calc_function_switcher[15]
-        result = func(15,sample_scope_2)
+        ds = DataService(sample_scope_2)
+        result = ds.get_data_for_definition(15)
         self.assertAlmostEqual(result, EXPECTED_INT_RESULTS["indv_child_hh_wominor"]["franklin_value"])
         
     def test_get_indv_child_total(self):
-        func = calc.data_calc_function_switcher[16]
-        result = func(16,sample_scope_2)
+        ds = DataService(sample_scope_2)
+        result = ds.get_data_for_definition(16)
         self.assertAlmostEqual(result, EXPECTED_INT_RESULTS["indv_child_total"]["franklin_value"])
         
     def test_get_indv_total_hh_wminor(self):
-        func = calc.data_calc_function_switcher[17]
-        result = func(17,sample_scope_2)
+        ds = DataService(sample_scope_2)
+        result = ds.get_data_for_definition(17)
         self.assertAlmostEqual(result, EXPECTED_INT_RESULTS["indv_total_hh_wminor"]["franklin_value"])
         
     def test_get_indv_total_hh_wominor(self):
-        func = calc.data_calc_function_switcher[18]
-        result = func(18,sample_scope_2)
+        ds = DataService(sample_scope_2)
+        result = ds.get_data_for_definition(18)
         self.assertAlmostEqual(result, EXPECTED_INT_RESULTS["indv_total_hh_wominor"]["franklin_value"])
         
     def test_get_indv_total(self):
-        func = calc.data_calc_function_switcher[19]
-        result = func(19,sample_scope_2)
+        ds = DataService(sample_scope_2)
+        result = ds.get_data_for_definition(19)
         self.assertAlmostEqual(result, EXPECTED_INT_RESULTS["indv_total"]["franklin_value"])
         
     # #MOFC addin
     def test_get_hh_wsenior(self):
-        func = calc.data_calc_function_switcher[20]
-        result = func(20,sample_scope_2)
+        ds = DataService(sample_scope_2)
+        result = ds.get_data_for_definition(20)
         self.assertAlmostEqual(result, EXPECTED_INT_RESULTS["hh_wsenior"]["franklin_value"])
         
     def test_get_hh_wosenior(self):
-        func = calc.data_calc_function_switcher[21]
-        result = func(21,sample_scope_2)
+        ds = DataService(sample_scope_2)
+        result = ds.get_data_for_definition(21)
         self.assertAlmostEqual(result, EXPECTED_INT_RESULTS["hh_wosenior"]["franklin_value"])
         
     def test_get_hh_grandparent(self):
-        func = calc.data_calc_function_switcher[22]
-        result = func(22,sample_scope_2)
+        ds = DataService(sample_scope_2)
+        result = ds.get_data_for_definition(22)
         self.assertAlmostEqual(result, EXPECTED_INT_RESULTS["hh_grandparent"]["franklin_value"])
     
     # Base services
     def test_get_services_summary(self):
-        func = calc.data_calc_function_switcher[23]
-        result = func(23, base_services_scope)
+        ds = DataService(base_services_scope)
+        result = ds.get_data_for_definition(23)
         self.maxDiff = None
         self.assertEqual(json.loads(result), json.loads(EXPECTED_JSON_RESULTS["service_summary_service"]["mofc_value"]))
         
     def test_get_services_category(self):
-        func = calc.data_calc_function_switcher[24]
-        result = func(24, base_services_scope)
+        ds = DataService(base_services_scope)
+        result = ds.get_data_for_definition(24)
         self.maxDiff = None
         self.assertEqual(json.loads(result), json.loads(EXPECTED_JSON_RESULTS["service_category_service"]["mofc_value"]))
 
     def test_get_distribution_outlets(self):
-        func = calc.data_calc_function_switcher[25]
-        result = func(25, base_services_scope)
+        ds = DataService(base_services_scope)
+        result = ds.get_data_for_definition(25)
         self.maxDiff = None
         self.assertEqual(json.loads(result), json.loads(EXPECTED_JSON_RESULTS["distribution_outlets"]["mofc_value"]))
     
@@ -238,8 +237,8 @@ class CalculationsTestCase(unittest.TestCase):
                 "14":26446,"15":25365,"16":24864,"17":22763,"18":22392,"19":20919,"20":20420,"21":19341,"22":17534,"23":17181,"24":16656,"25":366004
             }
         }
-        func = calc.data_calc_function_switcher[26]
-        result = func(26, base_services_scope)
+        ds = DataService(base_services_scope)
+        result = ds.get_data_for_definition(26)
         resultDict = json.loads(result)
         self.assertDictEqual(resultDict, expected)
 
@@ -266,8 +265,8 @@ class CalculationsTestCase(unittest.TestCase):
                 "6":30385
             }
         }
-        func = calc.data_calc_function_switcher[28]
-        result = func(28, base_services_scope)
+        ds = DataService(base_services_scope)
+        result = ds.get_data_for_definition(28)
         resultDict = json.loads(result)
         self.assertDictEqual(resultDict, expected)
 
@@ -288,8 +287,8 @@ class CalculationsTestCase(unittest.TestCase):
                 "1":58365,
             }
         }
-        func = calc.data_calc_function_switcher[29]
-        result = func(29, base_services_scope)
+        ds = DataService(base_services_scope)
+        result = ds.get_data_for_definition(29)
         resultDict = json.loads(result)
         self.assertDictEqual(resultDict, expected)
 
@@ -305,8 +304,8 @@ class CalculationsTestCase(unittest.TestCase):
                 "0": "1 - 3", "1": "1 - 3", "2": "1 - 3", "3": "4 - 6", "4": "4 - 6", "5": "4 - 6", "6": "7+", "7": "7+", "8": "7+", "9": "7+"
             }
         }
-        func = calc.data_calc_function_switcher[30]
-        result = func(30, base_services_scope)
+        ds = DataService(base_services_scope)
+        result = ds.get_data_for_definition(30)
         resultDict = json.loads(result)
         self.assertDictEqual(resultDict, expected)
 
@@ -316,8 +315,8 @@ class CalculationsTestCase(unittest.TestCase):
             '4 - 6':60758,
             '7+':12297
         }
-        func = calc.data_calc_function_switcher[31]
-        result = func(31, base_services_scope)
+        ds = DataService(base_services_scope)
+        result = ds.get_data_for_definition(31)
         resultDict = json.loads(result)
         self.assertDictEqual(resultDict, expected)
 
