@@ -2,228 +2,51 @@ from pandas.core.frame import DataFrame
 import dateutil.parser as parser
 import pandas as pd
 from django.db import connections
+from transform_layer.services.ds_fact_services import FactServicesDataService
+from transform_layer.services.ds_families import FamiliesDataService
+from transform_layer.services.ds_services_types import ServiceTypesDataService
 
 import copy
 
 SCOPE_HIERARCHY = "hierarchy"
 SCOPE_GEOGRAPHY = "geography"
 
-class Data_Service:
+class DataService:
     __scope:str = None
-    __fact_services:DataFrame = None
-    ##  getter and setter for __fact_services based on the scope "hierarchy" or "geography"
-    ##  Columns always in services:
-    ##      research_service_key
-    ##      service_status
-    ##      service_id
-    ##      research_family_key
-    ##      research_member_key
-    ##      served_children
-    ##      served_adults
-    ##      served_seniors
-    ##      served_total
-    ##      Additional columns depending on params:
-    ##      hierarchy_id - if scope_type is "hierarchy"
-    ##      dimgeo_id - if scope_type is "geography"
-    @classmethod
-    def fact_services(cls,params):
-        if cls.__fact_services is None:
-            cls.__fact_services = cls.__get_fact_services(params)
-        return cls.__fact_services
+
+    def __init__(self, scope):
+        self.scope = scope
+        self.fact_services_service = FactServicesDataService(self.scope)
+        self.families_service = FamiliesDataService(self.scope)
+        self.service_types_service = ServiceTypesDataService(self.scope)
+
+
+    # ## returns DataFrame for a specific data definition
+    # @classmethod
+    # def get_data_for_definition(cls, id, params):
+    #     if( params != cls.__scope):
+    #         cls.__fact_services = None
+    #         cls.__base_services = None
+    #         cls.__family_services = None
+    #         cls.__scope = copy.deepcopy(params)
+    #     func = cls.data_def_function_switcher.get(id, cls.get_data_def_error)
+    #     return func(params)
+
+
     
-    __base_services:DataFrame = None
-    ## getter and setter for __base_services
-    ##  Columns always in services:
-    ##      research_service_key
-    ##      research_family_key
-    ##      service_id
-    ##      service_name
-    ##      service_category_code
-    ##      service_category_name
-    ##      served_total
-    ##      loc_id
-    @classmethod
-    def base_services(cls,params):
-        if cls.__base_services is None:
-            cls.__base_services = cls.__get_base_services(params)
-        return cls.__base_services
-
-    __family_services:DataFrame = None
-    ## getter and setter for __family_services
-    @classmethod
-    def family_services(cls, params):
-        if cls.__family_services is None:
-            cls.__family_services = cls.__get_family_services(params)
-        return cls.__family_services
-
     ## returns DataFrame for a specific data definition
-    @classmethod
-    def get_data_for_definition(cls, id, params):
-        if( params != cls.__scope):
-            cls.__fact_services = None
-            cls.__base_services = None
-            cls.__family_services = None
-            cls.__scope = copy.deepcopy(params)
-        func = cls.data_def_function_switcher.get(id, cls.get_data_def_error)
-        return func(params)
+    def get_data_for_definition(self, id):
+        if id>=1 and id <= 22:
+            return self.fact_services_service.get_data_for_definition(id)
+        elif id <= 25:
+            return self.families_service.get_data_for_definition(id)
+        elif id <= 31:
+            return self.service_types_service.get_data_for_definition(id)
 
-    ## retrieves fact_services
-    @classmethod
-    def __get_fact_services(cls, params):
-        conn = connections['source_db']
 
-        table1 = ""
-        left1 = right1 = ""
 
-        if params["scope_type"] == "hierarchy":
-            table1 = "dim_hierarchies"
-            left1 = right1 = "hierarchy_id"
-        elif params["scope_type"] == "geography":
-            table1 = "dim_geos"
-            left1 = "dimgeo_id"
-            right1 = "id"
 
-        control_type_name = params["control_type_name"]
-        control_query = cls.__get_control_query(control_type_name)
-        scope_field = params["scope_field"]
-        scope_value = params["scope_field_value"]
-        start_date = cls.__date_str_to_int(params["startDate"])
-        end_date = cls.__date_str_to_int(params["endDate"])
 
-        query = f"""
-        SELECT
-            fs.research_service_key,
-            fs.{left1},
-            fs.service_status,
-            fs.service_id,
-            fs.research_family_key,
-            fs.served_children,
-            fs.served_adults,
-            fs.served_seniors,
-            fs.served_total,
-            fsm.research_member_key
-        FROM 
-            fact_services AS fs
-            INNER JOIN dim_service_types ON fs.service_id = dim_service_types.id
-            LEFT JOIN {table1} AS t1 ON fs.{left1} = t1.{right1}
-            LEFT JOIN dim_service_statuses ON fs.service_status = dim_service_statuses.status 
-            LEFT JOIN fact_service_members AS fsm ON fs.research_service_key = fsm.research_service_key
-        WHERE
-            fs.service_status = 17
-            AND {control_query}
-            AND t1.{scope_field} = {scope_value}
-            AND fs.date >= {start_date} AND fs.date <= {end_date}
-        """
-
-        return pd.read_sql(query, conn)
-
-    @classmethod
-    def __get_base_services(cls, params):
-        conn = connections['source_db']
-
-        extra_join = ""
-        if params["scope_type"] == "hierarchy":
-            table1 = "dim_hierarchies"
-            left1 = right1 = "hierarchy_id"
-        elif params["scope_type"] == "geography":
-            table1 = "dim_geos"
-            left1 = "dimgeo_id"
-            right1 = "id"
-            extra_join = """INNER JOIN dim_hierarchies ON fact_services.hiearchy_id = dim_hiearchies.loc_id"""
-
-        control_type_name = params["control_type_name"]
-        control_query = cls.__get_control_query(control_type_name)
-        scope_field = params["scope_field"]
-        scope_value = params["scope_field_value"]
-        start_date = cls.__date_str_to_int(params["startDate"])
-        end_date = cls.__date_str_to_int(params["endDate"])
-
-        query = f"""
-        SELECT
-            fact_services.research_service_key,
-            fact_services.research_family_key,
-            fact_services.service_id,
-            dim_service_types.name as service_name,
-            dim_service_types.service_category_code,
-            dim_service_types.service_category_name,
-            fact_services.served_total,
-            dim_hierarchies.loc_id
-        FROM
-            fact_services
-            INNER JOIN dim_service_types ON fact_services.service_id = dim_service_types.id
-            INNER JOIN {table1} ON fact_services.{left1} = {table1}.{right1}
-            {extra_join if params["scope_type"] == "geography" else ""}
-        WHERE
-            fact_services.service_status = 17 
-            AND {control_query}
-            AND fact_services.date >= {start_date} AND fact_services.date <= {end_date}
-            AND {table1}.{scope_field} = {scope_value}
-        """
-        return pd.read_sql(query, conn)
-
-    @classmethod
-    def __get_family_services(cls, params):
-        conn = connections['source_db']
-
-        table1 = ""
-        left1 = right1 = ""
-
-        if params["scope_type"] == "hierarchy":
-            table1 = "dim_hierarchies"
-            left1 = right1 = "hierarchy_id"
-        elif params["scope_type"] == "geography":
-            table1 = "dim_geos"
-            left1 = "dimgeo_id"
-            right1 = "id"
-
-        control_type_name = params["control_type_name"]
-        control_query = cls.__get_control_query(control_type_name)
-        scope_field = params["scope_field"]
-        scope_value = params["scope_field_value"]
-        start_date = cls.__date_str_to_int(params["startDate"])
-        end_date = cls.__date_str_to_int(params["endDate"])
-
-        query = f"""
-        SELECT
-            fact_services.research_family_key,
-            COUNT(fact_services.research_service_key) AS num_services,
-            AVG(fact_services.served_total) AS avg_fam_size,
-            SUM(fact_services.is_first_service_date) as timeframe_has_first_service_date,
-            AVG(fact_services.days_since_first_service) AS avg_days_since_first_service,
-            MAX(fact_services.days_since_first_service) AS max_days_since_first_service,
-            dim_family_compositions.family_composition_type
-        FROM 
-            fact_services
-            INNER JOIN dim_families ON fact_services.research_family_key = dim_families.research_family_key
-            INNER JOIN dim_family_compositions ON dim_families.family_composition_type = dim_family_compositions.id
-            INNER JOIN dim_service_types ON fact_services.service_id = dim_service_types.id
-            INNER JOIN {table1}  ON fact_services.{left1} = {table1}.{right1}
-        WHERE
-            fact_services.service_status = 17 
-            AND {control_query}
-            AND fact_services.date >= {start_date} AND fact_services.date <= {end_date}
-            AND {table1}.{scope_field} = {scope_value}
-        GROUP BY
-            fact_services.research_family_key,
-            dim_family_compositions.family_composition_type
-        """
-        
-        return pd.read_sql(query, conn)
-
-    @staticmethod
-    def __get_control_query(control_type_name):
-        if (control_type_name == "Prepack & Choice only"):
-            return f"dim_service_types.service_category_code IN (10, 15)"
-        elif (control_type_name == "Produce only"):
-            return f"dim_service_types.service_category_code IN (20)"
-        else:
-            return f"dim_service_types.dummy_is_grocery_service = 1"
-
-    @staticmethod
-    def __date_str_to_int(date):
-        dt = parser.parse(date,dayfirst = False)
-        date_int = (10000*dt.year)+ (100 * dt.month) + dt.day 
-        return date_int
 
     ## DataFrame to fulfill Data Definition 1
     ####    Returns: services
@@ -321,12 +144,7 @@ class Data_Service:
         services = Data_Service.fact_services(params).drop_duplicates(subset = 'research_service_key', inplace = False)
         return services[services['served_adults']>0]
     
-    ## DataFrame to fulfill Data Definition 15
-    ####    Returns: empty
-    ####        empty - empty data table (no such thing as children wo minors)
-    @staticmethod
-    def __get_child_wominor(params):
-        return DataFrame()
+
     
     ## DataFrame to fulfill Data Definition 21
     ####    Returns services_wosenior
@@ -336,22 +154,8 @@ class Data_Service:
         services = Data_Service.fact_services(params).drop_duplicates(subset = 'research_service_key', inplace = False)
         return services[services['served_seniors']==0]
 
-    ## DataFrame to fulfill Data Definition 23, 24, 25
-    ####    Returns base_services
-    @staticmethod
-    def __get_service_summary(params):
-        return Data_Service.base_services(params)
 
-    ## DataFrame to fulfill Data Definition 26,27, 28, 29, 30, 31
-    ## Returns family_services
-    @staticmethod
-    def __get_household_composition(params):
-        return Data_Service.family_services(params)
 
-    ## error, none
-    @staticmethod
-    def get_data_def_error(params):
-        return DataFrame()
 
     ## Data Defintion Switcher
     # usage:
@@ -380,13 +184,4 @@ class Data_Service:
             20: __get_sen.__func__,
             21: __get_wosenior.__func__,
             22: __get_sen_wminor.__func__,
-            23: __get_service_summary.__func__,
-            24: __get_service_summary.__func__,
-            25: __get_service_summary.__func__,
-            26: __get_household_composition.__func__,
-            27: __get_household_composition.__func__,
-            28: __get_household_composition.__func__,
-            29: __get_household_composition.__func__,
-            30: __get_household_composition.__func__,
-            31: __get_household_composition.__func__,
         }
