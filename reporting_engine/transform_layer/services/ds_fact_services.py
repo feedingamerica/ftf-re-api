@@ -108,8 +108,8 @@ class FactServicesDataService:
         num_services_avg - average number of services per family
 
         """
-        services = self.__get_services_total()
-        families = self.__get_undup_hh_total()
+        services = self.get_services_total()
+        families = self.get_undup_hh_total()
         return services/families
 
     #data def 5
@@ -133,7 +133,7 @@ class FactServicesDataService:
     ####    Returns: sen_hh_wminor
     ####        sen_hh_wminor - fact service data table, filtered on served_children > 0 and served_seniors > 0
     def get_indv_sen_hh_wminor(self):
-        services = self.fact_services.drop_duplicates(subset = 'research_service_key', inplace = False)
+        services = self.fact_services().drop_duplicates(subset = 'research_service_key', inplace = False)
         seniors = services[services['served_seniors']>0]
         senior_wminor = seniors[seniors['served_children']>0]
         return senior_wminor['served_seniors'].sum()
@@ -142,7 +142,7 @@ class FactServicesDataService:
     ####    Returns: sen_hh_wominor
     ####        sen_hh_wominor - fact service data table, filtered on served_children == 0 and served_seniors > 0
     def get_indv_sen_hh_wominor(self):
-        services = self.fact_services.drop_duplicates(subset = 'research_service_key', inplace = False)
+        services = self.fact_services().drop_duplicates(subset = 'research_service_key', inplace = False)
         seniors = services[services['served_seniors']>0]
         senior_wominor =  seniors[seniors['served_children']==0]
         return senior_wominor['served_seniors'].sum()
@@ -152,8 +152,8 @@ class FactServicesDataService:
     ####        sen_hh - fact service data table, filtered on served_seniors > 0
     def get_sen_total(self):
         services = self.fact_services().drop_duplicates(subset = 'research_service_key', inplace = False)
-        sen_total = services[services['served_seniors']>0].sum()
-        return sen_total
+        seniors = services[services['served_seniors']>0]
+        return seniors['served_seniors'].sum()
 
         ## DataFrame to fulfill Data Definition 11
     ####    Returns: adult_hh_wminor

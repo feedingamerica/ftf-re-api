@@ -14,13 +14,22 @@ from transform_layer.services.utils import date_str_to_int, get_control_query
 
 
 class FamiliesDataService:
+    _stored_scope = None
+    _stored_services = None
+
     def __init__(self, scope):
-        self._family_services: DataFrame = None
-        self.scope = scope
+        if(scope != FamiliesDataService._stored_scope):
+            self._family_services: DataFrame = None
+            self.scope = scope
+        else:
+            self.scope = FamiliesDataService._stored_scope
+            self._family_services = FamiliesDataService._stored_services
         
     def family_services(self):
         if self._family_services is None:
-            self._family_services = self.__get_family_services(self.scope)
+            self._family_services = self.__get_family_services()
+            FamiliesDataService._stored_services = self._family_services
+            FamiliesDataService._stored_scope = self.scope
         return self._family_services
 
 

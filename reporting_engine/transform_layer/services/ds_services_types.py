@@ -8,9 +8,15 @@ import copy
 
 
 class ServiceTypesDataService:
+    _stored_scope = None
+    _stored_services = None
     def __init__(self, scope):
-        self._base_services: DataFrame = None
-        self.scope = scope
+        if(scope != ServiceTypesDataService._stored_scope):
+            self._base_services: DataFrame = None
+            self.scope = scope
+        else:
+            self.scope = ServiceTypesDataService._stored_scope
+            self._base_services = ServiceTypesDataService._stored_services
 
     ## getter and setter for __base_services
     ##  Columns always in services:
@@ -22,10 +28,11 @@ class ServiceTypesDataService:
     ##      service_category_name
     ##      served_total
     ##      loc_id
-    @property
-    def base_services(self,params):
+    def base_services(self):
         if self._base_services is None:
-            self._base_services = self.__get_base_services(params)
+            self._base_services = self.__get_base_services()
+            ServiceTypesDataService._stored_services = self._base_services
+            ServiceTypesDataService._stored_scope = self.scope
         return self._base_services
 
 

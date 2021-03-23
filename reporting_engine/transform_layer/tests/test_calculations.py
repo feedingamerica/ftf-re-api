@@ -10,6 +10,8 @@ import os
 import sys
 import json
 
+#threshold above which two floats are considered different
+DELTA = 10e-5
 
 sample_scope_1 = {
     "startDate":"2019-01-01",
@@ -112,7 +114,7 @@ class CalculationsTestCase(unittest.TestCase):
     def test_get_services_per_uhh_avg(self):
         ds = DataService(sample_scope_2)
         result = ds.get_data_for_definition(4)
-        self.assertAlmostEqual(result, EXPECTED_INT_RESULTS["services_per_uhh_avg"]["franklin_value"])
+        self.assertAlmostEqual(result, EXPECTED_INT_RESULTS["services_per_uhh_avg"]["franklin_value"], delta= DELTA)
     
     #Ohio Addin
     def test_get_hh_wminor(self):
@@ -240,6 +242,7 @@ class CalculationsTestCase(unittest.TestCase):
         ds = DataService(base_services_scope)
         result = ds.get_data_for_definition(26)
         resultDict = json.loads(result)
+        self.maxDiff = None
         self.assertDictEqual(resultDict, expected)
 
         
@@ -268,6 +271,7 @@ class CalculationsTestCase(unittest.TestCase):
         ds = DataService(base_services_scope)
         result = ds.get_data_for_definition(28)
         resultDict = json.loads(result)
+        self.maxDiff = None
         self.assertDictEqual(resultDict, expected)
 
     def test_get_family_comp_key_insight(self):
@@ -290,6 +294,7 @@ class CalculationsTestCase(unittest.TestCase):
         ds = DataService(base_services_scope)
         result = ds.get_data_for_definition(29)
         resultDict = json.loads(result)
+        self.maxDiff = None
         self.assertDictEqual(resultDict, expected)
 
     def test_get_household_size_distribution_1_to_10(self):
@@ -307,6 +312,7 @@ class CalculationsTestCase(unittest.TestCase):
         ds = DataService(base_services_scope)
         result = ds.get_data_for_definition(30)
         resultDict = json.loads(result)
+        self.maxDiff = None
         self.assertDictEqual(resultDict, expected)
 
     def test_get_household_size_distribution_classic(self):
@@ -318,6 +324,7 @@ class CalculationsTestCase(unittest.TestCase):
         ds = DataService(base_services_scope)
         result = ds.get_data_for_definition(31)
         resultDict = json.loads(result)
+        self.maxDiff = None
         self.assertDictEqual(resultDict, expected)
 
 
