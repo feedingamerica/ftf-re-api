@@ -2,7 +2,8 @@ from celery import shared_task
 from api.utils import get_data_definitions
 from transform_layer.calculations import CalculationDispatcher
 from api.models import ReportSchedule, Report, ReportDataInt, ReportDataFloat
-from datetime import date
+import datetime
+from datetime import date, timedelta
 
 # calculates report parameters, generates the report, and saves it to the reports database
 def generate_report_and_save(schedule):      
@@ -12,7 +13,7 @@ def generate_report_and_save(schedule):
     # once get_data_definitions is updated to take 3 parameters...
     # start_date, end_date = calculate_dates(schedule)
     # data_def_dict = get_data_definitions(schedule.id, start_date, end_date)
-    
+
     cd = CalculationDispatcher(data_def_dict)
     cd.run_calculations()
 
