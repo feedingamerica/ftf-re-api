@@ -39,6 +39,7 @@ def calculate_dates(schedule):
         start_date = datetime.date(end_date.year, 1, 1)
     elif (schedule.timeframe_type.name == "Fiscal year to date"):
         # July 1 of the previous year
+        start_date = datetime.date(end_date.year - 1, 7, 1)
     elif (schedule.timeframe_type.name == "Custom Date Range"):
         # these custom dates are stored in the report_schedules table 
         start_date = schedule.date_custom_start
