@@ -18,7 +18,7 @@ Written by Joy Lin, Nick Biederman, Alli Hornyak, and Emily Robinson
 from django.db import models
 
 class TimeframeType(models.Model):
-    """Defines TimeframeType table (named time_frame_types in mysql database)"""
+    """Defines TimeframeType table (named timeframe_types in mysql database)"""
     name = models.CharField(max_length = 255, blank = True)
     dim_dates_reference = models.TextField(blank = True)
     current_start_date = models.DateField(null = True, blank = True)
