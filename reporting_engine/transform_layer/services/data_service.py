@@ -58,7 +58,7 @@ class Data_Service:
 
     ## returns DataFrame for a specific data definition
     @classmethod
-    def get_data_for_definition(cls, id, params):
+    def get_data_for_definition(cls, id, params): 
         if( params != cls.__scope):
             cls.__fact_services = None
             cls.__base_services = None
@@ -216,6 +216,10 @@ class Data_Service:
             return f"dim_service_types.service_category_code IN (10, 15)"
         elif (control_type_name == "Produce only"):
             return f"dim_service_types.service_category_code IN (20)"
+        elif (control_type_name == "Everything"):
+            return f"dim_service_types.service_category_code = *"
+        elif (control_type_name == "TEFAP"):
+            return f'dim_service_types.name = "TEFAP"'
         else:
             return f"dim_service_types.dummy_is_grocery_service = 1"
 
