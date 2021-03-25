@@ -9,7 +9,7 @@ router.register(r'timeframe_types', views.TimeframeTypeViewSet)
 router.register(r'report_scopes', views.ReportScopeViewSet)
 router.register(r'control_types', views.ControlTypeViewSet)
 router.register(r'reporting_dictionaries', views.ReportingDictionaryViewSet)
-router.register(r'report_schedules', views.ReportScheduleViewSet, basename='report_schedules')
+router.register(r'report_schedules', views.ReportScheduleViewSet)
 
 
 urlpatterns = [
