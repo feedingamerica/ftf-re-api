@@ -26,7 +26,7 @@ def periodic_report_generation(recurrence):
 @shared_task
 def one_time_report_generation(schedule_id):
 	schedule = ReportSchedule.objects.get(id=schedule_id)
-	print(f"Executing one off report generation for {schedule.id}...")
+	print(f"Testing execution of one off report generation for {schedule.id}...")
 	# generate_report_and_save(schedule);
 
 # saves the given calculated report to the reports database

@@ -53,25 +53,16 @@ class ReportingDictionaryViewSet(viewsets.ModelViewSet):
     serializer_class = ReportingDictionarySerializer
     permission_classes = [permissions.IsAuthenticated]
 
-# Create your views here.
-
-
-@api_view(['GET', 'POST'])
-def report_schedule(request):
-    if request.method == 'POST':
-        # serialize input, within serializer determine if report exists
-        schedule_serializer = ReportScheduleSerializer(data=request.data)
-        # serializer.is_valid() should return true if report does not already exist
+class ReportScheduleViewSet(viewsets.ModelViewSet):
+    queryset = ReportSchedule.objects.all()
+    serializer_class = ReportScheduleSerializer
+    # permission_classes = [permissions.IsAuthenticated]
+    def create(self, request):
+        schedule_serializer = self.serializer_class(data=request.data)
         if schedule_serializer.is_valid():
             schedule = schedule_serializer.save()
             if (schedule.run_type.name == "One Time"):
-                print("Executing one-off...")
                 one_time_report_generation.delay(schedule.id)
             # send data to functions to process report schedule
             return Response(schedule_serializer.data, status=status.HTTP_201_CREATED)
         return Response(schedule_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    elif request.method == 'GET':
-        report_schedules = ReportSchedule.objects.all()
-        schedule_serializer = ReportScheduleSerializer(report_schedules, many=True)
-        # to be filled in later
-        return Response(schedule_serializer.data)
