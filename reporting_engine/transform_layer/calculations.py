@@ -1,7 +1,7 @@
 import numpy as np
 from .services.data_service import Data_Service as ds
 import json
-
+import pandas
 import numpy
 
 
@@ -341,7 +341,8 @@ def __get_household_size_distribution_classic(id, params):
             return_dict['4 - 6'] = return_dict['4 - 6'] + framework_dict[key]
         elif key >= 6.5:
             return_dict['7+'] = return_dict['7+'] + framework_dict[key]
-    print(return_dict)
+    df = pandas.DataFrame.from_dict(return_dict, orient = 'index').rename(columns= {0:"num_families"}).rename_axis("age_group")
+    print(df)
     return json.dumps(return_dict)
 
 ## Data Defintion Switcher
