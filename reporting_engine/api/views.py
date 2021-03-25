@@ -7,8 +7,6 @@ from rest_framework.decorators import api_view
 from .serializers import *
 from .tasks import one_time_report_generation
 
-
-
 class ReportViewSet(viewsets.ModelViewSet):
     """
     API endpoint for Report table
@@ -16,46 +14,46 @@ class ReportViewSet(viewsets.ModelViewSet):
     queryset = Report.objects.all()
     serializer_class = ReportSerializer
     permission_classes = [permissions.IsAuthenticated]
-
-
-class ReportScheduleViewSet(viewsets.ModelViewSet):
-    queryset = ReportSchedule.objects.all()
-    serializer_class = ReportScheduleSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    http_method_names=['get']
 
 
 class RunTypeViewSet(viewsets.ModelViewSet):
     queryset = RunType.objects.all()
     serializer_class = RunTypeSerializer
     permission_classes = [permissions.IsAuthenticated]
-
+    http_method_names=['get']
 
 class TimeframeTypeViewSet(viewsets.ModelViewSet):
     queryset = TimeframeType.objects.all()
     serializer_class = TimeframeTypeSerializer
     permission_classes = [permissions.IsAuthenticated]
+    http_method_names=['get']
 
 
 class ReportScopeViewSet(viewsets.ModelViewSet):
     queryset = ReportScope.objects.all()
     serializer_class = ReportScopeSerializer
     permission_classes = [permissions.IsAuthenticated]
+    http_method_names=['get']
 
 
 class ControlTypeViewSet(viewsets.ModelViewSet):
     queryset = ControlType.objects.all()
     serializer_class = ControlTypeSerializer
     permission_classes = [permissions.IsAuthenticated]
+    http_method_names=['get']
 
 
 class ReportingDictionaryViewSet(viewsets.ModelViewSet):
     queryset = ReportingDictionary.objects.all()
     serializer_class = ReportingDictionarySerializer
     permission_classes = [permissions.IsAuthenticated]
+    http_method_names=['get']
 
 class ReportScheduleViewSet(viewsets.ModelViewSet):
     queryset = ReportSchedule.objects.all()
     serializer_class = ReportScheduleSerializer
+    http_method_names=['get', 'post']
     # permission_classes = [permissions.IsAuthenticated]
     def create(self, request):
         schedule_serializer = self.serializer_class(data=request.data)
