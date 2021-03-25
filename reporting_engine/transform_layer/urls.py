@@ -12,6 +12,4 @@ urlpatterns = [
     path('get-family-breakdown', views.get_family_breakdown, name = 'get-family-breakdown'),
     path('demo1/franklin', views.get_demo1_franklin, name='get-demo1-franklin'),
     path('demo1/mofc', views.get_demo1_mofc, name='get-demo1-mofc'),
-    path('demo2/def3-large', views.test_data_def_3_large, name = 'test-data-def-3-large'),
-    path('demo2/def3-typical', views.test_data_def_3_typical, name = 'test-data-def-3-typical')
 ]
