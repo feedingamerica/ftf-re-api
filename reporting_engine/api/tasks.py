@@ -24,7 +24,7 @@ def generate_report_and_save(schedule):
 def calculate_dates(schedule):
     # for future: if needed, convert datetime objects to string using: .strftime('%Y-%m-%d')
  
-    # the end date is the same for all timeframes: the last day of the previous month
+    # the end date is the same for all timeframes except custom: the last day of the previous month
     end_date = date.today().replace(day = 1) - timedelta(days = 1)
  
     # calculating start date based on timeframe type
