@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Get Report from Transformation Layer</title>
+</head>
+<body>
+    <!-- pre HTML elements represent preformatted text. This element preserves spaces and linebreaks when the text is displayed. -->
+    <pre>
+        <!-- A Django variable tag that outputs the report Python dictionary generated in the get_report view. Filters out linebreaks and replaces with <p> tags -->
+        {{ report_output | linebreaks }}
+    </pre>
+</body>
+</html>
+
