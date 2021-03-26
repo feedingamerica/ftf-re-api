@@ -1,5 +1,5 @@
 from django.http import HttpResponse
-from api.models import Report, ReportSchedule, RunType, TimeframeType, ReportScope, ControlType, ReportingDictionary
+from .models import Report, ReportSchedule, RunType, TimeframeType, ReportScope, ControlType, ReportingDictionary
 from rest_framework import viewsets, permissions
 from rest_framework.response import Response
 from rest_framework import status
