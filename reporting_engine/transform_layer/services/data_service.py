@@ -129,7 +129,7 @@ class Data_Service:
             table1 = "dim_geos"
             left1 = "dimgeo_id"
             right1 = "id"
-            extra_join = """INNER JOIN dim_hierarchies ON fact_services.hiearchy_id = dim_hiearchies.loc_id"""
+            extra_join = """INNER JOIN dim_hierarchies ON fact_services.hierarchy_id = dim_hierarchies.loc_id"""
 
         control_type_name = params["control_type_name"]
         control_query = cls.__get_control_query(control_type_name)

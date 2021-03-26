@@ -3,13 +3,18 @@ import transform_layer.calculations as calc
 from transform_layer.services.data_service import Data_Service as ds
 from django.db import connections
 import pandas
+from pandas.testing import assert_frame_equal, assert_series_equal
 
 import unittest
 import csv
 import os 
 import sys
 import json
+import math
 
+#How 'off' the value returned by a data def can be before it is considered wrong
+#.005 = .5% of expected
+REL_TOL = .01
 
 sample_scope_1 = {
     "startDate":"2019-01-01",
@@ -51,14 +56,14 @@ json_test_results = {
         'day","33":"Pantry - Prepack - 9 day","34":"Pantry - Prepack\\/Choice - 3 day","35":"Pantry - Prepack\\/Choice - 4 day","36":"Pantry - Prepack\\/Choice - 5 '
         'day","37":"Pantry - Special Dietary Needs - 3 day","38":"Prepack - Perishables only","39":"Produce & Protein","40":"Produce \\/ Mobile Market","41":"Produce '
         'Market","42":"Rx - Produce","43":"Snack Bag","44":"Special - Perishables only","45":"TEFAP"},"Families '
-        'Served":{"0":173,"1":6149,"2":73,"3":599,"4":4,"5":239,"6":497,"7":190,"8":368,"9":13373,"10":2173,"11":1,"12":1773,"13":29457,"14":1545,"15":1332,"16":2197,"17":65336,"18":303571,"19":35831,"20":59866,"21":6790,"22":16919,"23":2049,"24":1048,"25":3444,"26":97550,"27":2,"28":11237,"29":28965,"30":2338,"31":98123,"32":5,"33":1878,"34":596,"35":66,"36":865,"37":1,"38":5473,"39":27111,"40":191074,"41":120216,"42":1440,"43":381,"44":25638,"45":4},"People '
-        'Served":{"0":750,"1":11712,"2":272,"3":1482,"4":9,"5":895,"6":1268,"7":616,"8":1537,"9":47112,"10":3084,"11":5,"12":4765,"13":79062,"14":2309,"15":3479,"16":5849,"17":227452,"18":965629,"19":115220,"20":190225,"21":21308,"22":59012,"23":6062,"24":2649,"25":8215,"26":290223,"27":9,"28":36120,"29":105112,"30":7995,"31":340291,"32":14,"33":5996,"34":1601,"35":199,"36":2386,"37":4,"38":19428,"39":95428,"40":546296,"41":370530,"42":4833,"43":689,"44":84918,"45":19}}',
-        '{"service_category_name":{"0":"CSFP","1":"Choice Pantry","2":"Prepack Pantry","3":"Produce"},"Families ''Served":{"0":6149,"1":553053,"2":264917,"3":343841},"People '
-        'Served":{"0":11712,"1":1773688,"2":860664,"3":1026005}}',
+        'Served":{"0":173,"1":6149,"2":73,"3":599,"4":4,"5":239,"6":497,"7":190,"8":368,"9":13373,"10":2173,"11":1,"12":1773,"13":29458,"14":1545,"15":1332,"16":2197,"17":65336,"18":303571,"19":35831,"20":59866,"21":6790,"22":16919,"23":2049,"24":1048,"25":3444,"26":97550,"27":2,"28":11237,"29":28965,"30":2338,"31":98123,"32":5,"33":1878,"34":596,"35":66,"36":865,"37":1,"38":5473,"39":27111,"40":191074,"41":120216,"42":1440,"43":381,"44":25638,"45":4},"People '
+        'Served":{"0":750,"1":11712,"2":272,"3":1482,"4":9,"5":895,"6":1268,"7":616,"8":1537,"9":47112,"10":3084,"11":5,"12":4765,"13":79066,"14":2309,"15":3479,"16":5849,"17":227452,"18":965629,"19":115220,"20":190225,"21":21308,"22":59012,"23":6062,"24":2649,"25":8215,"26":290223,"27":9,"28":36120,"29":105112,"30":7995,"31":340291,"32":14,"33":5996,"34":1601,"35":199,"36":2386,"37":4,"38":19428,"39":95428,"40":546296,"41":370530,"42":4833,"43":689,"44":84918,"45":19}}',
+        '{"service_category_name":{"0":"CSFP","1":"Choice Pantry","2":"Prepack Pantry","3":"Produce"},"Families ''Served":{"0":6149,"1":553054,"2":264917,"3":343841},"People '
+        'Served":{"0":11712,"1":1773692,"2":860664,"3":1026005}}',
         '{"sites_visited":{"0":1,"1":2,"2":3,"3":4,"4":5,"5":6,"6":7,"7":8,"8":9,"9":10,"10":11,"11":12,"12":13,"13":14,"14":15,"15":16,"16":17,"17":18,"18":19,"19":20,"20":22,"21":23,"22":24,"23":28,"24":29},"un_duplicated_families":{"0":132981,"1":37029,"2":14403,"3":6363,"4":3072,"5":1646,"6":939,"7":489,"8":313,"9":201,"10":125,"11":79,"12":53,"13":35,"14":31,"15":22,"16":11,"17":7,"18":2,"19":5,"20":2,"21":4,"22":2,"23":1,"24":1}}'],
 }
 
-
+#reads int_test_results.csv and returns a dictionary of expected test results for data definitions 1-22.
 def read_expected_int():
     expected = {}
     __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
@@ -89,12 +94,7 @@ EXPECTED_JSON_RESULTS = read_expected_json()
 
 
 class CalculationsTestCase(unittest.TestCase):
-    # @classmethod
-    # def setUpClass(cls):
-    #     cls.fact_services_scope1 = ds.fact_services(sample_scope_2)
-    #     #ds.__fact_services = None
-    #     #cls.fact_services_scope2 = ds.fact_services(sample_scope_2)
-    #     #ds.__fact_services = None
+    
 
     
     def test_get_services_total(self):
@@ -104,130 +104,143 @@ class CalculationsTestCase(unittest.TestCase):
         #make data service a singleton
         func = calc.data_calc_function_switcher[1]
         result = func(1,sample_scope_2)
-        self.assertEqual(result, EXPECTED_INT_RESULTS["services_total"]["franklin_value"])
+        self.assertTrue(math.isclose(result, EXPECTED_INT_RESULTS["services_total"]["franklin_value"], rel_tol = REL_TOL))
     
     def test_get_undup_hh_total(self):
         func = calc.data_calc_function_switcher[2]
         result = func(2,sample_scope_2)
-        self.assertEqual(result, EXPECTED_INT_RESULTS["undup_hh_total"]["franklin_value"])
+        self.assertTrue(math.isclose(result, EXPECTED_INT_RESULTS["undup_hh_total"]["franklin_value"], rel_tol = REL_TOL))
     
     def test_get_undup_indv_total(self):
         func = calc.data_calc_function_switcher[3]
         result = func(3,sample_scope_2)
-        self.assertEqual(result, EXPECTED_INT_RESULTS["undup_indv_total"]["franklin_value"])
+        self.assertTrue(math.isclose(result, EXPECTED_INT_RESULTS["undup_indv_total"]["franklin_value"], rel_tol = REL_TOL))
     def test_get_services_per_uhh_avg(self):
         func = calc.data_calc_function_switcher[4]
         result = func(4,sample_scope_2)
-        self.assertAlmostEqual(result, EXPECTED_INT_RESULTS["services_per_uhh_avg"]["franklin_value"])
+        self.assertTrue(math.isclose(result, EXPECTED_INT_RESULTS["services_per_uhh_avg"]["franklin_value"], rel_tol = REL_TOL))
+
     
     #Ohio Addin
     def test_get_hh_wminor(self):
         func = calc.data_calc_function_switcher[5]
         result = func(5,sample_scope_2)
-        self.assertAlmostEqual(result, EXPECTED_INT_RESULTS["hh_wminor"]["franklin_value"])
+        self.assertTrue(math.isclose(result, EXPECTED_INT_RESULTS["hh_wminor"]["franklin_value"], rel_tol = REL_TOL))
         
 
     def test_get_hh_wominor(self):
         func = calc.data_calc_function_switcher[6]
         result = func(6,sample_scope_2)
-        self.assertAlmostEqual(result, EXPECTED_INT_RESULTS["hh_wominor"]["franklin_value"])
+        self.assertTrue(math.isclose(result, EXPECTED_INT_RESULTS["hh_wominor"]["franklin_value"], rel_tol = REL_TOL))
         
     def test_get_hh_total(self):
         func = calc.data_calc_function_switcher[7]
         result = func(7,sample_scope_2)
-        self.assertAlmostEqual(result, EXPECTED_INT_RESULTS["hh_total"]["franklin_value"])
+        self.assertTrue(math.isclose(result, EXPECTED_INT_RESULTS["hh_total"]["franklin_value"], rel_tol = REL_TOL))
         
     def test_get_indv_sen_hh_wminor(self):
         func = calc.data_calc_function_switcher[8]
         result = func(8,sample_scope_2)
-        self.assertAlmostEqual(result, EXPECTED_INT_RESULTS["indv_sen_hh_wminor"]["franklin_value"])
+        self.assertTrue(math.isclose(result, EXPECTED_INT_RESULTS["indv_sen_hh_wminor"]["franklin_value"], rel_tol = REL_TOL))
         
     def test_get_indv_sen_hh_wominor(self):
         func = calc.data_calc_function_switcher[9]
         result = func(9,sample_scope_2)
-        self.assertAlmostEqual(result, EXPECTED_INT_RESULTS["indv_sen_hh_wominor"]["franklin_value"])
+        self.assertTrue(math.isclose(result, EXPECTED_INT_RESULTS["indv_sen_hh_wominor"]["franklin_value"], rel_tol = REL_TOL))
+
         
     def test_get_indv_sen_total(self):
         func = calc.data_calc_function_switcher[10]
         result = func(10,sample_scope_2)
-        self.assertAlmostEqual(result, EXPECTED_INT_RESULTS["indv_sen_total"]["franklin_value"])
+        self.assertTrue(math.isclose(result, EXPECTED_INT_RESULTS["indv_sen_total"]["franklin_value"], rel_tol = REL_TOL))
         
     def test_get_indv_adult_hh_wminor(self):
         func = calc.data_calc_function_switcher[11]
         result = func(11,sample_scope_2)
-        self.assertAlmostEqual(result, EXPECTED_INT_RESULTS["indv_adult_hh_wminor"]["franklin_value"])
+        self.assertTrue(math.isclose(result, EXPECTED_INT_RESULTS["indv_adult_hh_wminor"]["franklin_value"], rel_tol = REL_TOL))
         
     def test_get_indv_adult_hh_wominor(self):
         func = calc.data_calc_function_switcher[12]
         result = func(12,sample_scope_2)
-        self.assertAlmostEqual(result, EXPECTED_INT_RESULTS["indv_adult_hh_wominor"]["franklin_value"])
+        self.assertTrue(math.isclose(result, EXPECTED_INT_RESULTS["indv_adult_hh_wominor"]["franklin_value"], rel_tol = REL_TOL))
         
     def test_get_indv_adult_total(self):
         func = calc.data_calc_function_switcher[13]
         result = func(13,sample_scope_2)
-        self.assertAlmostEqual(result, EXPECTED_INT_RESULTS["indv_adult_total"]["franklin_value"])
+        self.assertTrue(math.isclose(result, EXPECTED_INT_RESULTS["indv_adult_total"]["franklin_value"], rel_tol = REL_TOL))
         
     def test_get_indv_child_hh_wminor(self):
         func = calc.data_calc_function_switcher[14]
         result = func(14,sample_scope_2)
-        self.assertAlmostEqual(result, EXPECTED_INT_RESULTS["indv_child_hh_wminor"]["franklin_value"])
+        self.assertTrue(math.isclose(result, EXPECTED_INT_RESULTS["indv_child_hh_wminor"]["franklin_value"], rel_tol = REL_TOL))
         
     def test_get_indv_child_hh_wominor(self):
         func = calc.data_calc_function_switcher[15]
         result = func(15,sample_scope_2)
-        self.assertAlmostEqual(result, EXPECTED_INT_RESULTS["indv_child_hh_wominor"]["franklin_value"])
+        self.assertTrue(math.isclose(result, EXPECTED_INT_RESULTS["indv_child_hh_wominor"]["franklin_value"], rel_tol = REL_TOL))
         
     def test_get_indv_child_total(self):
         func = calc.data_calc_function_switcher[16]
         result = func(16,sample_scope_2)
-        self.assertAlmostEqual(result, EXPECTED_INT_RESULTS["indv_child_total"]["franklin_value"])
+        self.assertTrue(math.isclose(result, EXPECTED_INT_RESULTS["indv_child_total"]["franklin_value"], rel_tol = REL_TOL))
         
     def test_get_indv_total_hh_wminor(self):
         func = calc.data_calc_function_switcher[17]
         result = func(17,sample_scope_2)
-        self.assertAlmostEqual(result, EXPECTED_INT_RESULTS["indv_total_hh_wminor"]["franklin_value"])
+        self.assertTrue(math.isclose(result, EXPECTED_INT_RESULTS["indv_total_hh_wminor"]["franklin_value"], rel_tol = REL_TOL))
         
     def test_get_indv_total_hh_wominor(self):
         func = calc.data_calc_function_switcher[18]
         result = func(18,sample_scope_2)
-        self.assertAlmostEqual(result, EXPECTED_INT_RESULTS["indv_total_hh_wominor"]["franklin_value"])
+        self.assertTrue(math.isclose(result, EXPECTED_INT_RESULTS["indv_total_hh_wominor"]["franklin_value"], rel_tol = REL_TOL))
         
     def test_get_indv_total(self):
         func = calc.data_calc_function_switcher[19]
         result = func(19,sample_scope_2)
-        self.assertAlmostEqual(result, EXPECTED_INT_RESULTS["indv_total"]["franklin_value"])
+        self.assertTrue(math.isclose(result, EXPECTED_INT_RESULTS["indv_total"]["franklin_value"], rel_tol = REL_TOL))
         
     # #MOFC addin
     def test_get_hh_wsenior(self):
         func = calc.data_calc_function_switcher[20]
         result = func(20,sample_scope_2)
-        self.assertAlmostEqual(result, EXPECTED_INT_RESULTS["hh_wsenior"]["franklin_value"])
+        self.assertTrue(math.isclose(result, EXPECTED_INT_RESULTS["hh_wsenior"]["franklin_value"], rel_tol = REL_TOL))
         
     def test_get_hh_wosenior(self):
         func = calc.data_calc_function_switcher[21]
         result = func(21,sample_scope_2)
-        self.assertAlmostEqual(result, EXPECTED_INT_RESULTS["hh_wosenior"]["franklin_value"])
+        self.assertTrue(math.isclose(result, EXPECTED_INT_RESULTS["hh_wosenior"]["franklin_value"], rel_tol = REL_TOL))
         
     def test_get_hh_grandparent(self):
         func = calc.data_calc_function_switcher[22]
         result = func(22,sample_scope_2)
-        self.assertAlmostEqual(result, EXPECTED_INT_RESULTS["hh_grandparent"]["franklin_value"])
+        self.assertTrue(math.isclose(result, EXPECTED_INT_RESULTS["hh_grandparent"]["franklin_value"], rel_tol = REL_TOL))
     
     # Base services
     def test_get_services_summary(self):
         func = calc.data_calc_function_switcher[23]
         result = func(23, base_services_scope)
-        self.assertEqual(json.loads(result), json.loads(EXPECTED_JSON_RESULTS["service_summary_service"]["mofc_value"]))
+        result = pandas.DataFrame.from_dict(json.loads(result))
+        expected = json.loads(EXPECTED_JSON_RESULTS["service_summary_service"]["mofc_value"])
+        expected = pandas.DataFrame.from_dict(expected)
+        assert_frame_equal(result, expected, rtol= REL_TOL)
+
         
     def test_get_services_category(self):
         func = calc.data_calc_function_switcher[24]
         result = func(24, base_services_scope)
-        self.assertEqual(json.loads(result), json.loads(EXPECTED_JSON_RESULTS["service_category_service"]["mofc_value"]))
+        result = pandas.DataFrame.from_dict(json.loads(result))
+        expected = json.loads(EXPECTED_JSON_RESULTS["service_category_service"]["mofc_value"])
+        expected = pandas.DataFrame.from_dict(expected)
+        assert_frame_equal(result, expected, rtol= REL_TOL)
+
 
     def test_get_distribution_outlets(self):
         func = calc.data_calc_function_switcher[25]
         result = func(25, base_services_scope)
-        self.assertEqual(json.loads(result), json.loads(EXPECTED_JSON_RESULTS["distribution_outlets"]["mofc_value"]))
+        result = pandas.DataFrame.from_dict(json.loads(result))
+        expected = json.loads(EXPECTED_JSON_RESULTS["distribution_outlets"]["mofc_value"])
+        expected = pandas.DataFrame.from_dict(expected)
+        assert_frame_equal(result, expected, rtol= REL_TOL)
     
     def test_get_frequency_visits(self):
         expected = {
@@ -240,10 +253,12 @@ class CalculationsTestCase(unittest.TestCase):
                 "14":26446,"15":25365,"16":24864,"17":22763,"18":22392,"19":20919,"20":20420,"21":19341,"22":17534,"23":17181,"24":16656,"25":366004
             }
         }
+        expected = pandas.DataFrame.from_dict(expected)
         func = calc.data_calc_function_switcher[26]
         result = func(26, base_services_scope)
         resultDict = json.loads(result)
-        self.assertDictEqual(resultDict, expected)
+        resultFrame = pandas.DataFrame.from_dict(resultDict)
+        assert_frame_equal(resultFrame, expected, rtol= REL_TOL)
 
         
     def test_get_household_composition(self):
@@ -268,10 +283,12 @@ class CalculationsTestCase(unittest.TestCase):
                 "6":30385
             }
         }
+        expected = pandas.DataFrame.from_dict(expected)
         func = calc.data_calc_function_switcher[28]
         result = func(28, base_services_scope)
         resultDict = json.loads(result)
-        self.assertDictEqual(resultDict, expected)
+        resultFrame = pandas.DataFrame.from_dict(resultDict)
+        assert_frame_equal(resultFrame, expected, rtol= REL_TOL)
 
     def test_get_family_comp_key_insight(self):
 
@@ -290,10 +307,12 @@ class CalculationsTestCase(unittest.TestCase):
                 "1":58365,
             }
         }
+        expected = pandas.DataFrame.from_dict(expected)
         func = calc.data_calc_function_switcher[29]
         result = func(29, base_services_scope)
         resultDict = json.loads(result)
-        self.assertDictEqual(resultDict, expected)
+        resultFrame = pandas.DataFrame.from_dict(resultDict)
+        assert_frame_equal(resultFrame, expected, rtol= REL_TOL)
 
     def test_get_household_size_distribution_1_to_10(self):
         expected = {
@@ -307,10 +326,12 @@ class CalculationsTestCase(unittest.TestCase):
                 "0": "1 - 3", "1": "1 - 3", "2": "1 - 3", "3": "4 - 6", "4": "4 - 6", "5": "4 - 6", "6": "7+", "7": "7+", "8": "7+", "9": "7+"
             }
         }
+        expected = pandas.DataFrame.from_dict(expected)
         func = calc.data_calc_function_switcher[30]
         result = func(30, base_services_scope)
         resultDict = json.loads(result)
-        self.assertDictEqual(resultDict, expected)
+        resultFrame = pandas.DataFrame.from_dict(resultDict)
+        assert_frame_equal(resultFrame, expected, rtol= REL_TOL)
 
     def test_get_household_size_distribution_classic(self):
         expected = {
@@ -318,10 +339,12 @@ class CalculationsTestCase(unittest.TestCase):
             '4 - 6':60758,
             '7+':12297
         }
+        expected = pandas.Series(data = expected)
         func = calc.data_calc_function_switcher[31]
         result = func(31, base_services_scope)
         resultDict = json.loads(result)
-        self.assertDictEqual(resultDict, expected)
+        resultFrame = pandas.Series(data = resultDict)
+        assert_series_equal(resultFrame, expected, rtol= REL_TOL)
 
 
 if __name__ == '__main__':

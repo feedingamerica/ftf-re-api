@@ -1,7 +1,7 @@
 import numpy as np
 from .services.data_service import Data_Service as ds
 import json
-
+import pandas
 import numpy
 
 
@@ -201,6 +201,7 @@ def __get_services_summary(id, params):
     base_services = ds.get_data_for_definition(id, params).groupby(['service_name'])
     base_services = base_services.agg({'research_family_key': 'count', 'served_total': 'sum'})
     base_services = base_services.reset_index().rename(columns={'research_family_key':"Families Served", 'served_total': 'People Served'})
+    print(base_services)
     return base_services.to_json()
 
 # data def 24
@@ -221,6 +222,7 @@ def __get_services_category(id, params):
     base_services = ds.get_data_for_definition(id, params).groupby(['service_category_name'])
     base_services = base_services.agg({'research_family_key': 'count', 'served_total': 'sum'})
     base_services = base_services.reset_index().rename(columns={'research_family_key':"Families Served", 'served_total': 'People Served'})
+    print(base_services)
     return base_services.to_json()
 
 # data def 25
@@ -242,6 +244,7 @@ def __get_distribution_outlets(id, params):
     base_services = base_services.groupby('research_family_key')['loc_id'].nunique().reset_index().rename(columns={'loc_id': 'sites_visited'})
     base_services = base_services.groupby('sites_visited').agg(un_duplicated_families = ('sites_visited', 'count')).reset_index()
     base_services = base_services.sort_values(by = ['sites_visited'], ascending = [True])
+    print(base_services)
     return base_services.to_json()
 
 #data def 26/27 (return same data, outputted graph just has different y axis depending on def )
@@ -254,6 +257,7 @@ def __get_frequency_visits(id, params):
     families.at[25, 'num_services'] = largeSum.iloc[1]
     families = families.rename(columns={'research_family_key' :'n_families', 'num_services':'sum_services'})
     families = families.head(25)
+    print(families)
     return families.to_json()
 
 #data def 28
@@ -261,6 +265,7 @@ def __get_household_composition(id, params):
     families = ds.get_data_for_definition(id, params)
     
     families = families.groupby('family_composition_type').agg(num_families = ('family_composition_type', 'count')).reset_index()
+    print(families)
     return families.to_json()
 
 #data def 29
@@ -278,7 +283,7 @@ def __get_family_comp_key_insight(id, params):
 
 
     #reset the index at the end
-
+    print(families)
     return families.to_json()
 
 #data def 30
@@ -307,6 +312,7 @@ def __get_household_size_distribution_1_to_10(id, params):
     choices = ['1 - 3', '4 - 6', '7+']
 
     families['classic_roll'] = np.select(conditions, choices)
+    print(families)
 
     return families.to_json()
 
@@ -335,7 +341,8 @@ def __get_household_size_distribution_classic(id, params):
             return_dict['4 - 6'] = return_dict['4 - 6'] + framework_dict[key]
         elif key >= 6.5:
             return_dict['7+'] = return_dict['7+'] + framework_dict[key]
-
+    df = pandas.DataFrame.from_dict(return_dict, orient = 'index').rename(columns= {0:"num_families"}).rename_axis("age_group")
+    print(df)
     return json.dumps(return_dict)
 
 ## Data Defintion Switcher
