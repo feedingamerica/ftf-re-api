@@ -1,4 +1,4 @@
-from api.models import ReportSchedule, Report
+from api.models import ReportSchedule, Report, ReportingDictionary
 import json
 from django.core.serializers.json import DjangoJSONEncoder
 
@@ -31,14 +31,14 @@ def get_data_definitions(report_schedule_id, startDate, endDate):
     # Add all reports that reference the given ReportSchedule
     # TODO: Modify later for efficiency
     # https://docs.djangoproject.com/en/3.1/ref/models/relations/
-    for r in Report.objects.filter(report_schedule=report_schedule):
+    for r in report_schedule.reporting_dictionary.reportingdictionarydefinition_set.all():
         report = dict()
-        report["reportId"] = r.pk  # gets primary key of r
+        report["reportScheduleId"] = r.pk  # gets primary key of r
         report["reportDictId"] = report_schedule.reporting_dictionary.pk  # common
-        report["dataDefId"] = None  # FIXME: Cannot be completed due to models
-        report["name"] = "name"  # FIXME: currently no name in models
+        report["dataDefId"] = r.data_definition.pk
+        report["name"] = r.report_dictionary.name
+        report["dataDefType"] = r.data_definition.data_definition_type.name
         d["ReportInfo"].append(report)
-
     return d
 
 
