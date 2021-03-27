@@ -7,12 +7,11 @@ from datetime import date, timedelta
 
 # calculates report parameters, generates the report, and saves it to the reports database
 def generate_report_and_save(schedule):      
-    # get data definitions for current schedule and perform necessary calculations to generate the report
-    data_def_dict = get_data_definitions(schedule.id)
+    # get the start and end date that defines the timeframe the report should be run for
+    start_date, end_date = calculate_dates(schedule)
 
-    # once get_data_definitions is updated to take 3 parameters...
-    # start_date, end_date = calculate_dates(schedule)
-    # data_def_dict = get_data_definitions(schedule.id, start_date, end_date)
+    # get data definitions for current schedule and perform necessary calculations to generate the report
+    data_def_dict = get_data_definitions(schedule.id, start_date, end_date)
 
     cd = CalculationDispatcher(data_def_dict)
     cd.run_calculations()
@@ -44,7 +43,7 @@ def calculate_dates(schedule):
         # these custom dates are stored in the report_schedules table 
         start_date = schedule.date_custom_start
         end_date = schedule.date_custom_end
-
+        
     return start_date, end_date
 
 # generates (and saves) recurring reports if they are due based on recurrence parameter
@@ -59,7 +58,7 @@ def periodic_report_generation(recurrence):
 def one_time_report_generation(schedule_id):
 	schedule = ReportSchedule.objects.get(id=schedule_id)
 	print(f"Testing execution of one off report generation for {schedule.id}...")
-	# generate_report_and_save(schedule);
+	generate_report_and_save(schedule)
 
 # saves the given calculated report to the reports database
 def save_report(schedule, results):
