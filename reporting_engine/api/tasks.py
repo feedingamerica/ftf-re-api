@@ -20,9 +20,7 @@ def generate_report_and_save(schedule):
     save_report(schedule, data_def_dict)
 
 # calculates start and end dates that a report should be run for, based on its timeframe type
-def calculate_dates(schedule):
-    # for future: if needed, convert datetime objects to string using: .strftime('%Y-%m-%d')
- 
+def calculate_dates(schedule): 
     # the end date is the same for all timeframes except custom: the last day of the previous month
     end_date = date.today().replace(day = 1) - timedelta(days = 1)
  
@@ -44,6 +42,10 @@ def calculate_dates(schedule):
         start_date = schedule.date_custom_start
         end_date = schedule.date_custom_end
         
+    # convert convert datetime objects to string
+    start_date = start_date.strftime("%Y-%m-%d")
+    end_date = end_date.strftime("%Y-%m-%d")
+
     return start_date, end_date
 
 # generates (and saves) recurring reports if they are due based on recurrence parameter
