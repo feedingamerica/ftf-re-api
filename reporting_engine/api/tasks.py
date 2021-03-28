@@ -42,7 +42,7 @@ def calculate_dates(schedule):
         start_date = schedule.date_custom_start
         end_date = schedule.date_custom_end
         
-    # convert convert datetime objects to string
+    # convert datetime objects to string
     start_date = start_date.strftime("%Y-%m-%d")
     end_date = end_date.strftime("%Y-%m-%d")
 
