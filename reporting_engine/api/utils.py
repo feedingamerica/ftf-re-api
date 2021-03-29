@@ -31,13 +31,13 @@ def get_data_definitions(report_schedule_id, startDate, endDate):
     # Add all reports that reference the given ReportSchedule
     # TODO: Modify later for efficiency
     # https://docs.djangoproject.com/en/3.1/ref/models/relations/
-    for r in report_schedule.reporting_dictionary.reportingdictionarydefinition_set.all():
+    for dict_def in report_schedule.reporting_dictionary.reportingdictionarydefinition_set.all():
         report = dict()
-        report["reportScheduleId"] = r.pk  # gets primary key of r
-        report["reportDictId"] = report_schedule.reporting_dictionary.pk  # common
-        report["dataDefId"] = r.data_definition.pk
-        report["name"] = r.report_dictionary.name
-        report["dataDefType"] = r.data_definition.data_definition_type.name
+        report["reportScheduleId"] = report_schedule.pk  # gets primary key of r
+        report["reportDictId"] = dict_def.reporting_dictionary.pk  # common
+        report["dataDefId"] = dict_def.data_definition.pk
+        report["name"] = dict_def.data_definition.name
+        report["dataDefType"] = dict_def.data_definition.data_definition_type.name
         d["ReportInfo"].append(report)
     return d
 
