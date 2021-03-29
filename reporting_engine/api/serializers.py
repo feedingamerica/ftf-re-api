@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Report, ReportSchedule, RunType, TimeFrameType, ReportScope, ControlType, ReportingDictionary
+from .models import Report, ReportSchedule, RunType, TimeframeType, ReportScope, ControlType, ReportingDictionary
 
 
 class ReportSerializer(serializers.HyperlinkedModelSerializer):
@@ -25,7 +25,7 @@ class RunTypeSerializer(serializers.HyperlinkedModelSerializer):
 
 class TimeFrameTypeSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
-        model = TimeFrameType
+        model = TimeframeType
         fields = '__all__'
 
 

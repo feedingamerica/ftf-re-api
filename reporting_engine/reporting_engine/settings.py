@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'api.apps.ApiConfig',
     'rest_framework',
     'drf_yasg',
+    'transform_layer',
 ]
 
 MIDDLEWARE = [
@@ -84,11 +85,19 @@ WSGI_APPLICATION = 'reporting_engine.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': os.getenv('DB_NAME'),
-        'USER': os.getenv('DB_USER'),
-        'PASSWORD': os.getenv('DB_PW'),
-        'HOST': os.getenv('DB_HOST'),
-        'PORT': os.getenv('DB_PORT'),
+        'NAME': os.getenv( 'DB_NAME' ),
+        'USER': os.getenv( 'DB_USER' ),
+        'PASSWORD': os.getenv( 'DB_PW' ), 
+        'HOST': os.getenv( 'DB_HOST' ),
+        'PORT': os.getenv( 'DB_PORT' ),
+    },
+    'source_db': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': os.getenv( 'SOURCE_DB_NAME' ),
+        'USER': os.getenv( 'SOURCE_DB_USER' ),
+        'PASSWORD': os.getenv( 'SOURCE_DB_PW' ), 
+        'HOST': os.getenv( 'SOURCE_DB_HOST' ),
+        'PORT': os.getenv( 'SOURCE_DB_PORT' ),
     }
 }
 """
