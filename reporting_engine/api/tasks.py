@@ -1,7 +1,7 @@
 from celery import shared_task
-from api.utils import get_data_definitions
-from transform_layer.calculations import CalculationDispatcher
-from api.models import ReportSchedule, Report, ReportDataInt, ReportDataFloat
+from .utils import get_data_definitions
+from reporting_engine.transform_layer.calculations import CalculationDispatcher
+from .models import ReportSchedule, Report, ReportDataInt, ReportDataFloat
 import datetime
 from datetime import date, timedelta
 
