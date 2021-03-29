@@ -20,20 +20,6 @@ class DataService:
         self.families_service = FamiliesDataService(self.scope)
         self.service_types_service = ServiceTypesDataService(self.scope)
 
-
-    # ## returns DataFrame for a specific data definition
-    # @classmethod
-    # def get_data_for_definition(cls, id, params):
-    #     if( params != cls.__scope):
-    #         cls.__fact_services = None
-    #         cls.__base_services = None
-    #         cls.__family_services = None
-    #         cls.__scope = copy.deepcopy(params)
-    #     func = cls.data_def_function_switcher.get(id, cls.get_data_def_error)
-    #     return func(params)
-
-
-    
     ## returns DataFrame for a specific data definition
     def get_data_for_definition(self, id):
         if id>=1 and id <= 22:

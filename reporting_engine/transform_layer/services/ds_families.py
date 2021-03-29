@@ -186,7 +186,7 @@ class FamiliesDataService:
             28: self.get_household_composition.__name__,
             29: self.get_family_comp_key_insight.__name__,
             30: self.get_household_size_distribution_1_to_10.__name__,
-            31: self.get_family_comp_key_insight.__name__,
+            31: self.get_household_size_distribution_classic.__name__,
         }   
  
         func = getattr(self, data_def_function_switcher[id],  lambda: None)
