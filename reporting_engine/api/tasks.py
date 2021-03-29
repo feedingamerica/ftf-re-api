@@ -1,6 +1,6 @@
 from celery import shared_task
 from .utils import get_data_definitions
-from reporting_engine.transform_layer.calculations import CalculationDispatcher
+from transform_layer.calculations import CalculationDispatcher
 from .models import ReportSchedule, Report, ReportDataInt, ReportDataFloat
 import datetime
 from datetime import date, timedelta
