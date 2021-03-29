@@ -58,10 +58,8 @@ class ReportScheduleViewSet(viewsets.ModelViewSet):
     def create(self, request):
         schedule_serializer = self.serializer_class(data=request.data)
         if schedule_serializer.is_valid():
-            #uniqueness = self.serializer_class.check_uniqueness(schedule_serializer, data=request.data)
             duplicate_schedule_serializer = self.serializer_class.check_uniqueness(schedule_serializer)
             if (not(duplicate_schedule_serializer)):
-            #if (duplicate_schedule_serializer == 0):
                 schedule = schedule_serializer.save()
                 if (schedule.run_type.name == "One Time"):
                     one_time_report_generation.delay(schedule.id)
