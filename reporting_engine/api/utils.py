@@ -34,11 +34,23 @@ def get_data_definitions(report_schedule_id, startDate, endDate):
     for dict_def in report_schedule.reporting_dictionary.reportingdictionarydefinition_set.all():
         report = dict()
         report["reportScheduleId"] = report_schedule.pk  # gets primary key of r
-        report["reportDictId"] = dict_def.reporting_dictionary.pk  # common
+        report["reportDictId"] = dict_def.report_dictionary.pk  # common
         report["dataDefId"] = dict_def.data_definition.pk
         report["name"] = dict_def.data_definition.name
         report["dataDefType"] = dict_def.data_definition.data_definition_type.name
         d["ReportInfo"].append(report)
+
+    for a in report_schedule.addin_reports.values_list('reporting_dictionary_id', flat = True):
+        RD = ReportingDictionary(id=a, name=ReportingDictionary.objects.get(pk=a).name,
+                                 definition=ReportingDictionary.objects.get(pk=a).definition)
+        for dict_def in RD.reportingdictionarydefinition_set.all():
+            report = dict()
+            report["reportScheduleId"] = report_schedule.pk  # gets primary key of r
+            report["reportDictId"] = dict_def.report_dictionary.pk  # common
+            report["dataDefId"] = dict_def.data_definition.pk
+            report["name"] = dict_def.data_definition.name
+            report["dataDefType"] = dict_def.data_definition.data_definition_type.name
+            d["ReportInfo"].append(report)
     return d
 
 
