@@ -26,7 +26,7 @@ class ReportScheduleSerializer(serializers.ModelSerializer):
 			    schedule.control_age_group_id == self.data['control_age_group_id']):
 			    #if a report schedule is a "One Time" report we must also check the custom start/end dates before returning a value
                 if(self.data['run_type'] == 1):
-                    if (schedule.date_custom_start.id == self.data['date_custom_start'] and schedule.date_custom_end.id == self.data['date_custom_end']):
+                    if (schedule.date_custom_start == self.data['date_custom_start'] and schedule.date_custom_end == self.data['date_custom_end']):
                         return ReportScheduleSerializer(schedule)
                     else:
                         return None
