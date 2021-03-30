@@ -21,7 +21,7 @@ class TimeframeType(models.Model):
     """Defines TimeframeType table (named timeframe_types in mysql database)"""
     name = models.CharField(max_length = 255, blank = True)
     dim_dates_reference = models.TextField(blank = True)
-    recurrence_type = models.CharField(max_length = 255, blank = True)
+    recurrence_type = models.CharField(max_length = 255, null = True)
     class Meta:
         db_table = 'timeframe_types'
     def __str__(self):
