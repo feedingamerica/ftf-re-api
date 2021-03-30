@@ -4,6 +4,7 @@ from api.models import ReportSchedule
 import datetime
 from datetime import date
 from api.tasks import generate_report_and_save
+from api.tasks import calculate_dates
 
 # c = Client()
 # responce = c.post('/api/', {
@@ -25,6 +26,10 @@ Testing functions in api/tasks.py
 """
 # TODO: ensure python manage.py test api works (add self as a parameter, create setup() fn); assertions
 class TasksTesting(TestCase):
+    """
+    Testing the calculate_dates(schedule) function from tasks.py
+    Testing timeframe type 1: last month
+    """
     def test_calculate_dates_last_month(self):
         # parameters used to create the report schedule: run_type_id (2; recurring), report_scope_id (1; hierarchy, event, event_id), 
         # report_scope_value ("346"), control_type_id (1; Is Grocery Service), reporting_dictionary_id (1; default reporting engine output),
@@ -36,6 +41,23 @@ class TasksTesting(TestCase):
 
         # ensuring we got expected results
         self.assertEqual(actual_start_date, datetime.date(2021, 2, 1).strftime("%Y-%m-%d"))
+        self.assertEqual(actual_end_date, datetime.date(2021, 2, 28).strftime("%Y-%m-%d"))
+
+    """
+    Testing the calculate_dates(schedule) function from tasks.py
+    Testing timeframe type 2: rolling 12 months
+    """
+    def test_calculate_dates_rolling(self):
+        # parameters used to create the report schedule: run_type_id (2; recurring), report_scope_id (1; hierarchy, event, event_id), 
+        # report_scope_value ("346"), control_type_id (1; Is Grocery Service), reporting_dictionary_id (1; default reporting engine output),
+        # control_age_group_id (1), date_scheduled (2021-03-05)
+        rs = ReportSchedule.objects.create(timeframe_type_id = 2, run_type_id = 2, report_scope_id = 1, report_scope_value = "346", \
+        control_type_id = 1, reporting_dictionary_id = 1, control_age_group_id = 1, date_scheduled=datetime.date(2021, 3, 5))
+
+        actual_start_date, actual_end_date = calculate_dates(rs)
+
+        # ensuring we got expected results
+        self.assertEqual(actual_start_date, datetime.date(2020, 3, 1).strftime("%Y-%m-%d"))
         self.assertEqual(actual_end_date, datetime.date(2021, 2, 28).strftime("%Y-%m-%d"))
 
     """
@@ -152,3 +174,5 @@ class TasksTesting(TestCase):
             control_type_id = 1, report_scope_value = "346", control_age_group_id = 1, date_scheduled=date.today())
             
             generate_report_and_save(rs)
+    
+    # TODO: add tests for generate_report_and_save on the addin_state_report and addin_foodbank_report parameters
