@@ -119,3 +119,23 @@ class TasksTesting(TestCase):
                 control_type_id = 1, reporting_dictionary_id = 1, control_age_group_id = 1, date_scheduled=date.today())
                 
                 generate_report_and_save(rs)
+
+    """
+    Testing the generate_report_and_save(schedule) function from tasks.py
+    Testing generation and saving of different reporting dictionary ids
+    """
+    def test_generate_report_and_save_reporting_dict():
+        # constants: report_scope_id (1; hierarchy, event, event_id), timeframe_type (2; rolling 12 months), run_type_id (2; recurring),
+        # control_type_id (1; Is Grocery Service), report_scope_value ("346"), control_age_group_id (1), date_scheduled (today)
+
+        # testing all reporting_dictionary_id:
+        #   1: Default Reporting Engine Output 
+        #   2: State AddIn - Ohio
+        #   3: Food Bank Add-in - MOFC
+        #   4: Food Bank Add-in - Virginia Peninsula
+        for x in range(1, 5): 
+            print(f"\nTesting reporting_dictionary_id = {x}...")
+            rs = ReportSchedule.objects.create(reporting_dictionary_id = x, report_scope_id = 1, timeframe_type_id = 1, run_type_id = 2, \
+            control_type_id = 1, report_scope_value = "346", control_age_group_id = 1, date_scheduled=date.today())
+            
+            generate_report_and_save(rs)
