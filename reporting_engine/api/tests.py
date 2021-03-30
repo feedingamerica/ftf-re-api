@@ -5,20 +5,20 @@ import datetime
 from datetime import date
 from api.tasks import generate_report_and_save
 
-c = Client()
-responce = c.post('/api/', {
-                    'run_type': 'onetime',
-                    'timeframe_type' : 'monthly',
-                    'report_scope' : '',
-                    'report_scope_value' : '',
-                    'control_type' : '',
-                    'reporting_dictionary' : '',
-                    'control_age_group_id' : '',
-                    'date_scheduled' : '',
-                    'date_custom_start' : '',
-                    'date_custom_end' : '',
-                    'addin_state_report' : '',
-                    'addin_foodbank_report' :''})
+# c = Client()
+# responce = c.post('/api/', {
+#                     'run_type': 'onetime',
+#                     'timeframe_type' : 'monthly',
+#                     'report_scope' : '',
+#                     'report_scope_value' : '',
+#                     'control_type' : '',
+#                     'reporting_dictionary' : '',
+#                     'control_age_group_id' : '',
+#                     'date_scheduled' : '',
+#                     'date_custom_start' : '',
+#                     'date_custom_end' : '',
+#                     'addin_state_report' : '',
+#                     'addin_foodbank_report' :''})
 
 """
 Testing functions in api/tasks.py
@@ -45,13 +45,13 @@ class TasksTesting(TestCase):
 
             if (x != 5):
                 rs = ReportSchedule.objects.create(timeframe_type_id = x, run_type_id = 2, report_scope_id = 1, report_scope_value = "346", \
-                control_type_id = 1, reporting_dictionary_id = 1, control_age_group_id = 1, date_scheduled=date.today().strftime("%Y-%m-%d"))
+                control_type_id = 1, reporting_dictionary_id = 1, control_age_group_id = 1, date_scheduled=date.today())
             elif (x == 5):
                 # for Custom Date Range, we need run_type_id = 1 (one time), and the date_custom_start and date_custom_end fields
                 # arbitrarily choosing custom date range as 3-05-2021 to 3-15-2021
                 rs = ReportSchedule.objects.create(timeframe_type_id = x, run_type_id = 1, date_custom_start = datetime.date(2021, 3, 5), \
                 date_custom_end = datetime.date(2021, 3, 15), report_scope_id = 1, report_scope_value = "346", control_type_id = 1, \
-                reporting_dictionary_id = 1, control_age_group_id = 1, date_scheduled=date.today().strftime("%Y-%m-%d"))
+                reporting_dictionary_id = 1, control_age_group_id = 1, date_scheduled=date.today())
             
             generate_report_and_save(rs)
 
@@ -73,7 +73,7 @@ class TasksTesting(TestCase):
         for x in range(1, 6): 
             print(f"\nTesting control_type_id = {x}...")
             rs = ReportSchedule.objects.create(control_type_id = x, report_scope_id = 1, timeframe_type_id = 1, run_type_id = 2, \
-            report_scope_value = "346", reporting_dictionary_id = 1, control_age_group_id = 1, date_scheduled=date.today().strftime("%Y-%m-%d"))
+            report_scope_value = "346", reporting_dictionary_id = 1, control_age_group_id = 1, date_scheduled=date.today())
             
             generate_report_and_save(rs)
 
@@ -116,6 +116,6 @@ class TasksTesting(TestCase):
             else: 
                 print(f"\nTesting report_scope_id = {x}...")
                 rs = ReportSchedule.objects.create(report_scope_id = x, timeframe_type_id = 2, run_type_id = 2, report_scope_value = scopeValList[x - 1], \
-                control_type_id = 1, reporting_dictionary_id = 1, control_age_group_id = 1, date_scheduled=date.today().strftime("%Y-%m-%d"))
+                control_type_id = 1, reporting_dictionary_id = 1, control_age_group_id = 1, date_scheduled=date.today())
                 
                 generate_report_and_save(rs)
