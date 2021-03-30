@@ -61,6 +61,23 @@ class TasksTesting(TestCase):
         self.assertEqual(actual_end_date, datetime.date(2021, 2, 28).strftime("%Y-%m-%d"))
 
     """
+    Testing the calculate_dates(schedule) function from tasks.py
+    Testing timeframe type 3: cy to date
+    """
+    def test_calculate_dates_cy(self):
+        # parameters used to create the report schedule: run_type_id (2; recurring), report_scope_id (1; hierarchy, event, event_id), 
+        # report_scope_value ("346"), control_type_id (1; Is Grocery Service), reporting_dictionary_id (1; default reporting engine output),
+        # control_age_group_id (1), date_scheduled (2021-03-05)
+        rs = ReportSchedule.objects.create(timeframe_type_id = 3, run_type_id = 2, report_scope_id = 1, report_scope_value = "346", \
+        control_type_id = 1, reporting_dictionary_id = 1, control_age_group_id = 1, date_scheduled=datetime.date(2021, 3, 5))
+
+        actual_start_date, actual_end_date = calculate_dates(rs)
+
+        # ensuring we got expected results
+        self.assertEqual(actual_start_date, datetime.date(2021, 1, 1).strftime("%Y-%m-%d"))
+        self.assertEqual(actual_end_date, datetime.date(2021, 2, 28).strftime("%Y-%m-%d"))
+
+    """
     Testing the generate_report_and_save(schedule) function from tasks.py
     Testing generation and saving of different timeframe types
     """
