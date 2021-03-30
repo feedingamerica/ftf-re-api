@@ -60,7 +60,7 @@ class TasksTesting(TestCase):
     Testing generation and saving of different control types
     """
     def test_generate_report_and_save_control_type():
-        # constants: report_scope_id (1; hierarchy, event, event_id), timeframe_type (1; last month), run_type_id (2; recurring),
+        # constants: report_scope_id (1; hierarchy, event, event_id), timeframe_type (2; rolling 12 months), run_type_id (2; recurring),
         # report_scope_value ("346"), reporting_dictionary_id (1; default reporting engine output),
         # control_age_group_id (1), date_scheduled (today)
 
@@ -72,7 +72,7 @@ class TasksTesting(TestCase):
         #   5: TEFAP
         for x in range(1, 6): 
             print(f"\nTesting control_type_id = {x}...")
-            rs = ReportSchedule.objects.create(control_type_id = x, report_scope_id = 1, timeframe_type_id = 1, run_type_id = 2, \
+            rs = ReportSchedule.objects.create(control_type_id = x, report_scope_id = 1, timeframe_type_id = 2, run_type_id = 2, \
             report_scope_value = "346", reporting_dictionary_id = 1, control_age_group_id = 1, date_scheduled=date.today())
             
             generate_report_and_save(rs)
@@ -135,7 +135,7 @@ class TasksTesting(TestCase):
         #   4: Food Bank Add-in - Virginia Peninsula
         for x in range(1, 5): 
             print(f"\nTesting reporting_dictionary_id = {x}...")
-            rs = ReportSchedule.objects.create(reporting_dictionary_id = x, report_scope_id = 1, timeframe_type_id = 1, run_type_id = 2, \
+            rs = ReportSchedule.objects.create(reporting_dictionary_id = x, report_scope_id = 1, timeframe_type_id = 2, run_type_id = 2, \
             control_type_id = 1, report_scope_value = "346", control_age_group_id = 1, date_scheduled=date.today())
             
             generate_report_and_save(rs)
