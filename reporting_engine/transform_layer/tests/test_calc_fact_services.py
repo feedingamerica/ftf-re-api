@@ -3,6 +3,7 @@ from transform_layer.services.data_service import DataService
 from django.db import connections
 import pandas
 from pandas.testing import assert_frame_equal, assert_series_equal
+import transform_layer.calculations as calc
 
 import unittest
 import csv
@@ -55,7 +56,7 @@ def read_expected_int():
     return expected
 
 
-
+TEST_DATA_SERVICE = DataService(sample_scope_2)
 EXPECTED_INT_RESULTS = read_expected_int()
 
 class CalculationsTestCase(unittest.TestCase):
@@ -65,117 +66,140 @@ class CalculationsTestCase(unittest.TestCase):
         #might want to instantiate the data service object
         #might want to pass a connection to mock database in data_service.get_fact_service
         #make data service a singleton
-        ds = DataService(sample_scope_2)
-        result = ds.get_data_for_definition(1)
+        data = TEST_DATA_SERVICE.get_data_for_definition(1)
+        func = calc.data_calc_function_switcher[1]
+        result = func(data)
         self.assertTrue(math.isclose(result, EXPECTED_INT_RESULTS["services_total"]["franklin_value"], rel_tol = REL_TOL))
     
     def test_get_undup_hh_total(self):
-        ds = DataService(sample_scope_2)
-        result = ds.get_data_for_definition(2)
+        data = TEST_DATA_SERVICE.get_data_for_definition(2)
+        func = calc.data_calc_function_switcher[2]
+        result = func(data)
         self.assertTrue(math.isclose(result, EXPECTED_INT_RESULTS["undup_hh_total"]["franklin_value"], rel_tol = REL_TOL))
     
     def test_get_undup_indv_total(self):
-        ds = DataService(sample_scope_2)
-        result = ds.get_data_for_definition(3)
+        data = TEST_DATA_SERVICE.get_data_for_definition(3)
+        func = calc.data_calc_function_switcher[3]
+        result = func(data)
         self.assertTrue(math.isclose(result, EXPECTED_INT_RESULTS["undup_indv_total"]["franklin_value"], rel_tol = REL_TOL))
+
     def test_get_services_per_uhh_avg(self):
-        ds = DataService(sample_scope_2)
-        result = ds.get_data_for_definition(4)
+        data = TEST_DATA_SERVICE.get_data_for_definition(4)
+        func = calc.data_calc_function_switcher[4]
+        result = func(data)
         self.assertTrue(math.isclose(result, EXPECTED_INT_RESULTS["services_per_uhh_avg"]["franklin_value"], rel_tol = REL_TOL))
 
     
     #Ohio Addin
     def test_get_hh_wminor(self):
-        ds = DataService(sample_scope_2)
-        result = ds.get_data_for_definition(5)
+        data = TEST_DATA_SERVICE.get_data_for_definition(5)
+        func = calc.data_calc_function_switcher[5]
+        result = func(data)
         self.assertTrue(math.isclose(result, EXPECTED_INT_RESULTS["hh_wminor"]["franklin_value"], rel_tol = REL_TOL))
         
 
     def test_get_hh_wominor(self):
-        ds = DataService(sample_scope_2)
-        result = ds.get_data_for_definition(6)
+        data = TEST_DATA_SERVICE.get_data_for_definition(6)
+        func = calc.data_calc_function_switcher[6]
+        result = func(data)
         self.assertTrue(math.isclose(result, EXPECTED_INT_RESULTS["hh_wominor"]["franklin_value"], rel_tol = REL_TOL))
         
     def test_get_hh_total(self):
-        ds = DataService(sample_scope_2)
-        result = ds.get_data_for_definition(7)
+        data = TEST_DATA_SERVICE.get_data_for_definition(7)
+        func = calc.data_calc_function_switcher[7]
+        result = func(data)
         self.assertTrue(math.isclose(result, EXPECTED_INT_RESULTS["hh_total"]["franklin_value"], rel_tol = REL_TOL))
         
     def test_get_indv_sen_hh_wminor(self):
-        ds = DataService(sample_scope_2)
-        result = ds.get_data_for_definition(8)
+        data = TEST_DATA_SERVICE.get_data_for_definition(8)
+        func = calc.data_calc_function_switcher[8]
+        result = func(data)
         self.assertTrue(math.isclose(result, EXPECTED_INT_RESULTS["indv_sen_hh_wminor"]["franklin_value"], rel_tol = REL_TOL))
         
     def test_get_indv_sen_hh_wominor(self):
-        ds = DataService(sample_scope_2)
-        result = ds.get_data_for_definition(9)
+        data = TEST_DATA_SERVICE.get_data_for_definition(9)
+        func = calc.data_calc_function_switcher[9]
+        result = func(data)
         self.assertTrue(math.isclose(result, EXPECTED_INT_RESULTS["indv_sen_hh_wominor"]["franklin_value"], rel_tol = REL_TOL))
 
         
     def test_get_indv_sen_total(self):
-        ds = DataService(sample_scope_2)
-        result = ds.get_data_for_definition(10)
+        data = TEST_DATA_SERVICE.get_data_for_definition(10)
+        func = calc.data_calc_function_switcher[10]
+        result = func(data)
         self.assertTrue(math.isclose(result, EXPECTED_INT_RESULTS["indv_sen_total"]["franklin_value"], rel_tol = REL_TOL))
         
     def test_get_indv_adult_hh_wminor(self):
-        ds = DataService(sample_scope_2)
-        result = ds.get_data_for_definition(11)
+        data = TEST_DATA_SERVICE.get_data_for_definition(11)
+        func = calc.data_calc_function_switcher[11]
+        result = func(data)
         self.assertTrue(math.isclose(result, EXPECTED_INT_RESULTS["indv_adult_hh_wminor"]["franklin_value"], rel_tol = REL_TOL))
         
     def test_get_indv_adult_hh_wominor(self):
-        ds = DataService(sample_scope_2)
-        result = ds.get_data_for_definition(12)
+        data = TEST_DATA_SERVICE.get_data_for_definition(12)
+        func = calc.data_calc_function_switcher[12]
+        result = func(data)
         self.assertTrue(math.isclose(result, EXPECTED_INT_RESULTS["indv_adult_hh_wominor"]["franklin_value"], rel_tol = REL_TOL))
         
     def test_get_indv_adult_total(self):
-        ds = DataService(sample_scope_2)
-        result = ds.get_data_for_definition(13)
+        data = TEST_DATA_SERVICE.get_data_for_definition(13)
+        func = calc.data_calc_function_switcher[13]
+        result = func(data)
         self.assertTrue(math.isclose(result, EXPECTED_INT_RESULTS["indv_adult_total"]["franklin_value"], rel_tol = REL_TOL))
         
     def test_get_indv_child_hh_wminor(self):
-        ds = DataService(sample_scope_2)
-        result = ds.get_data_for_definition(14)
+        data = TEST_DATA_SERVICE.get_data_for_definition(14)
+        func = calc.data_calc_function_switcher[14]
+        result = func(data)
         self.assertTrue(math.isclose(result, EXPECTED_INT_RESULTS["indv_child_hh_wminor"]["franklin_value"], rel_tol = REL_TOL))
         
     def test_get_indv_child_hh_wominor(self):
-        ds = DataService(sample_scope_2)
-        result = ds.get_data_for_definition(15)
+        data = TEST_DATA_SERVICE.get_data_for_definition(15)
+        func = calc.data_calc_function_switcher[15]
+        result = func(data)
         self.assertTrue(math.isclose(result, EXPECTED_INT_RESULTS["indv_child_hh_wominor"]["franklin_value"], rel_tol = REL_TOL))
         
     def test_get_indv_child_total(self):
-        ds = DataService(sample_scope_2)
-        result = ds.get_data_for_definition(16)
+        data = TEST_DATA_SERVICE.get_data_for_definition(16)
+        func = calc.data_calc_function_switcher[16]
+        result = func(data)
         self.assertTrue(math.isclose(result, EXPECTED_INT_RESULTS["indv_child_total"]["franklin_value"], rel_tol = REL_TOL))
         
     def test_get_indv_total_hh_wminor(self):
-        ds = DataService(sample_scope_2)
-        result = ds.get_data_for_definition(17)
+        data = TEST_DATA_SERVICE.get_data_for_definition(17)
+        func = calc.data_calc_function_switcher[17]
+        result = func(data)
         self.assertTrue(math.isclose(result, EXPECTED_INT_RESULTS["indv_total_hh_wminor"]["franklin_value"], rel_tol = REL_TOL))
         
     def test_get_indv_total_hh_wominor(self):
-        ds = DataService(sample_scope_2)
-        result = ds.get_data_for_definition(18)
+        data = TEST_DATA_SERVICE.get_data_for_definition(18)
+        func = calc.data_calc_function_switcher[18]
+        result = func(data)
         self.assertTrue(math.isclose(result, EXPECTED_INT_RESULTS["indv_total_hh_wominor"]["franklin_value"], rel_tol = REL_TOL))
         
     def test_get_indv_total(self):
-        ds = DataService(sample_scope_2)
-        result = ds.get_data_for_definition(19)
+        data = TEST_DATA_SERVICE.get_data_for_definition(19)
+        func = calc.data_calc_function_switcher[19]
+        result = func(data)
         self.assertTrue(math.isclose(result, EXPECTED_INT_RESULTS["indv_total"]["franklin_value"], rel_tol = REL_TOL))
         
     # #MOFC addin
     def test_get_hh_wsenior(self):
-        ds = DataService(sample_scope_2)
-        result = ds.get_data_for_definition(20)
+        data = TEST_DATA_SERVICE.get_data_for_definition(20)
+        func = calc.data_calc_function_switcher[20]
+        result = func(data)
         self.assertTrue(math.isclose(result, EXPECTED_INT_RESULTS["hh_wsenior"]["franklin_value"], rel_tol = REL_TOL))
         
     def test_get_hh_wosenior(self):
-        ds = DataService(sample_scope_2)
-        result = ds.get_data_for_definition(21)
+        data = TEST_DATA_SERVICE.get_data_for_definition(21)
+        func = calc.data_calc_function_switcher[21]
+        result = func(data)
         self.assertTrue(math.isclose(result, EXPECTED_INT_RESULTS["hh_wosenior"]["franklin_value"], rel_tol = REL_TOL))
         
     def test_get_hh_grandparent(self):
-        ds = DataService(sample_scope_2)
-        result = ds.get_data_for_definition(22)
+        data = TEST_DATA_SERVICE.get_data_for_definition(22)
+        func = calc.data_calc_function_switcher[22]
+        result = func(data)
         self.assertTrue(math.isclose(result, EXPECTED_INT_RESULTS["hh_grandparent"]["franklin_value"], rel_tol = REL_TOL))
 
 if __name__ == '__main__':

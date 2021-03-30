@@ -1,8 +1,10 @@
 from django.test import TestCase
-from transform_layer.services.data_service import DataService
 from django.db import connections
 import pandas
 from pandas.testing import assert_frame_equal, assert_series_equal
+from transform_layer.services.data_service import DataService
+import transform_layer.calculations as calc
+
 
 import unittest
 import csv
@@ -59,13 +61,20 @@ def read_expected_json():
 EXPECTED_JSON_RESULTS = read_expected_json()
 
 
+#shared test data service so you don't have to make a db call for every test
+#not gonna work with multithreaded tests
+TEST_DATA_SERVICE = DataService(base_services_scope)
+
+
+
 class CalculationsTestCase(unittest.TestCase):
     
     
     # Base services
     def test_get_services_summary(self):
-        ds = DataService(base_services_scope)
-        result = ds.get_data_for_definition(23)
+        data = TEST_DATA_SERVICE.get_data_for_definition(23)
+        func = calc.data_calc_function_switcher[23]
+        result = func(data)
         result = pandas.DataFrame.from_dict(json.loads(result))
         expected = json.loads(EXPECTED_JSON_RESULTS["service_summary_service"]["mofc_value"])
         expected = pandas.DataFrame.from_dict(expected)
@@ -73,8 +82,9 @@ class CalculationsTestCase(unittest.TestCase):
 
         
     def test_get_services_category(self):
-        ds = DataService(base_services_scope)
-        result = ds.get_data_for_definition(24)
+        data = TEST_DATA_SERVICE.get_data_for_definition(24)
+        func = calc.data_calc_function_switcher[24]
+        result = func(data)
         result = pandas.DataFrame.from_dict(json.loads(result))
         expected = json.loads(EXPECTED_JSON_RESULTS["service_category_service"]["mofc_value"])
         expected = pandas.DataFrame.from_dict(expected)
@@ -82,8 +92,9 @@ class CalculationsTestCase(unittest.TestCase):
 
 
     def test_get_distribution_outlets(self):
-        ds = DataService(base_services_scope)
-        result = ds.get_data_for_definition(25)
+        data = TEST_DATA_SERVICE.get_data_for_definition(25)
+        func = calc.data_calc_function_switcher[25]
+        result = func(data)
         result = pandas.DataFrame.from_dict(json.loads(result))
         expected = json.loads(EXPECTED_JSON_RESULTS["distribution_outlets"]["mofc_value"])
         expected = pandas.DataFrame.from_dict(expected)

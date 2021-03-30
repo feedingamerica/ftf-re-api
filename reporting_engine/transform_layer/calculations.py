@@ -3,7 +3,9 @@ from .services.data_service import DataService
 import json
 import pandas
 import numpy
-
+import transform_layer.calc_service_types as calc_service_types
+import transform_layer.calc_families as calc_families
+import transform_layer.calc_fact_services as calc_fact_services
 
 BIG_NUM_NAMES = ["services_total", "undup_hh_total", "undup_indv_total", "services_per_uhh_avg"]
 DEFAULT_CTRL = "Is Grocery Service"
@@ -54,8 +56,9 @@ class CalculationDispatcher:
     def run_calculations(self):
         for group in self.data_dict.values():
             for data_def in group:
-                result = self.data_service.get_data_for_definition(data_def["dataDefId"])
-                data_def["value"] = result
+                data = self.data_service.get_data_for_definition(data_def["dataDefId"])
+                func = data_calc_function_switcher[data_def["dataDefId"]]
+                data_def["value"] = func(data)
 
         return self.request["ReportInfo"]
 
@@ -76,5 +79,37 @@ class CalculationDispatcher:
         return input_dict
 
 
-
+data_calc_function_switcher = {
+        1: calc_fact_services.get_services_total,
+        2: calc_fact_services.get_undup_hh_total,
+        3: calc_fact_services.get_undup_indv_total,
+        4: calc_fact_services.get_services_per_uhh_avg,
+        5: calc_fact_services.get_wminor,
+        6: calc_fact_services.get_wominor,
+        7: calc_fact_services.get_services_total,
+        8: calc_fact_services.get_indv_sen_hh_wminor,
+        9: calc_fact_services.get_indv_sen_hh_wominor,
+        10: calc_fact_services.get_sen_total,
+        11: calc_fact_services.get_adult_wminor,
+        12: calc_fact_services.get_adult_wominor,
+        13: calc_fact_services.get_adult,
+        14: calc_fact_services.get_indv_child_hh_wminor,
+        15: calc_fact_services.get_indv_child_hh_wominor,
+        16: calc_fact_services.get_indv_child_total,
+        17: calc_fact_services.get_indv_total_hh_wminor,
+        18: calc_fact_services.get_indv_total_hh_wominor,
+        19: calc_fact_services.get_indv_total,
+        20: calc_fact_services.get_hh_wsenior,
+        21: calc_fact_services.get_hh_wosenior,
+        22: calc_fact_services.get_hh_grandparent,
+        23: calc_service_types.get_services_summary,
+        24: calc_service_types.get_services_category,
+        25: calc_service_types.get_distribution_outlets,
+        26: calc_families.get_frequency_visits,
+        27: calc_families.get_frequency_visits,
+        28: calc_families.get_household_composition,
+        29: calc_families.get_family_comp_key_insight,
+        30: calc_families.get_household_size_distribution_1_to_10,
+        31: calc_families.get_household_size_distribution_classic
+    }
 

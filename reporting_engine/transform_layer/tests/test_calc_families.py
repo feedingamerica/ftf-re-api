@@ -3,6 +3,7 @@ from transform_layer.services.data_service import DataService
 from django.db import connections
 import pandas
 from pandas.testing import assert_frame_equal, assert_series_equal
+import transform_layer.calculations as calc
 
 import unittest
 import csv
@@ -25,6 +26,9 @@ base_services_scope = {
 }
 
 
+#shared test data service so you don't have to make a db call for every test
+#not gonna work with multithreaded tests
+TEST_DATA_SERVICE = DataService(base_services_scope)
 
 class CalculationsTestCase(unittest.TestCase):    
     def test_get_frequency_visits(self):
@@ -39,8 +43,9 @@ class CalculationsTestCase(unittest.TestCase):
             }
         }
         expected = pandas.DataFrame.from_dict(expected)
-        ds = DataService(base_services_scope)
-        result = ds.get_data_for_definition(26)
+        data = TEST_DATA_SERVICE.get_data_for_definition(26)
+        func = calc.data_calc_function_switcher[26]
+        result = func(data)
         resultDict = json.loads(result)
         resultFrame = pandas.DataFrame.from_dict(resultDict)
         assert_frame_equal(resultFrame, expected, rtol= REL_TOL)
@@ -69,8 +74,9 @@ class CalculationsTestCase(unittest.TestCase):
             }
         }
         expected = pandas.DataFrame.from_dict(expected)
-        ds = DataService(base_services_scope)
-        result = ds.get_data_for_definition(28)
+        data = TEST_DATA_SERVICE.get_data_for_definition(28)
+        func = calc.data_calc_function_switcher[28]
+        result = func(data)
         resultDict = json.loads(result)
         resultFrame = pandas.DataFrame.from_dict(resultDict)
         assert_frame_equal(resultFrame, expected, rtol= REL_TOL)
@@ -93,8 +99,9 @@ class CalculationsTestCase(unittest.TestCase):
             }
         }
         expected = pandas.DataFrame.from_dict(expected)
-        ds = DataService(base_services_scope)
-        result = ds.get_data_for_definition(29)
+        data = TEST_DATA_SERVICE.get_data_for_definition(29)
+        func = calc.data_calc_function_switcher[29]
+        result = func(data)
         resultDict = json.loads(result)
         resultFrame = pandas.DataFrame.from_dict(resultDict)
         assert_frame_equal(resultFrame, expected, rtol= REL_TOL)
@@ -112,8 +119,9 @@ class CalculationsTestCase(unittest.TestCase):
             }
         }
         expected = pandas.DataFrame.from_dict(expected)
-        ds = DataService(base_services_scope)
-        result = ds.get_data_for_definition(30)
+        data = TEST_DATA_SERVICE.get_data_for_definition(30)
+        func = calc.data_calc_function_switcher[30]
+        result = func(data)
         resultDict = json.loads(result)
         resultFrame = pandas.DataFrame.from_dict(resultDict)
         assert_frame_equal(resultFrame, expected, rtol= REL_TOL)
@@ -125,8 +133,9 @@ class CalculationsTestCase(unittest.TestCase):
             '7+':12297
         }
         expected = pandas.Series(data = expected)
-        ds = DataService(base_services_scope)
-        result = ds.get_data_for_definition(31)
+        data = TEST_DATA_SERVICE.get_data_for_definition(31)
+        func = calc.data_calc_function_switcher[31]
+        result = func(data)
         resultDict = json.loads(result)
         resultFrame = pandas.Series(data = resultDict)
         assert_series_equal(resultFrame, expected, rtol= REL_TOL)
