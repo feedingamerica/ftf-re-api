@@ -6,7 +6,7 @@ from django.db import connections
 from print_dict import print_dict, format_dict
 
 from .calculations import CalculationDispatcher
-from .services.data_service import Data_Service
+from .services.data_service import DataService
 
 
 
@@ -442,7 +442,7 @@ def get_all_defs_typical(request):
         "fam_household_size_distribution_1_10",
         "fam_household_size_distribution_classic"
     ]
-    num_defs = len(Data_Service.data_def_function_switcher)
+    num_defs = len(data_def_names)
     for i in range(1, num_defs + 1):
         data_def = {
             "reportId":1,
@@ -566,5 +566,32 @@ def get_family_breakdown(request):
     return render(request, 'transformapi/get-report.html', context)
 
 
+def get_new_families(request):
+    input_dict = {
+        "Scope": {
+            "startDate":"01/01/2020",
+            "endDate":"12/31/2020",
+            "scope_field":"loc_id",
+            "scope_field_value":6,
+            "control_type_name":"Is Grocery Service",
+        },
+        "ReportInfo": [
+            {
+                "reportId":1,
+                "reportDictId":1,
+                "dataDefId":34,
+                "name": "newmem_oldfam_undup_indv_total",
+                "dataDefType":3
+            }
+        ]
+    }
 
+    start_time = time.time()
+    cd = CalculationDispatcher(input_dict)
+    cd.run_calculations()
+
+    context = { 'report_output': format_dict(cd.request)}
+    print_dict(cd.request)
+    print(str(time.time() - start_time), ' seconds to run all queries')
+    return render(request, 'transformapi/get-report.html', context)
 
