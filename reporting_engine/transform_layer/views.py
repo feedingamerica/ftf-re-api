@@ -582,6 +582,27 @@ def get_new_families(request):
                 "dataDefId":34,
                 "name": "newmem_oldfam_undup_indv_total",
                 "dataDefType":3
+            },
+            {
+                "reportId":1,
+                "reportDictId":1,
+                "dataDefId":38,
+                "name": "new_fam_service_distribution",
+                "dataDefType":3
+            },
+            {
+                "reportId":1,
+                "reportDictId":1,
+                "dataDefId":42,
+                "name": "newfam_hh_size_dist_classic",
+                "dataDefType":3  
+            },
+            {
+                "reportId":1,
+                "reportDictId":1,
+                "dataDefId":45,
+                "name": "relationship_length_indv_mean",
+                "dataDefType":3  
             }
         ]
     }
