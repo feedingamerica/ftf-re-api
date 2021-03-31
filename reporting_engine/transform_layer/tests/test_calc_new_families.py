@@ -36,7 +36,29 @@ base_services = pyreadr.read_r(os.path.join(__location__, './test_data/base_serv
 BASE_DATA = [base_services, base_families, base_members]
 
 class CalculationsTestCase(unittest.TestCase):
+    #test for data def 34
+    def test_get_new_members_to_old_families(self):
+        expected = 19160
+        data = BASE_DATA
+        func = calc.data_calc_function_switcher[34]
+        result = func(data)
+        self.assertTrue(math.isclose(result, expected))
 
+    #test for data def 35
+    def test_get_services_to_new_families(self):
+        expected = 22790
+        data = BASE_DATA
+        func = calc.data_calc_function_switcher[35]
+        result = func(data)
+        self.assertTrue(math.isclose(result, expected))
+
+    #test for data def 36
+    def test_get_families_first_service(self):
+        expected = 6352
+        data = BASE_DATA
+        func = calc.data_calc_function_switcher[36]
+        result = func(data)
+        self.assertTrue(math.isclose(result, expected))
 
     #test for data def 37/38
     def test_get_new_families_freq_visits(self):
