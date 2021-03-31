@@ -56,6 +56,14 @@ class Data_Service:
             cls.__family_services = cls.__get_family_services(params)
         return cls.__family_services
 
+    __new_family_services:'list[DataFrame]' = None
+    ## getter and setting for __new_family_services
+    @classmethod
+    def new_family_services(cls, params):
+        if cls.__new_family_services is None:
+            cls.__new_family_services = cls.__get_new_family_services(params)
+        return cls.__new_family_services
+
     ## returns DataFrame for a specific data definition
     @classmethod
     def get_data_for_definition(cls, id, params):
@@ -63,6 +71,7 @@ class Data_Service:
             cls.__fact_services = None
             cls.__base_services = None
             cls.__family_services = None
+            cls.__new_family_services = None
             cls.__scope = copy.deepcopy(params)
         func = cls.data_def_function_switcher.get(id, cls.get_data_def_error)
         return func(params)
@@ -210,6 +219,149 @@ class Data_Service:
         
         return pd.read_sql(query, conn)
 
+    @classmethod
+    def __get_new_family_services(cls, params):
+        conn = connections['source_db']
+
+        extra_join = ""
+        if params["scope_type"] == "hierarchy":
+            table1 = "dim_hierarchies"
+            left1 = right1 = "hierarchy_id"
+        elif params["scope_type"] == "geography":
+            table1 = "dim_geos"
+            left1 = "dimgeo_id"
+            right1 = "id"
+            extra_join = """INNER JOIN dim_hierarchies ON fs.hierarchy_id = dim_hierarchies.loc_id"""
+
+        control_type_name = params["control_type_name"]
+        control_query = cls.__get_control_query(control_type_name)
+        scope_field = params["scope_field"]
+        scope_value = params["scope_field_value"]
+        start_date = cls.__date_str_to_int(params["startDate"])
+        end_date = cls.__date_str_to_int(params["endDate"])
+
+        services_query = f"""
+        SELECT
+            fs.research_service_key,
+            fs.research_family_key,
+            fs.service_id,
+            dim_service_types.name as service_name,
+            dim_service_types.service_category_code,
+            dim_service_types.service_category_name,
+            fs.served_total,
+            dim_hierarchies.loc_id,
+            fs.is_first_service_date
+        FROM
+            fact_services AS fs
+            INNER JOIN dim_service_types ON fs.service_id = dim_service_types.id
+            INNER JOIN {table1} ON fs.{left1} = {table1}.{right1}
+            INNER JOIN dim_dates ON fs.date = dim_dates.date_key
+            {extra_join if params["scope_type"] == "geography" else ""}
+        WHERE
+            fs.service_status = 17 
+            AND {control_query}
+            AND fs.date >= {start_date} AND fs.date <= {end_date}
+            AND {table1}.{scope_field} = {scope_value}
+        """
+
+        families_query = f"""
+            SELECT
+                fs.research_family_key,
+                COUNT( fs.research_service_key ) AS num_services,
+                AVG( fs.served_total ) AS avg_fam_size,
+                SUM( fs.is_first_service_date ) AS timeframe_has_first_service_date,
+                AVG( fs.days_since_first_service ) AS avg_days_since_first_service,
+                MAX( fs.days_since_first_service ) AS max_days_since_first_service,
+                dim_family_compositions.family_composition_type,
+                dim_families.datekey_first_service,
+                dim_families.dummy_use_geo,
+                dim_families.latitude_5,
+                dim_families.longitude_5,
+                dim_families.dimgeo_id,
+                dim_geos.fips_state,
+                dim_geos.fips_cnty,
+                dim_geos.fips_zcta
+            FROM
+                fact_services AS fs
+                INNER JOIN dim_families ON fs.research_family_key = dim_families.research_family_key
+                INNER JOIN dim_family_compositions ON dim_families.family_composition_type = dim_family_compositions.id
+                INNER JOIN dim_service_types ON fs.service_id = dim_service_types.id
+                INNER JOIN dim_dates ON fs.date = dim_dates.date_key
+                INNER JOIN {table1} ON fs.{left1} = {table1}.{right1}
+                LEFT JOIN dim_geos ON dim_families.dimgeo_id = dim_geos.id
+                {extra_join if params["scope_type"] == "geography" else ""}
+            WHERE
+                fs.service_status = 17
+                AND {control_query}
+                AND fs.date >= {start_date} AND fs.date <= {end_date}
+                AND {table1}.{scope_field} = {scope_value}
+            GROUP BY
+                fs.research_family_key,
+                dim_family_compositions.family_composition_type,
+                dim_families.datekey_first_service,
+                dim_families.dummy_use_geo,
+                dim_families.latitude_5,
+                dim_families.longitude_5,
+                dim_families.dimgeo_id,
+                dim_geos.fips_state,
+                dim_geos.fips_cnty,
+                dim_geos.fips_zcta
+        """
+
+        members_query = f"""
+        SELECT
+            fs_mem.research_member_key,
+            COUNT( fs.research_service_key ) AS num_services,
+            SUM( fs_mem.is_first_service_date ) AS timeframe_has_first_service_date,
+            AVG( fs_mem.days_since_first_service ) AS avg_days_since_first_service,
+            MAX( fs_mem.days_since_first_service ) AS max_days_since_first_service,
+            dim_members.datekey_first_served,
+            dim_members.gender,
+            dim_members.current_age,
+            dim_members.race_id,
+            dim_members.ethnic_id,
+            dim_members.immigrant_id,
+            dim_members.language_id,
+            dim_members.disability_id,
+            dim_members.military_id,
+            dim_members.healthcare_id,
+            dim_members.education_id,
+            dim_members.employment_id,
+            dim_families.datekey_first_service AS dim_families_datekey_first_service,
+            SUM( fs.is_first_service_date ) AS dim_families_timeframe_has_first_service_date
+        FROM
+            fact_services AS fs
+            INNER JOIN dim_service_types ON fs.service_id = dim_service_types.id
+            INNER JOIN {table1} ON fs.{left1} = {table1}.{right1}
+            INNER JOIN dim_dates ON fs.date = dim_dates.date_key
+            INNER JOIN fact_service_members AS fs_mem ON fs.research_service_key = fs_mem.research_service_key
+            INNER JOIN dim_members ON fs_mem.research_member_key = dim_members.research_member_key
+            INNER JOIN dim_families ON dim_members.research_family_key = dim_families.research_family_key
+            {extra_join if params["scope_type"] == "geography" else ""}
+        WHERE
+            fs.service_status = 17
+            AND {control_query}
+            AND {table1}.{scope_field} = {scope_value}
+            AND fs.date >= {start_date} AND fs.date <= {end_date}
+        GROUP BY
+            fs_mem.research_member_key
+        """
+        
+        services = pd.read_sql(services_query, conn)
+        families = pd.read_sql(families_query, conn)
+        members = pd.read_sql(members_query, conn)
+        
+        ## TODO remove, for testing only
+        print("SERVICES")
+        print(services)
+        print("FAMILIES")
+        print(families)
+        print("MEMBERS")
+        print(members)
+
+        return [services, families, members]
+
+
     @staticmethod
     def __get_control_query(control_type_name):
         if (control_type_name == "Prepack & Choice only"):
@@ -348,6 +500,11 @@ class Data_Service:
     def __get_household_composition(params):
         return Data_Service.family_services(params)
 
+    ## DataFram to fulfil DataDefinition 34
+    @staticmethod
+    def __get_new_members_to_old_families(params):
+        return Data_Service.new_family_services(params)
+
     ## error, none
     @staticmethod
     def get_data_def_error(params):
@@ -389,4 +546,5 @@ class Data_Service:
             29: __get_household_composition.__func__,
             30: __get_household_composition.__func__,
             31: __get_household_composition.__func__,
+            34: __get_new_members_to_old_families.__func__
         }

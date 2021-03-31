@@ -12,4 +12,5 @@ urlpatterns = [
     path('get-family-breakdown', views.get_family_breakdown, name = 'get-family-breakdown'),
     path('demo1/franklin', views.get_demo1_franklin, name='get-demo1-franklin'),
     path('demo1/mofc', views.get_demo1_mofc, name='get-demo1-mofc'),
+    path('get-new-families', views.get_new_families, name="get-new-families")
 ]

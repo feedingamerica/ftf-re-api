@@ -345,6 +345,11 @@ def __get_household_size_distribution_classic(id, params):
     print(df)
     return json.dumps(return_dict)
 
+# data def 34
+def __get_new_members_to_old_families(id, params):
+    data = ds.get_data_for_definition(id, params)
+    return data.to_json()
+
 ## Data Defintion Switcher
 # usage:
 #   func = data_calc_function_switcher.get(id)
@@ -380,5 +385,6 @@ data_calc_function_switcher = {
         28: __get_household_composition,
         29: __get_family_comp_key_insight,
         30: __get_household_size_distribution_1_to_10,
-        31: __get_household_size_distribution_classic
+        31: __get_household_size_distribution_classic,
+        34: __get_new_members_to_old_families
     }
