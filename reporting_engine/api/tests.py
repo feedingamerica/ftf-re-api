@@ -1,6 +1,6 @@
 from django.test import TestCase
 from django.test import Client
-from api.models import ReportSchedule, ControlType, TimeframeType, RunType, ReportScope, ReportingDictionary
+from api.models import ReportSchedule, ControlType, TimeframeType, RunType, ReportScope, ReportingDictionary, Report
 import datetime
 from datetime import date
 from api.tasks import generate_report_and_save
@@ -22,11 +22,12 @@ from api.tasks import calculate_dates
 #                     'addin_foodbank_report' :''})
 
 """
-The tests in the file can be run using: python manage.py test api
+The tests in this file can be run using: python manage.py test api
+This will run all of the tests, and Django will automatically create a test database, so nothing is added to the actual reports database
 """
 
 """
-Testing the calculate_dates function in api/tasks.py
+Testing the calculate_dates(schedule) function in api/tasks.py
 """
 class TasksCalcTesting(TestCase):
     """
@@ -154,14 +155,66 @@ class TasksCalcTesting(TestCase):
         self.assertEqual(actual_start_date, datetime.date(2021, 2, 7).strftime("%Y-%m-%d"))
         self.assertEqual(actual_end_date, datetime.date(2021, 3, 4).strftime("%Y-%m-%d"))
 
-# TODO: ensure python manage.py test api works (add self as a parameter, create setup() fn); assertions
+"""
+Testing the generate_report_and_save(schedule) function in api/tasks.py
+"""
+# TODO: add tests for generate_report_and_save on the addin_state_report and addin_foodbank_report parameters
 class TasksGenTesting(TestCase):
+    """
+    Setting up test model instances for the test database that Django creates
+    """
+    @classmethod
+    def setUpTestData(cls):
+        # the tests below create a ReportSchedule object, which has several foreign keys
+        # Django sets up a test database for unit testing, but it is not populated
+        # so, this function creates the needed model instances so that the tests can run and refer to these models without error
+
+        # needed for all tests:
+        testRT1 = RunType.objects.create(id = 1)
+        testRT2 = RunType.objects.create(id = 2)
+
+        # needed for the timeframe_type test:
+        testTfT1 = TimeframeType.objects.create(id = 1, name = "Last Month")
+        testTfT2 = TimeframeType.objects.create(id = 2, name = "Rolling 12 Months")
+        testTfT3 = TimeframeType.objects.create(id = 3, name = "CY To Date")
+        testTfT4 = TimeframeType.objects.create(id = 4, name = "Fiscal year to date")
+        testTfT5 = TimeframeType.objects.create(id = 5, name = "Custom Date Range")
+
+        # needed for the control_type test:
+        testCT1 = ControlType.objects.create(id = 1, name = "Is Grocery Service")
+        testCT2 = ControlType.objects.create(id = 2, name = "Prepack & Choice Only")
+        testCT3 = ControlType.objects.create(id = 3, name = "Produce Only")
+        testCT4 = ControlType.objects.create(id = 4, name = "Everything")
+        testCT5 = ControlType.objects.create(id = 5, name = "TEFAP")
+
+        # needed for the report_scope test:
+        testRSc1 = ReportScope.objects.create(id = 1)
+        testRSc2 = ReportScope.objects.create(id = 2)
+        testRSc3 = ReportScope.objects.create(id = 3)
+        testRSc4 = ReportScope.objects.create(id = 4)
+        testRSc5 = ReportScope.objects.create(id = 5)
+        testRSc6 = ReportScope.objects.create(id = 6)
+        testRSc9 = ReportScope.objects.create(id = 9)
+        testRSc10 = ReportScope.objects.create(id = 10)
+        testRSc11 = ReportScope.objects.create(id = 11)
+        testRSc12 = ReportScope.objects.create(id = 12)
+        testRSc13 = ReportScope.objects.create(id = 13)
+        testRSc14 = ReportScope.objects.create(id = 14)
+        testRSc15 = ReportScope.objects.create(id = 15)
+        testRSc16 = ReportScope.objects.create(id = 16)
+
+        # needed for the reporting_dictionary test:
+        testRD1 = ReportingDictionary.objects.create(id = 1)
+        testRD2 = ReportingDictionary.objects.create(id = 2)
+        testRD3 = ReportingDictionary.objects.create(id = 3)
+        testRD4 = ReportingDictionary.objects.create(id = 4)
+    
     """
     Testing the generate_report_and_save(schedule) function from tasks.py
     Testing generation and saving of different timeframe types
     """
-    def test_generate_report_and_save_timeframe_type():
-        # constants: run_type_id (2; recurring), report_scope_id (1; hierarchy, event, event_id), report_scope_value ("346"),
+    def test_generate_report_and_save_timeframe_type(self):
+        # constants in the report schedule: run_type_id (2; recurring), report_scope_id (1; hierarchy, event, event_id), report_scope_value ("346"),
         # control_type_id (1; Is Grocery Service), reporting_dictionary_id (1; default reporting engine output),
         # control_age_group_id (1), date_scheduled (today)
 
@@ -172,7 +225,8 @@ class TasksGenTesting(TestCase):
         #   4: Fiscal year to date
         #   5: Custom Date Range
         for x in range(1, 6): 
-            print(f"\nTesting timeframe_type_id = {x}...")
+            # use this print statement to help debug, if needed
+            # print(f"\nTesting timeframe_type_id = {x}...")
 
             if (x != 5):
                 rs = ReportSchedule.objects.create(timeframe_type_id = x, run_type_id = 2, report_scope_id = 1, report_scope_value = "346", \
@@ -184,15 +238,19 @@ class TasksGenTesting(TestCase):
                 date_custom_end = datetime.date(2021, 3, 15), report_scope_id = 1, report_scope_value = "346", control_type_id = 1, \
                 reporting_dictionary_id = 1, control_age_group_id = 1, date_scheduled=date.today())
             
+            # calling the tested function
             generate_report_and_save(rs)
+
+            # ensuring the generated report was actually saved to the database
+            self.assertTrue(Report.objects.filter(report_schedule_id = rs.pk).exists())
 
     """
     Testing the generate_report_and_save(schedule) function from tasks.py
     Testing generation and saving of different control types
     """
-    def test_generate_report_and_save_control_type():
-        # constants: report_scope_id (1; hierarchy, event, event_id), timeframe_type (2; rolling 12 months), run_type_id (2; recurring),
-        # report_scope_value ("346"), reporting_dictionary_id (1; default reporting engine output),
+    def test_generate_report_and_save_control_type(self):
+        # constants in the report schedule: report_scope_id (1; hierarchy, event, event_id), timeframe_type (2; rolling 12 months), 
+        # run_type_id (2; recurring), report_scope_value ("346"), reporting_dictionary_id (1; default reporting engine output),
         # control_age_group_id (1), date_scheduled (today)
 
         # testing all control_type_id: 
@@ -202,18 +260,24 @@ class TasksGenTesting(TestCase):
         #   4: Everything
         #   5: TEFAP
         for x in range(1, 6): 
-            print(f"\nTesting control_type_id = {x}...")
+            # use this print statement to help debug, if needed
+            # print(f"\nTesting control_type_id = {x}...")
+
             rs = ReportSchedule.objects.create(control_type_id = x, report_scope_id = 1, timeframe_type_id = 2, run_type_id = 2, \
             report_scope_value = "346", reporting_dictionary_id = 1, control_age_group_id = 1, date_scheduled=date.today())
             
+            # calling the tested function
             generate_report_and_save(rs)
+
+            # ensuring the generated report was actually saved to the database
+            self.assertTrue(Report.objects.filter(report_schedule_id = rs.pk).exists())
 
     """
     Testing the generate_report_and_save(schedule) function from tasks.py
     Testing generation and saving of different report scopes
     """ 
-    def test_generate_report_and_save_report_scope():
-        # constants: timeframe_type (2; rolling 12 months), run_type_id (2; recurring),
+    def test_generate_report_and_save_report_scope(self):
+        # constants in the report schedule: timeframe_type (2; rolling 12 months), run_type_id (2; recurring),
         # control_type_id (1; Is Grocery Service), reporting_dictionary_id (1; default reporting engine output),
         # control_age_group_id (1), date_scheduled (today)
 
@@ -245,19 +309,26 @@ class TasksGenTesting(TestCase):
             if (x == 7 or x == 8): 
                 print(f"\nSkipping report_scope_id = {x} because it is not available.")
             else: 
-                print(f"\nTesting report_scope_id = {x}...")
+                # use this print statement to help debug, if needed
+                # print(f"\nTesting report_scope_id = {x}...")
+
                 rs = ReportSchedule.objects.create(report_scope_id = x, timeframe_type_id = 2, run_type_id = 2, report_scope_value = scopeValList[x - 1], \
                 control_type_id = 1, reporting_dictionary_id = 1, control_age_group_id = 1, date_scheduled=date.today())
                 
+                # calling the tested function
                 generate_report_and_save(rs)
+
+                # ensuring the generated report was actually saved to the database
+                self.assertTrue(Report.objects.filter(report_schedule_id = rs.pk).exists())
 
     """
     Testing the generate_report_and_save(schedule) function from tasks.py
     Testing generation and saving of different reporting dictionary ids
     """
-    def test_generate_report_and_save_reporting_dict():
-        # constants: report_scope_id (1; hierarchy, event, event_id), timeframe_type (2; rolling 12 months), run_type_id (2; recurring),
-        # control_type_id (1; Is Grocery Service), report_scope_value ("346"), control_age_group_id (1), date_scheduled (today)
+    def test_generate_report_and_save_reporting_dict(self):
+        # constants in the report schedule: report_scope_id (1; hierarchy, event, event_id), timeframe_type (2; rolling 12 months),
+        # run_type_id (2; recurring), control_type_id (1; Is Grocery Service), report_scope_value ("346"),
+        # control_age_group_id (1), date_scheduled (today)
 
         # testing all reporting_dictionary_id:
         #   1: Default Reporting Engine Output 
@@ -265,10 +336,14 @@ class TasksGenTesting(TestCase):
         #   3: Food Bank Add-in - MOFC
         #   4: Food Bank Add-in - Virginia Peninsula
         for x in range(1, 5): 
-            print(f"\nTesting reporting_dictionary_id = {x}...")
+            # use this print statement to help debug, if needed
+            # print(f"\nTesting reporting_dictionary_id = {x}...")
+            
             rs = ReportSchedule.objects.create(reporting_dictionary_id = x, report_scope_id = 1, timeframe_type_id = 2, run_type_id = 2, \
             control_type_id = 1, report_scope_value = "346", control_age_group_id = 1, date_scheduled=date.today())
             
+            # calling the tested function
             generate_report_and_save(rs)
-    
-    # TODO: add tests for generate_report_and_save on the addin_state_report and addin_foodbank_report parameters
+
+            # ensuring the generated report was actually saved to the database
+            self.assertTrue(Report.objects.filter(report_schedule_id = rs.pk).exists())
