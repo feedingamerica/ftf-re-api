@@ -1,0 +1,19 @@
+version: 0.0
+os: linux
+files:
+  - source: /
+    destination: /home/ubuntu/ftf-re-api
+    overwrite: true
+hooks:
+  BeforeInstall:
+    - location: deploy/dependencies.sh
+      timeout: 300
+      runas: root
+  AfterInstall:
+    - location: deploy/start.sh
+      timeout: 300
+      runas: ubuntu
+  ApplicationStop:
+    - location: deploy/stop.sh
+      timeout: 300
+      runas: ubuntu
