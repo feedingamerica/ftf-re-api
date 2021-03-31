@@ -124,9 +124,17 @@ class ReportSchedule(models.Model):
 	date_scheduled = models.DateField(default = datetime.date.today)
 	date_custom_start = models.DateField(null = True, blank = True)
 	date_custom_end = models.DateField(null = True, blank = True)
-	addin_reports = models.ManyToManyField(ReportScheduleAddin, null = True, blank = True)
+	addin_reports = models.ManyToManyField(ReportScheduleAddin, through = 'ReportScheduleAddinReport', blank = True)
 	class Meta:
 		db_table = 'report_schedules'
+	def __str__(self):
+		return str(self.id)
+
+class ReportScheduleAddinReport(models.Model):
+	report_schedule = models.ForeignKey(ReportSchedule, on_delete=models.CASCADE)
+	report_schedule_addin = models.ForeignKey(ReportScheduleAddin, on_delete=models.CASCADE)
+	class Meta:
+		db_table = 'report_schedule_addin_reports'
 	def __str__(self):
 		return str(self.id)
 
