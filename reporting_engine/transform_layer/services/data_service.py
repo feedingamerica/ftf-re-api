@@ -183,26 +183,25 @@ class DataService:
         
         return pd.read_sql(query, conn)
 
-    @classmethod
-    def __get_new_family_services(cls, params):
+    def __get_new_family_services(self):
         conn = connections['source_db']
 
         extra_join = ""
-        if params["scope_type"] == "hierarchy":
+        if self.scope["scope_type"] == "hierarchy":
             table1 = "dim_hierarchies"
             left1 = right1 = "hierarchy_id"
-        elif params["scope_type"] == "geography":
+        elif self.scope["scope_type"] == "geography":
             table1 = "dim_geos"
             left1 = "dimgeo_id"
             right1 = "id"
             extra_join = """INNER JOIN dim_hierarchies ON fs.hierarchy_id = dim_hierarchies.loc_id"""
 
-        control_type_name = params["control_type_name"]
-        control_query = cls.__get_control_query(control_type_name)
-        scope_field = params["scope_field"]
-        scope_value = params["scope_field_value"]
-        start_date = cls.__date_str_to_int(params["startDate"])
-        end_date = cls.__date_str_to_int(params["endDate"])
+        control_type_name = self.scope["control_type_name"]
+        control_query = get_control_query(control_type_name)
+        scope_field = self.scope["scope_field"]
+        scope_value = self.scope["scope_field_value"]
+        start_date = date_str_to_int(self.scope["startDate"])
+        end_date = date_str_to_int(self.scope["endDate"])
 
         services_query = f"""
         SELECT
@@ -220,7 +219,7 @@ class DataService:
             INNER JOIN dim_service_types ON fs.service_id = dim_service_types.id
             INNER JOIN {table1} ON fs.{left1} = {table1}.{right1}
             INNER JOIN dim_dates ON fs.date = dim_dates.date_key
-            {extra_join if params["scope_type"] == "geography" else ""}
+            {extra_join if self.scope["scope_type"] == "geography" else ""}
         WHERE
             fs.service_status = 17 
             AND {control_query}
@@ -253,7 +252,7 @@ class DataService:
                 INNER JOIN dim_dates ON fs.date = dim_dates.date_key
                 INNER JOIN {table1} ON fs.{left1} = {table1}.{right1}
                 LEFT JOIN dim_geos ON dim_families.dimgeo_id = dim_geos.id
-                {extra_join if params["scope_type"] == "geography" else ""}
+                {extra_join if self.scope["scope_type"] == "geography" else ""}
             WHERE
                 fs.service_status = 17
                 AND {control_query}
@@ -301,7 +300,7 @@ class DataService:
             INNER JOIN fact_service_members AS fs_mem ON fs.research_service_key = fs_mem.research_service_key
             INNER JOIN dim_members ON fs_mem.research_member_key = dim_members.research_member_key
             INNER JOIN dim_families ON dim_members.research_family_key = dim_families.research_family_key
-            {extra_join if params["scope_type"] == "geography" else ""}
+            {extra_join if self.scope["scope_type"] == "geography" else ""}
         WHERE
             fs.service_status = 17
             AND {control_query}
