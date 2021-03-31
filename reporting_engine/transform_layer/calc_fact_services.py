@@ -2,15 +2,7 @@ from pandas.core.frame import DataFrame
 import dateutil.parser as parser
 import pandas as pd
 from django.db import connections
-
-
 import copy
-
-
-
-
-    
-
 
 #calculations for data_def 1
 def get_services_total(data):

@@ -3,12 +3,7 @@ from django.db import connections
 import numpy as np
 import pandas as pd
 from pandas.core.frame import DataFrame
-
-
-
 import json
-
-
 
 #data def 26/27 (return same data, outputted graph just has different y axis depending on def )
 def get_frequency_visits(data):
