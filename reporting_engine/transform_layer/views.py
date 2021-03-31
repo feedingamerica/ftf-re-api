@@ -580,7 +580,7 @@ def get_new_families(request):
                 "reportId":1,
                 "reportDictId":1,
                 "dataDefId":34,
-                "name": "new_members_to_old_households",
+                "name": "newmem_oldfam_undup_indv_total",
                 "dataDefType":3
             }
         ]

@@ -16,4 +16,7 @@ def get_new_members_to_old_families(data: 'list[DataFrame]'):
     added_members - json of new members added to families that already have been served
 
     """
-    return "okk"
+    members = data[2]
+    members = members[members['timeframe_has_first_service_date']>0]
+    members = members[members['dim_families_timeframe_has_first_service_date']>0]
+    return len(members)

@@ -116,7 +116,7 @@ class DataService:
             fact_services.research_service_key,
             fact_services.research_family_key,
             fact_services.service_id,
-            dim_service_types.name as service_name,
+            dim_service_types.name AS service_name,
             dim_service_types.service_category_code,
             dim_service_types.service_category_name,
             fact_services.served_total,
