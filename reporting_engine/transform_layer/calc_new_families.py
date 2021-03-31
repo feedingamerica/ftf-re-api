@@ -6,7 +6,7 @@ import transform_layer.calc_families as calc_families
 
 
 # data def 33
-def get_new_members(data: 'list[DataFrame'):
+def get_new_members(data: 'list[DataFrame]'):
     """Calculate number of new members DataDef 33
 
     Arguments:
@@ -41,6 +41,12 @@ def get_new_members_to_old_families(data: 'list[DataFrame]'):
     members = members[members['timeframe_has_first_service_date']>0]
     members = members[members['dim_families_timeframe_has_first_service_date']>0]
     return len(members)
+
+# data def 35
+def get_services_to_new_families(data: 'list[DataFrame]'):
+    families = data[1]
+    families = families[families['timeframe_has_first_service_date']>0]
+    return families['num_services'].sum()
 
 # data def 37/38
 def get_new_families_freq_visits(data: 'list[DataFrame]'):

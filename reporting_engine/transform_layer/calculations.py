@@ -4,9 +4,6 @@ import transform_layer.calc_families as calc_families
 import transform_layer.calc_fact_services as calc_fact_services
 import transform_layer.calc_new_families as calc_new_families
 
-
-import pandas
-
 BIG_NUM_NAMES = ["services_total", "undup_hh_total", "undup_indv_total", "services_per_uhh_avg"]
 DEFAULT_CTRL = "Is Grocery Service"
 
@@ -112,6 +109,7 @@ data_calc_function_switcher = {
         31: calc_families.get_household_size_distribution_classic,
         33: calc_new_families.get_new_members,
         34: calc_new_families.get_new_members_to_old_families,
+        35: calc_new_families.get_services_to_new_families,
         37: calc_new_families.get_new_families_freq_visits,
         38: calc_new_families.get_new_families_freq_visits,
         42: calc_new_families.get_new_fam_hh_size_dist_classic,

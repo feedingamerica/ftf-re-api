@@ -581,14 +581,21 @@ def get_new_families(request):
                 "reportDictId":1,
                 "dataDefId":33,
                 "name": "newmem_undup_indv_total",
-                "dataDefType":3
+                "dataDefType":1
             },
             {
                 "reportId":1,
                 "reportDictId":1,
                 "dataDefId":34,
                 "name": "newmem_oldfam_undup_indv_total",
-                "dataDefType":3
+                "dataDefType":1
+            },
+            {
+                "reportId":1,
+                "reportDictId":1,
+                "dataDefId":35,
+                "name": "new_fam_services_total",
+                "dataDefType":1
             },
             {
                 "reportId":1,
