@@ -38,16 +38,15 @@ BASE_DATA = [base_services, base_families, base_members]
 class CalculationsTestCase(unittest.TestCase):
 
 
-    #test for data def 38
-    def test_get_new_fam_service_distribution(self):
+    #test for data def 37/38
+    def test_get_new_families_freq_visits(self):
         expected = pandas.read_csv(
             os.path.join(__location__, './expected_results/results_new_fam_service_distribution.csv'),
             index_col = 'num_services'
         )
-        expected = expected.drop(columns='n_families')
         #data = TEST_DATA_SERVICE.get_data_for_definition(38)
         data = BASE_DATA 
-        func = calc.data_calc_function_switcher[38]
+        func = calc.data_calc_function_switcher[37]
         result = func(data)
         resultFrame = pandas.read_json(result)
         assert_frame_equal(resultFrame, expected, check_like = True)

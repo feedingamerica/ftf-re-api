@@ -576,11 +576,25 @@ def get_new_families(request):
             "control_type_name":"Is Grocery Service",
         },
         "ReportInfo": [
+             {
+                "reportId":1,
+                "reportDictId":1,
+                "dataDefId":33,
+                "name": "newmem_undup_indv_total",
+                "dataDefType":3
+            },
             {
                 "reportId":1,
                 "reportDictId":1,
                 "dataDefId":34,
                 "name": "newmem_oldfam_undup_indv_total",
+                "dataDefType":3
+            },
+            {
+                "reportId":1,
+                "reportDictId":1,
+                "dataDefId":37,
+                "name": "newfam_freq_visits",
                 "dataDefType":3
             },
             {
