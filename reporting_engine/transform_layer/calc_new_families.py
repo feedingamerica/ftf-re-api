@@ -48,6 +48,12 @@ def get_services_to_new_families(data: 'list[DataFrame]'):
     families = families[families['timeframe_has_first_service_date']>0]
     return families['num_services'].sum()
 
+#data def 36
+def get_families_first_service(data: 'list[DataFrame]'):
+    services = data[0]
+    services = services[services['is_first_service_date']>0]
+    return len(services)
+
 # data def 37/38
 def get_new_families_freq_visits(data: 'list[DataFrame]'):
         """Calculate frequency of visits for new families DataDef 37

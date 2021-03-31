@@ -600,6 +600,13 @@ def get_new_families(request):
             {
                 "reportId":1,
                 "reportDictId":1,
+                "dataDefId":36,
+                "name": "global_first_services_total",
+                "dataDefType":1
+            },
+            {
+                "reportId":1,
+                "reportDictId":1,
                 "dataDefId":37,
                 "name": "newfam_freq_visits",
                 "dataDefType":3
