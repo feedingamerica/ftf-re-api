@@ -113,8 +113,10 @@ data_calc_function_switcher = {
         36: calc_new_families.get_families_first_service,
         37: calc_new_families.get_new_families_freq_visits,
         38: calc_new_families.get_new_families_freq_visits,
+        39: calc_new_families.get_new_fam_household_composition,
+        40: calc_new_families.get_new_fam_composition_key_insight,
         42: calc_new_families.get_new_fam_hh_size_dist_classic,
-        45: calc_new_families.get_relationship_length_indv_mean
-        
+        45: calc_new_families.get_relationship_length_indv_mean,
+        46: calc_new_families.get_new_fam_dist_of_length_of_relationships_for_individuals
     }
 

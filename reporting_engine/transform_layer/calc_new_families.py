@@ -1,6 +1,7 @@
 from pandas.core.frame import DataFrame
 import dateutil.parser as parser
 import pandas as pd
+import json
 
 import transform_layer.calc_families as calc_families
 
@@ -80,6 +81,45 @@ def get_new_families_freq_visits(data: 'list[DataFrame]'):
         families = families.head(25)
         return families.to_json()
 
+# data def 39
+def get_new_fam_household_composition(data: 'list[DataFrame]'):
+    families = data[1]
+    result_dict = {
+        "adults_and_children":0,
+        "adults_and_seniors":0,
+        "adults_only":0,
+        "adults_seniors_and_children":0,
+        "children_and_seniors":0,
+        "children_only":0,
+        "seniors_only":0
+    }
+
+    """ print("separator!")
+    print(str(families.iloc[0]))
+    print("separator!") """
+
+    for index, row in families.iterrows():
+        result_dict[row["family_composition_type"]]+=1
+    
+    return json.dumps(result_dict)
+
+# data def 40
+def get_new_fam_composition_key_insight(data: 'list[DataFrame]'):
+    families = data[1]
+
+    result_dict = {
+        "has_child_senior":0,
+        "no_child_senior":0
+    }
+
+    for index, row in families.iterrows():
+        if row["family_composition_type"] == "adults_only":
+            result_dict["no_child_senior"]+=1
+        else:
+            result_dict["has_child_senior"]+=1
+
+    return json.dumps(result_dict)
+
 #data def 42
 def get_new_fam_hh_size_dist_classic(data):
     families = data[1]
@@ -90,5 +130,34 @@ def get_new_fam_hh_size_dist_classic(data):
 def get_relationship_length_indv_mean(data):
     members = data[2]
     return members['max_days_since_first_service'].mean()
+
+# data def 46
+def get_new_fam_dist_of_length_of_relationships_for_individuals(data: 'list[DataFrame]'):
+    members = data[2]
+
+    result_dict = {
+        '0 - 400':0,
+        '400 - 800':0,
+        '800 - 1200':0,
+        '1200 - 1600':0,
+        '1600 - 2000':0,
+    }
+
+    for index, row in members.iterrows():
+
+        max_days = int(row["max_days_since_first_service"])
+
+        if max_days >= 0 and max_days < 400:
+            result_dict["0 - 400"]+=1
+        elif max_days >= 400 and max_days < 800:
+            result_dict["400 - 800"]+=1
+        elif max_days >= 800 and max_days < 1200:
+            result_dict["800 - 1200"]+=1
+        elif max_days >= 1200 and max_days < 1600:
+            result_dict["1200 - 1600"]+=1
+        elif max_days >= 1600 and max_days <= 2000:
+            result_dict["1600 - 2000"]+=1
+
+    return json.dumps(result_dict)
 
 

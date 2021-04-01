@@ -621,6 +621,20 @@ def get_new_families(request):
             {
                 "reportId":1,
                 "reportDictId":1,
+                "dataDefId":39,
+                "name": "new_fam_household_composition",
+                "dataDefType":3
+            },
+            {
+                "reportId":1,
+                "reportDictId":1,
+                "dataDefId":40,
+                "name": "new_fam_composition_key_insight",
+                "dataDefType":3
+            },
+            {
+                "reportId":1,
+                "reportDictId":1,
                 "dataDefId":42,
                 "name": "newfam_hh_size_dist_classic",
                 "dataDefType":3  
@@ -631,6 +645,13 @@ def get_new_families(request):
                 "dataDefId":45,
                 "name": "relationship_length_indv_mean",
                 "dataDefType":3  
+            },
+            {
+                "reportId":1,
+                "reportDictId":1,
+                "dataDefId":46,
+                "name": "new_fam_dist_of_length_of_relationships_for_individuals",
+                "dataDefType":3
             }
         ]
     }
