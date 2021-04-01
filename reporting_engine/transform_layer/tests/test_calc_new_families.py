@@ -72,6 +72,37 @@ class CalculationsTestCase(unittest.TestCase):
         result = func(data)
         resultFrame = pandas.read_json(result)
         assert_frame_equal(resultFrame, expected, check_like = True)
+    
+    #test for data def 39
+    def test_get_new_fam_household_composition(self):
+        expected = {
+            "adults_and_children":2622,
+            "adults_and_seniors":447,
+            "adults_only":2467,
+            "adults_seniors_and_children":297,
+            "children_and_seniors":36,
+            "children_only":16,
+            "seniors_only":422
+        }
+        #data = TEST_DATA_SERVICE.get_data_for_definition(38)
+        data = BASE_DATA 
+        func = calc.data_calc_function_switcher[39]
+        result = func(data)
+        resultFrame = pandas.read_json(result)
+        assert_frame_equal(resultFrame, expected, check_like = True)
+
+    #test for data def 40
+    def test_get_new_fam_composition_key_insight(self):
+        expected = {
+            "has_child_senior":3840,
+            "no_child_senior":2467
+        }
+        #data = TEST_DATA_SERVICE.get_data_for_definition(38)
+        data = BASE_DATA 
+        func = calc.data_calc_function_switcher[40]
+        result = func(data)
+        resultFrame = pandas.read_json(result)
+        assert_frame_equal(resultFrame, expected, check_like = True)
 
     #test for data def 42
     def test_get_new_fam_hh_size_dist_classic(self):
@@ -101,8 +132,28 @@ class CalculationsTestCase(unittest.TestCase):
         result = func(data)
         self.assertTrue(math.isclose(round(result,4), expected))
 
+    #test for data def 46
+    def test_get_new_fam_dist_of_length_of_relationships_for_individuals(self):
+        # NOTE 
+        # Everything here is 0 because the exact numbers are not given yet 
+        expected = {
+            '0 - 200':0,
+            '200 - 400':0,
+            '400 - 600':0,
+            '600 - 800':0,
+            '800 - 1000':0,
+            '1000 - 1200':0,
+            '1200 - 1400':0,
+            '1400 - 1600':0,
+            '1600 - 1800':0,
+            '1800 - 2000':0,
+        }
+        #data = TEST_DATA_SERVICE.get_data_for_definition(38)
+        data = BASE_DATA 
+        func = calc.data_calc_function_switcher[46]
+        result = func(data)
+        resultFrame = pandas.read_json(result)
+        assert_frame_equal(resultFrame, expected, check_like = True)
 
 if __name__ == '__main__':
     unittest.main()
-
-    #test for data def 45
