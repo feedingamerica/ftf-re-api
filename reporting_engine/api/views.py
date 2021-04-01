@@ -67,3 +67,10 @@ class ReportScheduleViewSet(viewsets.ModelViewSet):
                 return Response(schedule_serializer.data, status=status.HTTP_201_CREATED)
             return Response(schedule_serializer.data, status=status.HTTP_208_ALREADY_REPORTED)
         return Response(schedule_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET'])
+def get_reports(request, report_scope_id, report_scope_value):
+    reports = Report.objects.filter(report_schedule__report_scope_id = report_scope_id,
+                                    report_schedule__report_scope_value = report_scope_value)
+    serializer = ReportSerializer(reports, many=True)
+    return Response(serializer.data)

@@ -15,4 +15,5 @@ router.register(r'report_schedules', views.ReportScheduleViewSet)
 urlpatterns = [
     path('', include(router.urls)),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+    path('reports/<int:report_scope_id>/<int:report_scope_value>/', views.get_reports)
 ]
