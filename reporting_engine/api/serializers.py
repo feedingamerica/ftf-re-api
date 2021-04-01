@@ -6,7 +6,7 @@ class ReportSerializer(serializers.ModelSerializer):
     class Meta:
         model = Report
         depth = 2
-        fields = ['report_schedule', 'start_date',
+        fields = ['report_schedule', 'id', 'start_date',
                   'end_date', 'date_completed']
 
 
