@@ -6,6 +6,24 @@ import json
 import transform_layer.calc_families as calc_families
 
 
+# data def 32
+def get_new_families(data: 'list[DataFrame]'):
+    """Calculate number of new families DataDef 32
+
+    Arguments:
+    data - data frames to fulfill definiton id
+
+    Modifies:
+    Nothing
+
+    Returns: added_members
+    added_families - new family count
+
+    """
+    families = data[1]
+    families = families[families['timeframe_has_first_service_date']>0]
+    return len(families)
+
 # data def 33
 def get_new_members(data: 'list[DataFrame]'):
     """Calculate number of new members DataDef 33
@@ -116,11 +134,22 @@ def get_new_fam_composition_key_insight(data: 'list[DataFrame]'):
 
     return json.dumps(result_dict)
 
+#data def 41
+def get_new_fam_hh_size_dist_1_to_10(data):
+    families = data[1]
+    families = families[families['timeframe_has_first_service_date'] > 0]
+    return calc_families.get_household_size_distribution_1_to_10(families)
+
 #data def 42
 def get_new_fam_hh_size_dist_classic(data):
     families = data[1]
     families = families[families['timeframe_has_first_service_date'] > 0]
     return calc_families.get_household_size_distribution_classic(families)
+
+#data def 43
+def get_relationship_length_fam_mean(data):
+    families = data[1]
+    return families['max_days_since_first_service'].mean()
 
 #data def 44
 def get_new_fam_dist_of_length_of_relationship(data: 'list[DataFrame]'):

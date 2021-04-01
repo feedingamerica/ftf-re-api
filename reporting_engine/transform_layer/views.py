@@ -576,7 +576,14 @@ def get_new_families(request):
             "control_type_name":"Is Grocery Service",
         },
         "ReportInfo": [
-             {
+            {
+                "reportId":1,
+                "reportDictId":1,
+                "dataDefId":32,
+                "name": "newfam_undup_fam_total",
+                "dataDefType":1
+            },
+            {
                 "reportId":1,
                 "reportDictId":1,
                 "dataDefId":33,
@@ -635,8 +642,22 @@ def get_new_families(request):
             {
                 "reportId":1,
                 "reportDictId":1,
+                "dataDefId":41,
+                "name": "newfam_hh_size_dist_1_to_10",
+                "dataDefType":3
+            },
+            {
+                "reportId":1,
+                "reportDictId":1,
                 "dataDefId":42,
                 "name": "newfam_hh_size_dist_classic",
+                "dataDefType":3  
+            },
+            {
+                "reportId":1,
+                "reportDictId":1,
+                "dataDefId":43,
+                "name": "relationship_length_fam_mean",
                 "dataDefType":3  
             },
              {
