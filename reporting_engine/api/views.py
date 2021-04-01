@@ -1,5 +1,5 @@
 from django.http import HttpResponse
-from api.models import Report, ReportSchedule, RunType, TimeframeType, ReportScope, ControlType, ReportingDictionary
+from .models import Report, ReportSchedule, RunType, TimeframeType, ReportScope, ControlType, ReportingDictionary
 from rest_framework import viewsets, permissions
 from rest_framework.response import Response
 from rest_framework import status
@@ -58,14 +58,14 @@ class ReportScheduleViewSet(viewsets.ModelViewSet):
     def create(self, request):
         schedule_serializer = self.serializer_class(data=request.data)
         if schedule_serializer.is_valid():
-            uniqueness = self.serializer_class.check_uniqueness(schedule_serializer, data=request.data)
-            if (uniqueness == 0):
+            duplicate_schedule_serializer = self.serializer_class.check_uniqueness(schedule_serializer)
+            if (not(duplicate_schedule_serializer)):
                 schedule = schedule_serializer.save()
                 if (schedule.run_type.name == "One Time"):
                     one_time_report_generation.delay(schedule.id)
                 # send data to functions to process report schedule
                 return Response(schedule_serializer.data, status=status.HTTP_201_CREATED)
-            return Response(schedule_serializer.data, status=status.HTTP_208_ALREADY_REPORTED)
+            return Response(duplicate_schedule_serializer.data, status=status.HTTP_208_ALREADY_REPORTED)
         return Response(schedule_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['GET'])
