@@ -116,6 +116,7 @@ data_calc_function_switcher = {
         39: calc_new_families.get_new_fam_household_composition,
         40: calc_new_families.get_new_fam_composition_key_insight,
         42: calc_new_families.get_new_fam_hh_size_dist_classic,
+        44: calc_new_families.get_new_fam_dist_of_length_of_relationship,
         45: calc_new_families.get_relationship_length_indv_mean,
         46: calc_new_families.get_new_fam_dist_of_length_of_relationships_for_individuals
     }

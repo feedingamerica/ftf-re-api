@@ -639,6 +639,13 @@ def get_new_families(request):
                 "name": "newfam_hh_size_dist_classic",
                 "dataDefType":3  
             },
+             {
+                "reportId":1,
+                "reportDictId":1,
+                "dataDefId":44,
+                "name": "newfam_dist_length_of_relationship",
+                "dataDefType":3  
+            },
             {
                 "reportId":1,
                 "reportDictId":1,
