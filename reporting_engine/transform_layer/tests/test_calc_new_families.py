@@ -36,6 +36,14 @@ base_services = pyreadr.read_r(os.path.join(__location__, './test_data/base_serv
 BASE_DATA = [base_services, base_families, base_members]
 
 class CalculationsTestCase(unittest.TestCase):
+    #test for data def 32
+    def test_get_new_families(self):
+        expected = 6307
+        data = BASE_DATA
+        func = calc.data_calc_function_switcher[32]
+        result = func(data)
+        self.assertTrue(math.isclose(result, expected))
+
     #test for data def 34
     def test_get_new_members_to_old_families(self):
         expected = 19160
@@ -104,6 +112,18 @@ class CalculationsTestCase(unittest.TestCase):
         resultFrame = pandas.read_json(result)
         assert_frame_equal(resultFrame, expected, check_like = True)
 
+    #test for data def 41
+    def test_get_new_fam_hh_size_dist_1_to_10(self):
+        expected = pandas.read_csv(
+            os.path.join(__location__, './expected_results/results_new_fam_hh_size_dist_1_to_10.csv'),
+            index_col = 'index'
+        )
+        data = BASE_DATA 
+        func = calc.data_calc_function_switcher[41]
+        result = func(data)
+        resultFrame = pandas.read_json(result)
+        assert_frame_equal(resultFrame, expected, check_like = True)
+
     #test for data def 42
     def test_get_new_fam_hh_size_dist_classic(self):
         expected = {
@@ -121,6 +141,15 @@ class CalculationsTestCase(unittest.TestCase):
         resultDict = json.loads(result)
         resultFrame = pandas.Series(data = resultDict)
         assert_series_equal(resultFrame, expected)
+
+    #test for data def 43
+    def test_get_relationship_length_indv_mean(self):
+        expected = 809.5147
+        data = BASE_DATA
+
+        func = calc.data_calc_function_switcher[43]
+        result = func(data)
+        self.assertTrue(math.isclose(round(result,4), expected))
 
     #test for data def 45
     def test_get_relationship_length_indv_mean(self):

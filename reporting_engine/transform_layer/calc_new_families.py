@@ -18,8 +18,8 @@ def get_new_families(data: 'list[DataFrame]'):
 
     Returns: added_members
     added_families - new family count
-
     """
+    
     families = data[1]
     families = families[families['timeframe_has_first_service_date']>0]
     return len(families)
@@ -136,6 +136,18 @@ def get_new_fam_composition_key_insight(data: 'list[DataFrame]'):
 
 #data def 41
 def get_new_fam_hh_size_dist_1_to_10(data):
+    """Calculate household size distibutions for families of size 1 to 10 DataDef 41
+
+    Arguments:
+    data - data frames to fulfill definiton id
+
+    Modifies:
+    Nothing
+
+    Returns: added_members
+    num_new_families - new family distribution counts 1 to 10
+    """
+
     families = data[1]
     families = families[families['timeframe_has_first_service_date'] > 0]
     return calc_families.get_household_size_distribution_1_to_10(families)
@@ -148,6 +160,18 @@ def get_new_fam_hh_size_dist_classic(data):
 
 #data def 43
 def get_relationship_length_fam_mean(data):
+    """Calculate mean length of relationship for families DataDef 43
+
+    Arguments:
+    data - data frames to fulfill definiton id
+
+    Modifies:
+    Nothing
+
+    Returns: added_members
+    mean_relationship_length - mean relationship length of families
+    """
+
     families = data[1]
     return families['max_days_since_first_service'].mean()
 
