@@ -67,9 +67,13 @@ def save_report(schedule, results):
     # New report to the database
     dateCompleted = date.today().strftime('%Y-%m-%d')
     new_report = Report(report_schedule = schedule, start_date = results['Scope']['startDate'], end_date = results['Scope']['endDate'], date_completed = dateCompleted)
+    # once we get changes from other teams, this will become...
+    # new_report = Report(report_schedule = schedule, start_date = results['Meta']['startDate'], end_date = results['Meta']['endDate'], date_completed = dateCompleted, no_data = results['Meta']['no_data'])
     new_report.save()
 
     # New rows to report_data_int/report_data_float
+    # once we get changes from other teams, add the below statement...
+    # if (results['Meta']['no_data'] == False):
     for values in results['ReportInfo']:
         if(values['dataDefType'] == 'integer'):
             new_data_int = ReportDataInt(report = new_report, data_definition_id = values['dataDefId'], int_value = values['value'])
@@ -77,6 +81,7 @@ def save_report(schedule, results):
         elif(values['dataDefType'] == 'float'):
             new_data_float = ReportDataFloat(report = new_report, data_definition_id = values['dataDefId'], float_value = values['value'])
             new_data_float.save()
+    
 
 # used for testing purposes
 mock_dict = {
