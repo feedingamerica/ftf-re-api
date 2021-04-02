@@ -116,7 +116,7 @@ class ReportSchedule(models.Model):
 	run_type = models.ForeignKey(RunType, on_delete = models.CASCADE)
 	timeframe_type = models.ForeignKey(TimeframeType, on_delete = models.CASCADE)
 	report_scope = models.ForeignKey(ReportScope, on_delete = models.CASCADE)
-	report_scope_value = models.PositiveIntegerField()
+	report_scope_value = models.PositiveBigIntegerField()
 	control_type = models.ForeignKey(ControlType, on_delete = models.CASCADE)
 	reporting_dictionary = models.ForeignKey(ReportingDictionary, on_delete = models.CASCADE)
 	control_age_group_id = models.IntegerField()
