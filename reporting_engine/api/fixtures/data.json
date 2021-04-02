@@ -863,8 +863,7 @@
     "fields":{
         "name" : "Last Month",
         "dim_dates_reference" : "NA",
-        "current_start_date" : "2021-01-01",
-        "current_end_date": "2021-01-31"
+        "recurrence_type": "Monthly"
     }
   },
   {
@@ -873,8 +872,7 @@
     "fields":{
         "name" : "Rolling 12 Months",
         "dim_dates_reference" : "NA",
-        "current_start_date" : "2020-02-01",
-        "current_end_date": "2021-01-31"
+        "recurrence_type": "Monthly"
     }
   },
   {
@@ -883,8 +881,7 @@
     "fields":{
         "name" : "CY To Date",
         "dim_dates_reference" : "CalendarYear",
-        "current_start_date" : "2020-01-01",
-        "current_end_date": "2021-01-31"
+        "recurrence_type": "Monthly"
     }
   },
   {
@@ -893,8 +890,7 @@
     "fields":{
         "name" : "Fiscal year to date",
         "dim_dates_reference" : "JulFiscalYear",
-        "current_start_date" : "2020-07-01",
-        "current_end_date": "2021-01-31"
+        "recurrence_type": "Monthly"
     }
   },
   {
