@@ -54,9 +54,9 @@ class TasksCalcTesting(TestCase):
   
         # creating a schedule using the ReportSchedule model
         # parameters used to create it: run_type_id (2; recurring), report_scope_id (1; hierarchy, event, event_id), 
-        # report_scope_value ("346"), control_type_id (1; Is Grocery Service), reporting_dictionary_id (1; default reporting engine output),
+        # report_scope_value (346), control_type_id (1; Is Grocery Service), reporting_dictionary_id (1; default reporting engine output),
         # control_age_group_id (1), date_scheduled (2021-03-05)
-        rs = ReportSchedule.objects.create(timeframe_type_id = 1, run_type_id = 2, report_scope_id = 1, report_scope_value = "346", \
+        rs = ReportSchedule.objects.create(timeframe_type_id = 1, run_type_id = 2, report_scope_id = 1, report_scope_value = 346, \
         control_type_id = 1, reporting_dictionary_id = 1, control_age_group_id = 1, date_scheduled=datetime.date(2021, 3, 5))
 
         # calling the tested function
@@ -76,9 +76,9 @@ class TasksCalcTesting(TestCase):
   
         # creating a schedule using the ReportSchedule model
         # parameters used to create it: run_type_id (2; recurring), report_scope_id (1; hierarchy, event, event_id), 
-        # report_scope_value ("346"), control_type_id (1; Is Grocery Service), reporting_dictionary_id (1; default reporting engine output),
+        # report_scope_value (346), control_type_id (1; Is Grocery Service), reporting_dictionary_id (1; default reporting engine output),
         # control_age_group_id (1), date_scheduled (2021-03-05)
-        rs = ReportSchedule.objects.create(timeframe_type_id = 2, run_type_id = 2, report_scope_id = 1, report_scope_value = "346", \
+        rs = ReportSchedule.objects.create(timeframe_type_id = 2, run_type_id = 2, report_scope_id = 1, report_scope_value = 346, \
         control_type_id = 1, reporting_dictionary_id = 1, control_age_group_id = 1, date_scheduled=datetime.date(2021, 3, 5))
 
         # calling the tested function
@@ -98,9 +98,9 @@ class TasksCalcTesting(TestCase):
   
         # creating a schedule using the ReportSchedule model
         # parameters used to create it: run_type_id (2; recurring), report_scope_id (1; hierarchy, event, event_id), 
-        # report_scope_value ("346"), control_type_id (1; Is Grocery Service), reporting_dictionary_id (1; default reporting engine output),
+        # report_scope_value (346), control_type_id (1; Is Grocery Service), reporting_dictionary_id (1; default reporting engine output),
         # control_age_group_id (1), date_scheduled (2021-03-05)
-        rs = ReportSchedule.objects.create(timeframe_type_id = 3, run_type_id = 2, report_scope_id = 1, report_scope_value = "346", \
+        rs = ReportSchedule.objects.create(timeframe_type_id = 3, run_type_id = 2, report_scope_id = 1, report_scope_value = 346, \
         control_type_id = 1, reporting_dictionary_id = 1, control_age_group_id = 1, date_scheduled=datetime.date(2021, 3, 5))
 
         # calling the tested function
@@ -120,9 +120,9 @@ class TasksCalcTesting(TestCase):
   
         # creating a schedule using the ReportSchedule model
         # parameters used to create it: run_type_id (2; recurring), report_scope_id (1; hierarchy, event, event_id), 
-        # report_scope_value ("346"), control_type_id (1; Is Grocery Service), reporting_dictionary_id (1; default reporting engine output),
+        # report_scope_value (346), control_type_id (1; Is Grocery Service), reporting_dictionary_id (1; default reporting engine output),
         # control_age_group_id (1), date_scheduled (2021-03-05)
-        rs = ReportSchedule.objects.create(timeframe_type_id = 4, run_type_id = 2, report_scope_id = 1, report_scope_value = "346", \
+        rs = ReportSchedule.objects.create(timeframe_type_id = 4, run_type_id = 2, report_scope_id = 1, report_scope_value = 346, \
         control_type_id = 1, reporting_dictionary_id = 1, control_age_group_id = 1, date_scheduled=datetime.date(2021, 3, 5))
 
         # calling the tested function
@@ -142,9 +142,9 @@ class TasksCalcTesting(TestCase):
   
         # creating a schedule using the ReportSchedule model
         # parameters used to create it: run_type_id (2; recurring), report_scope_id (1; hierarchy, event, event_id), 
-        # report_scope_value ("346"), control_type_id (1; Is Grocery Service), reporting_dictionary_id (1; default reporting engine output),
+        # report_scope_value (346), control_type_id (1; Is Grocery Service), reporting_dictionary_id (1; default reporting engine output),
         # control_age_group_id (1), date_scheduled (2021-03-05), date_custom_start (2021-02-07), date_custom_end (2021-03-04)
-        rs = ReportSchedule.objects.create(timeframe_type_id = 5, run_type_id = 2, report_scope_id = 1, report_scope_value = "346", \
+        rs = ReportSchedule.objects.create(timeframe_type_id = 5, run_type_id = 2, report_scope_id = 1, report_scope_value = 346, \
         control_type_id = 1, reporting_dictionary_id = 1, control_age_group_id = 1, date_scheduled=datetime.date(2021, 3, 5), \
         date_custom_start=datetime.date(2021, 2, 7), date_custom_end=datetime.date(2021, 3, 4))
 
@@ -214,7 +214,7 @@ class TasksGenTesting(TestCase):
     Testing generation and saving of different timeframe types
     """
     def test_generate_report_and_save_timeframe_type(self):
-        # constants in the report schedule: run_type_id (2; recurring), report_scope_id (1; hierarchy, event, event_id), report_scope_value ("346"),
+        # constants in the report schedule: run_type_id (2; recurring), report_scope_id (1; hierarchy, event, event_id), report_scope_value (346),
         # control_type_id (1; Is Grocery Service), reporting_dictionary_id (1; default reporting engine output),
         # control_age_group_id (1), date_scheduled (today)
 
@@ -229,13 +229,13 @@ class TasksGenTesting(TestCase):
             # print(f"\nTesting timeframe_type_id = {x}...")
 
             if (x != 5):
-                rs = ReportSchedule.objects.create(timeframe_type_id = x, run_type_id = 2, report_scope_id = 1, report_scope_value = "346", \
+                rs = ReportSchedule.objects.create(timeframe_type_id = x, run_type_id = 2, report_scope_id = 1, report_scope_value = 346, \
                 control_type_id = 1, reporting_dictionary_id = 1, control_age_group_id = 1, date_scheduled=date.today())
             elif (x == 5):
                 # for Custom Date Range, we need run_type_id = 1 (one time), and the date_custom_start and date_custom_end fields
                 # arbitrarily choosing custom date range as 3-05-2021 to 3-15-2021
                 rs = ReportSchedule.objects.create(timeframe_type_id = x, run_type_id = 1, date_custom_start = datetime.date(2021, 3, 5), \
-                date_custom_end = datetime.date(2021, 3, 15), report_scope_id = 1, report_scope_value = "346", control_type_id = 1, \
+                date_custom_end = datetime.date(2021, 3, 15), report_scope_id = 1, report_scope_value = 346, control_type_id = 1, \
                 reporting_dictionary_id = 1, control_age_group_id = 1, date_scheduled=date.today())
             
             # calling the tested function
@@ -250,7 +250,7 @@ class TasksGenTesting(TestCase):
     """
     def test_generate_report_and_save_control_type(self):
         # constants in the report schedule: report_scope_id (1; hierarchy, event, event_id), timeframe_type (2; rolling 12 months), 
-        # run_type_id (2; recurring), report_scope_value ("346"), reporting_dictionary_id (1; default reporting engine output),
+        # run_type_id (2; recurring), report_scope_value (346), reporting_dictionary_id (1; default reporting engine output),
         # control_age_group_id (1), date_scheduled (today)
 
         # testing all control_type_id: 
@@ -264,7 +264,7 @@ class TasksGenTesting(TestCase):
             # print(f"\nTesting control_type_id = {x}...")
 
             rs = ReportSchedule.objects.create(control_type_id = x, report_scope_id = 1, timeframe_type_id = 2, run_type_id = 2, \
-            report_scope_value = "346", reporting_dictionary_id = 1, control_age_group_id = 1, date_scheduled=date.today())
+            report_scope_value = 346, reporting_dictionary_id = 1, control_age_group_id = 1, date_scheduled=date.today())
             
             # calling the tested function
             generate_report_and_save(rs)
@@ -286,7 +286,7 @@ class TasksGenTesting(TestCase):
         # value that makes sense
         # each value corresponds to a report scope id: the first value corresponds to report scope id 1, the last corresponds to report scope id 16
         # note that we are not testing report scope id 7 and 8, so their corresponding spots are empty
-        scopeValList = ["1", "1", "3", "39045", "17", "21", "", "", "21", "21187", "21187970300", "40359", "21062", "18013", "3901", "2104560"]
+        scopeValList = [1, 1, 3, 39045, 17, 21, "", "", 21, 21187, 21187970300, 40359, 21062, 18013, 3901, 2104560]
         
         # testing all report_scope_id: 
         #   1: Hierarchy; Event; event_id
@@ -327,7 +327,7 @@ class TasksGenTesting(TestCase):
     """
     def test_generate_report_and_save_reporting_dict(self):
         # constants in the report schedule: report_scope_id (1; hierarchy, event, event_id), timeframe_type (2; rolling 12 months),
-        # run_type_id (2; recurring), control_type_id (1; Is Grocery Service), report_scope_value ("346"),
+        # run_type_id (2; recurring), control_type_id (1; Is Grocery Service), report_scope_value (346),
         # control_age_group_id (1), date_scheduled (today)
 
         # testing all reporting_dictionary_id:
@@ -340,7 +340,7 @@ class TasksGenTesting(TestCase):
             # print(f"\nTesting reporting_dictionary_id = {x}...")
             
             rs = ReportSchedule.objects.create(reporting_dictionary_id = x, report_scope_id = 1, timeframe_type_id = 2, run_type_id = 2, \
-            control_type_id = 1, report_scope_value = "346", control_age_group_id = 1, date_scheduled=date.today())
+            control_type_id = 1, report_scope_value = 346, control_age_group_id = 1, date_scheduled=date.today())
             
             # calling the tested function
             generate_report_and_save(rs)
