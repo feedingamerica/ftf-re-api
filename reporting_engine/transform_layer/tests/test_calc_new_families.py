@@ -173,24 +173,21 @@ class CalculationsTestCase(unittest.TestCase):
     def test_get_new_fam_dist_of_length_of_relationships_for_individuals(self):
         # NOTE 
         # Everything here is 0 because the exact numbers are not given yet 
-        expected = {
-            '0 - 200':0,
-            '200 - 400':0,
-            '400 - 600':0,
-            '600 - 800':0,
-            '800 - 1000':0,
-            '1000 - 1200':0,
-            '1200 - 1400':0,
-            '1400 - 1600':0,
-            '1600 - 1800':0,
-            '1800 - 2000':0,
-        }
+        expected = 792.9765
+
         #data = TEST_DATA_SERVICE.get_data_for_definition(38)
         data = BASE_DATA 
         func = calc.data_calc_function_switcher[46]
         result = func(data)
         resultFrame = pandas.read_json(result)
-        assert_frame_equal(resultFrame, expected, check_like = True)
+
+        average = 0;
+        for index, row in families.iterrows():
+            max_days = int(row["max_days_since_first_service"])
+            average+=max_days
+        average = average / resultFrame.count
+
+        self.assertTrue(math.isclose(round(average,4), expected))
 
 if __name__ == '__main__':
     unittest.main()
