@@ -51,7 +51,7 @@ class DataDefinition(models.Model):
 	name = models.CharField(max_length = 255, blank = True)
 	definition_public = models.CharField(max_length = 255, blank = True)
 	calculation_notes = models.CharField(max_length = 255, blank = True)
-	interpretation_notes = models.CharField(max_length = 300, blank = True)
+	interpretation_notes = models.TextField(blank = True)
 	data_definition_type = models.ForeignKey(DataDefinitionType, on_delete = models.CASCADE, null = True, blank = True)
 	class Meta:
 		db_table = 'data_definitions'
@@ -144,6 +144,7 @@ class Report(models.Model):
 	start_date = models.DateField(null = True, blank = True)
 	end_date = models.DateField(null = True, blank = True)
 	date_completed = models.DateField(null = True, blank = True)
+	no_data = models.BooleanField(null = True, blank = True)
 	class Meta:
 		db_table = 'reports'
 	def __str__(self):
