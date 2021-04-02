@@ -22,7 +22,7 @@ def generate_report_and_save(schedule):
 # calculates start and end dates that a report should be run for, based on its timeframe type
 def calculate_dates(schedule): 
     # the end date is the same for all timeframes except custom: the last day of the previous month
-    end_date = date.today().replace(day = 1) - timedelta(days = 1)
+    end_date = schedule.date_scheduled.replace(day = 1) - timedelta(days = 1)
  
     # calculating start date based on timeframe type
     if (schedule.timeframe_type.name == "Last Month"):
@@ -30,7 +30,7 @@ def calculate_dates(schedule):
         start_date = datetime.date(end_date.year, end_date.month, 1)
     elif (schedule.timeframe_type.name == "Rolling 12 Months"):
         # first day of the same month, previous year
-        start_date = datetime.date(date.today().year - 1, date.today().month, 1)
+        start_date = datetime.date(schedule.date_scheduled.year - 1, schedule.date_scheduled.month, 1)
     elif (schedule.timeframe_type.name == "CY To Date"):
         # January 1 of this year
         start_date = datetime.date(end_date.year, 1, 1)
