@@ -1,6 +1,5 @@
 from django.test import TestCase
-from django.test import Client
-from api.models import ReportSchedule, ControlType, TimeframeType, RunType, ReportScope, ReportingDictionary, Report
+from api.models import ReportSchedule, ControlType, TimeframeType, RunType, ReportScope, ReportingDictionary, Report, ReportScheduleAddinReport, ReportScheduleAddin, ReportDataInt
 import datetime
 from datetime import date
 from api.tasks import generate_report_and_save
@@ -143,7 +142,6 @@ class TasksCalcTesting(TestCase):
 """
 Testing the generate_report_and_save(schedule) function in api/tasks.py
 """
-# TODO: add tests for generate_report_and_save on the addin_state_report and addin_foodbank_report parameters
 class TasksGenTesting(TestCase):
     """
     Setting up test model instances for the test database that Django creates
@@ -234,7 +232,7 @@ class TasksGenTesting(TestCase):
     Testing generation and saving of different control types
     """
     def test_generate_report_and_save_control_type(self):
-        # constants in the report schedule: report_scope_id (1; hierarchy, event, event_id), timeframe_type (2; rolling 12 months), 
+        # constants in the report schedule: report_scope_id (1; hierarchy, event, event_id), timeframe_type_id (2; rolling 12 months), 
         # run_type_id (2; recurring), report_scope_value (346), reporting_dictionary_id (1; default reporting engine output),
         # control_age_group_id (1), date_scheduled (today)
 
@@ -262,7 +260,7 @@ class TasksGenTesting(TestCase):
     Testing generation and saving of different report scopes
     """ 
     def test_generate_report_and_save_report_scope(self):
-        # constants in the report schedule: timeframe_type (2; rolling 12 months), run_type_id (2; recurring),
+        # constants in the report schedule: timeframe_type_id (2; rolling 12 months), run_type_id (2; recurring),
         # control_type_id (1; Is Grocery Service), reporting_dictionary_id (1; default reporting engine output),
         # control_age_group_id (1), date_scheduled (today)
 
@@ -311,7 +309,7 @@ class TasksGenTesting(TestCase):
     Testing generation and saving of different reporting dictionary ids
     """
     def test_generate_report_and_save_reporting_dict(self):
-        # constants in the report schedule: report_scope_id (1; hierarchy, event, event_id), timeframe_type (2; rolling 12 months),
+        # constants in the report schedule: report_scope_id (1; hierarchy, event, event_id), timeframe_type_id (2; rolling 12 months),
         # run_type_id (2; recurring), control_type_id (1; Is Grocery Service), report_scope_value (346),
         # control_age_group_id (1), date_scheduled (today)
 
@@ -326,6 +324,47 @@ class TasksGenTesting(TestCase):
             
             rs = ReportSchedule.objects.create(reporting_dictionary_id = x, report_scope_id = 1, timeframe_type_id = 2, run_type_id = 2, \
             control_type_id = 1, report_scope_value = 346, control_age_group_id = 1, date_scheduled=date.today())
+            
+            # calling the tested function
+            generate_report_and_save(rs)
+
+            # ensuring the generated report was actually saved to the database
+            self.assertTrue(Report.objects.filter(report_schedule_id = rs.pk).exists())
+
+    """
+    Testing the generate_report_and_save(schedule) function from tasks.py
+    Testing generation and saving of different addin reports
+    """
+    def test_generate_report_and_save_addin_reports(self):
+        # constants in the report schedule: report_scope_id (1; hierarchy, event, event_id), timeframe_type_id (2; rolling 12 months),
+        # run_type_id (2; recurring), control_type_id (1; Is Grocery Service), report_scope_value (346),
+        # control_age_group_id (1), date_scheduled (today), reporting_dictionary_id (1; default reporting engine output)
+
+        # we are testing all addin_reports, which are types of reporting_dictionary_id:
+        #   2: State AddIn - Ohio                           (here, accessed via ReportScheduleAddin primary key 1)
+        #   3: Food Bank Add-in - MOFC                      (here, accessed via ReportScheduleAddin primary key 2)
+        #   4: Food Bank Add-in - Virginia Peninsula        (here, accessed via ReportScheduleAddin primary key 3)
+        # the addin_report is accessed through ReportScheduleAddinReport and ReportScheduleAddin; we will be inputting 
+        # the primary keys of ReportScheduleAddin as our values for our ReportSchedule's addin_reports_id value
+        for x in range(1, 4): 
+            # use this print statement to help debug, if needed
+            # print(f"\nTesting addin_reports_id = {x}...")
+
+            # creating the necessary rows in ReportScheduleAddin
+            rsa = ReportScheduleAddin.objects.create(reporting_dictionary_id = x + 1)
+            
+            # creating the report schedule
+            rs = ReportSchedule.objects.create(report_scope_id = 1, timeframe_type_id = 2, run_type_id = 2, \
+            control_type_id = 1, report_scope_value = 346, control_age_group_id = 1, date_scheduled=date.today(), reporting_dictionary_id = 1)
+            
+            # adding a new row to report_schedule_addin_reports which corresponds to the ReportSchedule object we just made
+            # the report_schedule_addin_id refers to the ReportScheduleAddin table
+            rsar = ReportScheduleAddinReport.objects.create(report_schedule_id = rs.pk, report_schedule_addin_id = x)
+
+            # now that we have made a new ReportScheduleAddinReport object, updating our ReportSchedule object so that it 
+            # has the addin_reports_id field (this field is of type ReportScheduleAddin, through ReportScheduleAddinReport)
+            rs.addin_reports_id = x
+            rs.save()
             
             # calling the tested function
             generate_report_and_save(rs)
