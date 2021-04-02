@@ -1,9 +1,9 @@
-from api.models import ReportSchedule, Report
+from api.models import ReportSchedule, Report, ReportingDictionary
 import json
 from django.core.serializers.json import DjangoJSONEncoder
 
 
-def get_data_definitions(report_schedule_id):
+def get_data_definitions(report_schedule_id, startDate, endDate):
     """
     Takes a report schedule id and returns a dictionary/json
     of the necessary data definitions to be used by the
@@ -19,30 +19,38 @@ def get_data_definitions(report_schedule_id):
     report_schedule = ReportSchedule.objects.get(pk=report_schedule_id)
 
     # Get startDate and endDate
-    if report_schedule.run_type.name == "One Time":
-        d["Scope"]["startDate"] = report_schedule.date_custom_start
-        d["Scope"]["endDate"] = report_schedule.date_custom_end
-    elif report_schedule.run_type.name == "Recurring":
-        d["Scope"]["startDate"] = report_schedule.timeframe_type.current_start_date
-        d["Scope"]["endDate"] = report_schedule.timeframe_type.current_end_date
+    d["Scope"]["startDate"] = startDate
+    d["Scope"]["endDate"] = endDate
 
     # Complete all fields in Scope
     d["Scope"]["scope_field"] = report_schedule.report_scope.field_reference
     d["Scope"]["scope_field_value"] = report_schedule.report_scope_value
-    d["Scope"]["control_type_field"] = report_schedule.control_type.name
-    d["Scope"]["control_type_value"] = 1  # For now this will always be 1
+    d["Scope"]["control_type_name"] = report_schedule.control_type.name
+    d["Scope"]["control_age_group_id"] = report_schedule.control_age_group_id
 
     # Add all reports that reference the given ReportSchedule
     # TODO: Modify later for efficiency
     # https://docs.djangoproject.com/en/3.1/ref/models/relations/
-    for r in Report.objects.filter(report_schedule=report_schedule):
+    for dict_def in report_schedule.reporting_dictionary.reportingdictionarydefinition_set.all():
         report = dict()
-        report["reportId"] = r.pk  # gets primary key of r
-        report["reportDictId"] = report_schedule.reporting_dictionary.pk  # common
-        report["dataDefId"] = None  # FIXME: Cannot be completed due to models
-        report["name"] = "name"  # FIXME: currently no name in models
+        report["reportScheduleId"] = report_schedule.pk  # gets primary key of r
+        report["reportDictId"] = dict_def.report_dictionary.pk  # common
+        report["dataDefId"] = dict_def.data_definition.pk
+        report["name"] = dict_def.data_definition.name
+        report["dataDefType"] = dict_def.data_definition.data_definition_type.name
         d["ReportInfo"].append(report)
 
+    for a in report_schedule.addin_reports.values_list('reporting_dictionary_id', flat = True):
+        RD = ReportingDictionary(id=a, name=ReportingDictionary.objects.get(pk=a).name,
+                                 definition=ReportingDictionary.objects.get(pk=a).definition)
+        for dict_def in RD.reportingdictionarydefinition_set.all():
+            report = dict()
+            report["reportScheduleId"] = report_schedule.pk  # gets primary key of r
+            report["reportDictId"] = dict_def.report_dictionary.pk  # common
+            report["dataDefId"] = dict_def.data_definition.pk
+            report["name"] = dict_def.data_definition.name
+            report["dataDefType"] = dict_def.data_definition.data_definition_type.name
+            d["ReportInfo"].append(report)
     return d
 
 
