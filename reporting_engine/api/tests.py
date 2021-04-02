@@ -6,21 +6,6 @@ from datetime import date
 from api.tasks import generate_report_and_save
 from api.tasks import calculate_dates
 
-# c = Client()
-# responce = c.post('/api/', {
-#                     'run_type': 'onetime',
-#                     'timeframe_type' : 'monthly',
-#                     'report_scope' : '',
-#                     'report_scope_value' : '',
-#                     'control_type' : '',
-#                     'reporting_dictionary' : '',
-#                     'control_age_group_id' : '',
-#                     'date_scheduled' : '',
-#                     'date_custom_start' : '',
-#                     'date_custom_end' : '',
-#                     'addin_state_report' : '',
-#                     'addin_foodbank_report' :''})
-
 """
 The tests in this file can be run using: python manage.py test api
 This will run all of the tests, and Django will automatically create a test database, so nothing is added to the actual reports database
