@@ -44,11 +44,19 @@ class CalculationsTestCase(unittest.TestCase):
         result = func(data)
         self.assertTrue(math.isclose(result, expected))
 
+    #test for data def 33
+    def test_get_new_members(self):
+        expected = 20779
+        data = BASE_DATA
+        func = calc.data_calc_function_switcher[33]
+        result = func(data)
+        self.assertTrue(math.isclose(result, expected))
+
     #test for data def 34
     def test_get_new_members_to_old_families(self):
         expected = 19160
         data = BASE_DATA
-        func = calc.data_calc_function_switcher[34]
+        func =calc.data.data_calc_function_switcher[34]
         result = func(data)
         self.assertTrue(math.isclose(result, expected))
 
