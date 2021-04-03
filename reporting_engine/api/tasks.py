@@ -22,7 +22,7 @@ def generate_report_and_save(schedule):
 # calculates start and end dates that a report should be run for, based on its timeframe type
 def calculate_dates(schedule): 
     # the end date is the same for all timeframes except custom: the last day of the previous month
-    end_date = date.today().replace(day = 1) - timedelta(days = 1)
+    end_date = schedule.date_scheduled.replace(day = 1) - timedelta(days = 1)
  
     # calculating start date based on timeframe type
     if (schedule.timeframe_type.name == "Last Month"):
@@ -30,7 +30,7 @@ def calculate_dates(schedule):
         start_date = datetime.date(end_date.year, end_date.month, 1)
     elif (schedule.timeframe_type.name == "Rolling 12 Months"):
         # first day of the same month, previous year
-        start_date = datetime.date(date.today().year - 1, date.today().month, 1)
+        start_date = datetime.date(schedule.date_scheduled.year - 1, schedule.date_scheduled.month, 1)
     elif (schedule.timeframe_type.name == "CY To Date"):
         # January 1 of this year
         start_date = datetime.date(end_date.year, 1, 1)
@@ -67,9 +67,13 @@ def save_report(schedule, results):
     # New report to the database
     dateCompleted = date.today().strftime('%Y-%m-%d')
     new_report = Report(report_schedule = schedule, start_date = results['Scope']['startDate'], end_date = results['Scope']['endDate'], date_completed = dateCompleted)
+    # once we get changes from other teams, this will become...
+    # new_report = Report(report_schedule = schedule, start_date = results['Meta']['startDate'], end_date = results['Meta']['endDate'], date_completed = dateCompleted, no_data = results['Meta']['no_data'])
     new_report.save()
 
     # New rows to report_data_int/report_data_float
+    # once we get changes from other teams, add the below statement...
+    # if (results['Meta']['no_data'] == False):
     for values in results['ReportInfo']:
         if(values['dataDefType'] == 'integer'):
             new_data_int = ReportDataInt(report = new_report, data_definition_id = values['dataDefId'], int_value = values['value'])
@@ -77,6 +81,7 @@ def save_report(schedule, results):
         elif(values['dataDefType'] == 'float'):
             new_data_float = ReportDataFloat(report = new_report, data_definition_id = values['dataDefId'], float_value = values['value'])
             new_data_float.save()
+    
 
 # used for testing purposes
 mock_dict = {

@@ -462,7 +462,7 @@
     "fields": {
       "name": "service_summary_service",
       "definition_public": "A summary of services by service type. Provides a detailed summary of network output by each type of service.",
-      "calculation_notes": "base services, group by service id, show count of services as duplicated families served, and sum of fact_services.served_total as duplicated people served.",
+      "calculation_notes": "Base services, group by service id, show count of services as duplicated families served, and sum of fact_services.served_total as duplicated people served.",
       "interpretation_notes": "Will not show any variables that have zero observations.",
       "data_definition_type_id": 2
     }
@@ -473,7 +473,7 @@
     "fields": {
       "name": "service_summary_category",
       "definition_public": "A summary of services by service cateogry. This provides a high-level summary of network output.",
-      "calculation_notes": "base services, group by service category name, show count of services as duplicated families served, and sum of fact_services.served_total as duplicated people served.",
+      "calculation_notes": "Base services, group by service category name, show count of services as duplicated families served, and sum of fact_services.served_total as duplicated people served.",
       "interpretation_notes": "Will not show any variables that have zero observations.",
       "data_definition_type_id": 2
     }
@@ -484,9 +484,339 @@
     "fields": {
       "name": "distribution_outlets",
       "definition_public": "A summary of how many sites customers visited during the reporting timeframe.",
-      "calculation_notes": "base services, group by research_family_key, summarise sites visited as a count distinct of loc_id, group by sites visited, summarise unduplicated families as a count of observations.",
+      "calculation_notes": "Base services, group by research_family_key, summarise sites visited as a count distinct of loc_id, group by sites visited, summarise unduplicated families as a count of observations.",
       "interpretation_notes": "Will not show any variables that have zero observations, recommend reporting clients summarize data as 1, 2, 3, 4, and 5+ sites visited.",
       "data_definition_type_id": 2
+    }
+  },
+  {
+    "model": "api.DataDefinition",
+    "pk": 26,
+    "fields": {
+      "name": "fam_frequency_of_visits",
+      "definition_public": "A summary of how many families received how many services in the timeframe.",
+      "calculation_notes": "Base families, group by number of services, show count of unduplicated families in each group. Cap output at 25+.",
+      "interpretation_notes": "The general insight is that grocery service data shows a large number of families receiving a few services, and a few families receiving large services. This trend has been shown across states, foodbanks, counties, and agencies for any annual timeframe.",
+      "data_definition_type_id": 2
+    }
+  },
+  {
+    "model": "api.DataDefinition",
+    "pk": 27,
+    "fields": {
+      "name": "fam_service_distribution",
+      "definition_public": "A summary of how many total services were received by families in the timeframe.",
+      "calculation_notes": "Base families, group by number of services, show sum of services received (unduplicated families * services) in each group. Cap output at 25+.",
+      "interpretation_notes": "The general insight is that families who receive more services are fewer in number, and . E.g. if 3500 families receive 10 services each, the 10 group received 35000 services. This is likely fewer services received total than all the families who received 1 service, 2 services,etc...",
+      "data_definition_type_id": 2
+    }
+  },
+  {
+    "model": "api.DataDefinition",
+    "pk": 28,
+    "fields": {
+      "name": "fam_household_composition",
+      "definition_public": "Provides an unduplicated 7 category breakdown of family composition.",
+      "calculation_notes": "Base families, group by family_composition_type, summarise unduplicated count of families.",
+      "interpretation_notes": "A family household composition is derived from their most frequent household composition in ALL services received, not just the ones from the reporting timeframe.",
+      "data_definition_type_id": 2
+    }
+  },
+  {
+    "model": "api.DataDefinition",
+    "pk": 29,
+    "fields": {
+      "name": "fam_family_composition_key_insight",
+      "definition_public": "Provides a high-level statistic about how many families contained at least one child and one senior.",
+      "calculation_notes": "Base families, group by family_composition_type, summarise unduplicated count of families, group again by has_child_senior, summarise unduplicated count of families.",
+      "interpretation_notes": "This is a powerful statistic and shows grocery services benefit many types of families, and most of them have at least one senior or child.",
+      "data_definition_type_id": 2
+    }
+  },
+  {
+    "model": "api.DataDefinition",
+    "pk": 30,
+    "fields": {
+      "name": "fam_household_size_distribution_1_10",
+      "definition_public": "Provides a summary of family size, 1 - 10+",
+      "calculation_notes": "Base families, round average family size, bring up any family size <1 to 1, group by family_size, summarise unduplicated count of families. Cap output at 10+.",
+      "interpretation_notes": "One of the original myths about grocery services was that all families were large. The typical result of this data is that the majority of families are in line with the average demographics in their area.",
+      "data_definition_type_id": 2
+    }
+  },
+  {
+    "model": "api.DataDefinition",
+    "pk": 31,
+    "fields": {
+      "name": "fam_household_size_distribution_classic",
+      "definition_public": "Provides a summary of family size, 1 - 3, 4 - 6, 7+",
+      "calculation_notes": "Base families, round average family size, bring up any family size <1 to 1, group by family_size, summarise unduplicated count of families, summarise output at classic levels",
+      "interpretation_notes": "One of the original myths about grocery services was that all families were large. The typical result of this data is that the majority of families are in line with the average demographics in their area. This is the classical breakdown of family size.",
+      "data_definition_type_id": 2
+    }
+  },
+  {
+    "model": "api.DataDefinition",
+    "pk": 32,
+    "fields": {
+      "name": "newfam_undup_hh_total",
+      "definition_public": "Unduplicated count of new families.",
+      "calculation_notes": "Base families, filter for first fact_service ocurring during timeframe, count number of families.",
+      "interpretation_notes": "New families are determined based on their first recorded date of service, regardless of the fact_service's hierarchy or geography. For a family to be new, they just need to have had their first service in the reporting timeframe. This data point provides an unduplicated count of those families who interacted with the report scope & value.",
+      "data_definition_type_id": 1
+    }
+  },
+  {
+    "model": "api.DataDefinition",
+    "pk": 33,
+    "fields": {
+      "name": "newmem_allfams_undup_indv_total",
+      "definition_public": "Unduplicated count of new individuals in all families.",
+      "calculation_notes": "Base members, filter for first fact_service ocurring during timeframe, count number of individuals.",
+      "interpretation_notes": "New individuals are determined based on their first recorded date of service, regardless of their dim_families first day of service, or the fact_service's hierarchy or geography. For an individual to be new, they just need to have had their first fact_service_members entry in the reporting timeframe. This data point provides an unduplicated count of those indivuals who interacted with the report scope & value.",
+      "data_definition_type_id": 1
+    }
+  },
+  {
+    "model": "api.DataDefinition",
+    "pk": 34,
+    "fields": {
+      "name": "newmem_oldfam_undup_indv_total",
+      "definition_public": "Unduplicated count of new individuals in old families.",
+      "calculation_notes": "Base members, filter for first fact_service_member entry occurring during timeframe, filter for first fact_service entry ocurring during timeframe, count number of individuals.",
+      "interpretation_notes": "New individuals are determined based on their first recorded date of service, regardless of their dim_families first day of service, or the fact_service's hierarchy or geography. For an individual to be new, they just need to have had their first fact_service_members entry in the reporting timeframe. This data point provides an unduplicated count of new indivuals who were part of old families (not new during the timeframe).",
+      "data_definition_type_id": 1
+    }
+  },
+  {
+    "model": "api.DataDefinition",
+    "pk": 35,
+    "fields": {
+      "name": "new_fam_services_total",
+      "definition_public": "Services received by new families",
+      "calculation_notes": "Base families, filter for first fact_service occuring during timeframe, sum total services.",
+      "interpretation_notes": "The total number of services new families received that were provided within the report scope.",
+      "data_definition_type_id": 1
+    }
+  },
+  {
+    "model": "api.DataDefinition",
+    "pk": 36,
+    "fields": {
+      "name": "global_first_services_total",
+      "definition_public": "Total number of first time services.",
+      "calculation_notes": "Base services, filter for first fact_service occuring during timeframe, count observations.",
+      "interpretation_notes": "The number of first-time services received by families. These are the markers that allow us to identify new families, and are global in nature across the system. Use this information to understand how many new families the report scope interacted with.",
+      "data_definition_type_id": 1
+    }
+  },
+  {
+    "model": "api.DataDefinition",
+    "pk": 37,
+    "fields": {
+      "name": "new_fam_frequency_of_visits",
+      "definition_public": "A summary of how many new families received how many services in the timeframe.",
+      "calculation_notes": "Base families, filter for new families, group by number of services, show count of unduplicated families in each group. Cap output at 25+.",
+      "interpretation_notes": "The general insight is that grocery service data shows a large number of families receiving a few services, and a few families receiving large services. This trend has been shown across states, foodbanks, counties, and agencies for any annual timeframe. Compare this data to the service distribution for all families to understand how it may be more difficult for new families to take full advantage of the network immediately upon starting to interact with it.",
+      "data_definition_type_id": 2
+    }
+  },
+  {
+    "model": "api.DataDefinition",
+    "pk": 38,
+    "fields": {
+      "name": "new_fam_service_distribution",
+      "definition_public": "A summary of how many total services were received by new families in the timeframe.",
+      "calculation_notes": "Base families, filter for first fact_service ocurring during timeframe, group by number of services, show sum of services received (unduplicated families * services) in each group. Cap output at 25+.",
+      "interpretation_notes": "The general insight is that families who receive more services are fewer in number, and . E.g. if 3500 families receive 10 services each, the 10 group received 35000 services. This is likely fewer services received total than all the families who received 1 service, 2 services,etc... For new families, this is another example of how they may not be able to fully benefit from the network in ways that established families can access larger amounts of resources.",
+      "data_definition_type_id": 2
+    }
+  },
+  {
+    "model": "api.DataDefinition",
+    "pk": 39,
+    "fields": {
+      "name": "new_fam_household_composition",
+      "definition_public": "Provides an unduplicated 7 category breakdown of family composition, for new families.",
+      "calculation_notes": "Base families, filter for first fact_service ocurring during timeframe, group by family_composition_type, summarise unduplicated count of families.",
+      "interpretation_notes": "A family household composition is derived from their most frequent household composition in ALL services received, not just the ones from the reporting timeframe. For new families this is likely to be a single value and more closely agrees with the family composition determinations in fact_services. Compare these breakdowns to all familes to gain insight into how the newest families you are serving differ from the established families you are serving.",
+      "data_definition_type_id": 2
+    }
+  },
+  {
+    "model": "api.DataDefinition",
+    "pk": 40,
+    "fields": {
+      "name": "new_fam_family_composition_key_insight",
+      "definition_public": "Provides a high-level statistic about how many families contained at least one child and one senior, for new families.",
+      "calculation_notes": "Base families, filter for first fact_service ocurring during timeframe, group by family_composition_type, summarise unduplicated count of families, group again by has_child_senior, summarise unduplicated count of families.",
+      "interpretation_notes": "This is a powerful statistic and shows grocery services benefit many types of new families, and most of them have at least one senior or child. Expect this number to be more sensitive to changes in family composition than the general household composition insights.",
+      "data_definition_type_id": 2
+    }
+  },
+  {
+    "model": "api.DataDefinition",
+    "pk": 41,
+    "fields": {
+      "name": "new_fam_household_size_distribution_1_10",
+      "definition_public": "Provides a summary of family size, 1 - 10+, for new families",
+      "calculation_notes": "Base families, filter for first fact_service ocurring during timeframe, round average family size, bring up any family size <1 to 1, group by family_size, summarise unduplicated count of families. Cap output at 10+",
+      "interpretation_notes": "One of the original myths about grocery services was that all families were large. The typical result of this data is that the majority of families are in line with the average demographics in their area. Look for differences as compared to the general family statistics for insights into hunger affecting families of different sizes.",
+      "data_definition_type_id": 2
+    }
+  },
+  {
+    "model": "api.DataDefinition",
+    "pk": 42,
+    "fields": {
+      "name": "new_fam_household_size_distribution_classic",
+      "definition_public": "Provides a summary of family size, 1 - 3, 4 - 6, 7+, for new families",
+      "calculation_notes": "Base families, filter for first fact_service ocurring during timeframe, round average family size, bring up any family size <1 to 1, group by family_size, summarise unduplicated count of families, summarise output at classic levels.",
+      "interpretation_notes": "One of the original myths about grocery services was that all families were large. The typical result of this data is that the majority of families are in line with the average demographics in their area. This is the classical breakdown of family size. Look for differences as compared to the general family statistics for insights into hunger affecting families of different sizes.",
+      "data_definition_type_id": 2
+    }
+  },
+  {
+    "model": "api.DataDefinition",
+    "pk": 43,
+    "fields": {
+      "name": "relationship_length_families_mean",
+      "definition_public": "Provides the mean length of time between all families' first service and most recent service.",
+      "calculation_notes": "Base families, summarize for mean of max(fact_services.days_since_first_service)",
+      "interpretation_notes": "Use this information to gain insight into how long families served in the report scope have been engaged with the feeding network.",
+      "data_definition_type_id": 1
+    }
+  },
+  {
+    "model": "api.DataDefinition",
+    "pk": 44,
+    "fields": {
+      "name": "relationship_length_families_distribution",
+      "definition_public": "Provides the distribution of the length of time between all families' first service and most recent service.",
+      "calculation_notes": "Base families, generate a distribution for fact_services.days_since_first_service",
+      "interpretation_notes": "Use this information to gain insight into the distribution of families length of service.",
+      "data_definition_type_id": 2   
+    }
+  },
+  {
+    "model": "api.DataDefinition",
+    "pk": 45,
+    "fields": {
+      "name": "relationship_length_indv_mean",
+      "definition_public": "Provides the mean length of time between all individuals' first service and most recent service.",
+      "calculation_notes": "Base members, summarize for mean of max(fact_service_members.days_since_first_service)",
+      "interpretation_notes": "Use this information to gain insight into how long individuals served in the report scope have been engaged with the feeding network.",
+      "data_definition_type_id": 1
+    }
+  },
+  {
+    "model": "api.DataDefinition",
+    "pk": 46,
+    "fields": {
+      "name": "relationship_length_indv_distribution",
+      "definition_public": "Provides the distribution of the length of time between all individuals' first service and most recent service.",
+      "calculation_notes": "Base members, generate a distribution for fact_service_members.days_since_first_service",
+      "interpretation_notes": "Use this information to gain insight into the distribution of individals length of service.",
+      "data_definition_type_id": 2
+    }
+  },
+  {
+    "model": "api.DataDefinition",
+    "pk": 47,
+    "fields": {
+      "name": "dimgeo_coverage",
+      "definition_public": "Coverage provides an estimate of how many families in the report scope have been enriched with geographic information.",
+      "calculation_notes": "Base families, mutate summay of has_dim_geo_id, group by has_dim_geo_id, summarize count. State coverage as % of total.",
+      "interpretation_notes": "Only valuable for hierarchy-based reports because for geography-based reports, only the covered data points are included.",
+      "data_definition_type_id": 3
+    }
+  },
+  {
+    "model": "api.DataDefinition",
+    "pk": 48,
+    "fields": {
+      "name": "geographic_breakdown_fam_state",
+      "definition_public": "Provides a summary of how many families and individuals live in the geography, by state",
+      "calculation_notes": "Base members, group by fips_state, summarise number of families as count distinct of research_family_key, count number of individuals",
+      "interpretation_notes": "Use this information to gain an understanding about what state your families live in. Unknown geographies are for families we do not have geographic coverage for.",
+      "data_definition_type_id": 2
+    }
+  },
+  {
+    "model": "api.DataDefinition",
+    "pk": 49,
+    "fields": {
+      "name": "geographic_breakdown_fam_county",
+      "definition_public": "Provides a summary of how many families and individuals live in the geography, by county",
+      "calculation_notes": "Base members, group by fips_cnty, summarise number of families as count distinct of research_family_key, count number of individuals",
+      "interpretation_notes": "Use this information to gain an understanding about what county your families live in. Unknown geographies are for families we do not have geographic coverage for.",
+      "data_definition_type_id": 2
+    }
+  },
+  {
+    "model": "api.DataDefinition",
+    "pk": 50,
+    "fields": {
+      "name": "geographic_breakdown_fam_zcta",
+      "definition_public": "Provides a summary of how many families and individuals live in the geography, by zip code",
+      "calculation_notes": "Base members, group by fips_zcta, summarise number of families as count distinct of research_family_key, count number of individuals",
+      "interpretation_notes": "Use this information to gain an understanding about what zip code your families live in. Unknown geographies are for families we do not have geographic coverage for. Technically, this is for the ZCTA which is an official geography maintained by the census bureau. It is very similar to the USPS zip code, but less subject to changes.",
+      "data_definition_type_id": 2
+    }
+  },
+  {
+    "model": "api.DataDefinition",
+    "pk": 51,
+    "fields": {
+      "name": "services_flow_event_fips",
+      "definition_public": "Summarizes the flow of services from the county of the point of service to the county of the famlies.",
+      "calculation_notes": "Base services, group by dim_hierarchy_events.dimgeo_id.fips_cnty and fact_services.dimgeo_id.fips_cnty, summarize count of services.",
+      "interpretation_notes": "Understand the flow of services from one county to another. Depending on the agency this may not be very interestesting as most agencies provide most of their service to families living in the same county. However, for analysis at higher levels (county, foodbank, geographies, etc...) or agencies serving multiple counties or in border areas, this information helps understand how families travel to receive service.",
+      "data_definition_type_id": 2
+    }
+  },
+  {
+    "model": "api.DataDefinition",
+    "pk": 52,
+    "fields": {
+      "name": "distance_traveled",
+      "definition_public": "",
+      "calculation_notes": "",
+      "interpretation_notes": "",
+      "data_definition_type_id": null
+    }
+  },
+  {
+    "model": "api.DataDefinition",
+    "pk": 53,
+    "fields": {
+      "name": "direction_traveled",
+      "definition_public": "",
+      "calculation_notes": "",
+      "interpretation_notes": "",
+      "data_definition_type_id": null
+    }
+  },
+  {
+    "model": "api.DataDefinition",
+    "pk": 54,
+    "fields": {
+      "name": "windrose",
+      "definition_public": "",
+      "calculation_notes": "",
+      "interpretation_notes": "",
+      "data_definition_type_id": null
+    }
+  },
+  {
+    "model": "api.DataDefinition",
+    "pk": 55,
+    "fields": {
+      "name": "sites_visited_distribution",
+      "definition_public": "",
+      "calculation_notes": "",
+      "interpretation_notes": "",
+      "data_definition_type_id": null
     }
   },
   {
@@ -724,6 +1054,195 @@
     }
   },
   {
+    "model": "api.ReportingDictionaryDefinition",
+    "pk": 27,
+    "fields": {
+      "report_dictionary_id": 1,
+      "data_definition_id": 26,
+      "section_id": 3
+    }
+  },
+  {
+    "model": "api.ReportingDictionaryDefinition",
+    "pk": 28,
+    "fields": {
+      "report_dictionary_id": 1,
+      "data_definition_id": 27,
+      "section_id": 3
+    }
+  },
+  {
+    "model": "api.ReportingDictionaryDefinition",
+    "pk": 29,
+    "fields": {
+      "report_dictionary_id": 1,
+      "data_definition_id": 28,
+      "section_id": 3
+    }
+  },
+  {
+    "model": "api.ReportingDictionaryDefinition",
+    "pk": 30,
+    "fields": {
+      "report_dictionary_id": 1,
+      "data_definition_id": 29,
+      "section_id": 3
+    }
+  },
+  {
+    "model": "api.ReportingDictionaryDefinition",
+    "pk": 31,
+    "fields": {
+      "report_dictionary_id": 1,
+      "data_definition_id": 30,
+      "section_id": 3
+    }
+  },
+  {
+    "model": "api.ReportingDictionaryDefinition",
+    "pk": 32,
+    "fields": {
+      "report_dictionary_id": 1,
+      "data_definition_id": 31,
+      "section_id": 3
+    }
+  },
+  {
+    "model": "api.ReportingDictionaryDefinition",
+    "pk": 33,
+    "fields": {
+      "report_dictionary_id": 1,
+      "data_definition_id": 32,
+      "section_id": 4
+    }
+  },
+  {
+    "model": "api.ReportingDictionaryDefinition",
+    "pk": 34,
+    "fields": {
+      "report_dictionary_id": 1,
+      "data_definition_id": 33,
+      "section_id": 4
+    }
+  },
+  {
+    "model": "api.ReportingDictionaryDefinition",
+    "pk": 35,
+    "fields": {
+      "report_dictionary_id": 1,
+      "data_definition_id": 34,
+      "section_id": 4
+    }
+  },
+  {
+    "model": "api.ReportingDictionaryDefinition",
+    "pk": 36,
+    "fields": {
+      "report_dictionary_id": 1,
+      "data_definition_id": 35,
+      "section_id": 4
+    }
+  },
+  {
+    "model": "api.ReportingDictionaryDefinition",
+    "pk": 37,
+    "fields": {
+      "report_dictionary_id": 1,
+      "data_definition_id": 36,
+      "section_id": 4
+    }
+  },
+  {
+    "model": "api.ReportingDictionaryDefinition",
+    "pk": 38,
+    "fields": {
+      "report_dictionary_id": 1,
+      "data_definition_id": 37,
+      "section_id": 4
+    }
+  },
+  {
+    "model": "api.ReportingDictionaryDefinition",
+    "pk": 39,
+    "fields": {
+      "report_dictionary_id": 1,
+      "data_definition_id": 38,
+      "section_id": 4
+    }
+  },
+  {
+    "model": "api.ReportingDictionaryDefinition",
+    "pk": 40,
+    "fields": {
+      "report_dictionary_id": 1,
+      "data_definition_id": 39,
+      "section_id": 4
+    }
+  },
+  {
+    "model": "api.ReportingDictionaryDefinition",
+    "pk": 41,
+    "fields": {
+      "report_dictionary_id": 1,
+      "data_definition_id": 40,
+      "section_id": 4
+    }
+  },
+  {
+    "model": "api.ReportingDictionaryDefinition",
+    "pk": 42,
+    "fields": {
+      "report_dictionary_id": 1,
+      "data_definition_id": 41,
+      "section_id": 4
+    }
+  },
+  {
+    "model": "api.ReportingDictionaryDefinition",
+    "pk": 43,
+    "fields": {
+      "report_dictionary_id": 1,
+      "data_definition_id": 42,
+      "section_id": 4
+    }
+  },
+  {
+    "model": "api.ReportingDictionaryDefinition",
+    "pk": 44,
+    "fields": {
+      "report_dictionary_id": 1,
+      "data_definition_id": 43,
+      "section_id": 4
+    }
+  },
+  {
+    "model": "api.ReportingDictionaryDefinition",
+    "pk": 45,
+    "fields": {
+      "report_dictionary_id": 1,
+      "data_definition_id": 44,
+      "section_id": 4
+    }
+  },
+  {
+    "model": "api.ReportingDictionaryDefinition",
+    "pk": 46,
+    "fields": {
+      "report_dictionary_id": 1,
+      "data_definition_id": 45,
+      "section_id": 4
+    }
+  },
+  {
+    "model": "api.ReportingDictionaryDefinition",
+    "pk": 47,
+    "fields": {
+      "report_dictionary_id": 1,
+      "data_definition_id": 46,
+      "section_id": 4
+    }
+  },
+  {
     "model": "api.RunType",
     "pk": 1,
     "fields": {
@@ -743,8 +1262,7 @@
     "fields":{
         "name" : "Last Month",
         "dim_dates_reference" : "NA",
-        "current_start_date" : "2021-01-01",
-        "current_end_date": "2021-01-31"
+        "recurrence_type": "Monthly"
     }
   },
   {
@@ -753,8 +1271,7 @@
     "fields":{
         "name" : "Rolling 12 Months",
         "dim_dates_reference" : "NA",
-        "current_start_date" : "2020-02-01",
-        "current_end_date": "2021-01-31"
+        "recurrence_type": "Monthly"
     }
   },
   {
@@ -763,8 +1280,7 @@
     "fields":{
         "name" : "CY To Date",
         "dim_dates_reference" : "CalendarYear",
-        "current_start_date" : "2020-01-01",
-        "current_end_date": "2021-01-31"
+        "recurrence_type": "Monthly"
     }
   },
   {
@@ -773,8 +1289,7 @@
     "fields":{
         "name" : "Fiscal year to date",
         "dim_dates_reference" : "JulFiscalYear",
-        "current_start_date" : "2020-07-01",
-        "current_end_date": "2021-01-31"
+        "recurrence_type": "Monthly"
     }
   },
   {

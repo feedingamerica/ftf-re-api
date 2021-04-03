@@ -6,7 +6,7 @@ from django.db import connections
 from print_dict import print_dict, format_dict
 
 from .calculations import CalculationDispatcher
-from .services.data_service import Data_Service
+from .services.data_service import DataService
 
 
 
@@ -22,21 +22,21 @@ def test_data_service(request, id):
         },
         "ReportInfo": [
             {
-                "reportId":1,
+                "reportScheduleId":1,
                 "reportDictId":1,
                 "dataDefId":1,
                 "name":"name_one",
                 "dataDefType":"type1"
             },
             {
-                "reportId":2,
+                "reportScheduleId":2,
                 "reportDictId":2,
                 "dataDefId":2,
                 "name":"name_two",
                 "dataDefType":"type1"
             },
             {
-                "reportId":3,
+                "reportScheduleId":3,
                 "reportDictId":3,
                 "dataDefId":3,
                 "name":"name_three",
@@ -63,28 +63,28 @@ def get_report_big_numbers(request):
         },
         "ReportInfo": [
             {
-                "reportId":1,
+                "reportScheduleId":1,
                 "reportDictId":1,
                 "dataDefId":1,
                 "name":"services_total",
                 "dataDefType":"type1"
             },
             {
-                "reportId":2,
+                "reportScheduleId":2,
                 "reportDictId":2,
                 "dataDefId":2,
                 "name":"undup_hh_total",
                 "dataDefType":"type1"
             },
             {
-                "reportId":3,
+                "reportScheduleId":3,
                 "reportDictId":3,
                 "dataDefId":3,
                 "name":"undup_indv_total",
                 "dataDefType":"type1"
             },
             {
-                "reportId":4,
+                "reportScheduleId":4,
                 "reportDictId":4,
                 "dataDefId":4,
                 "name":"services_per_uhh_avg",
@@ -113,105 +113,105 @@ def get_report_ohio(request):
         },
         "ReportInfo": [
             {
-                "reportId":1,
+                "reportScheduleId":1,
                 "reportDictId":2,
                 "dataDefId":5,
                 "name":"hh_wminor",
                 "dataDefType":"type1"
             },
             {
-                "reportId":1,
+                "reportScheduleId":1,
                 "reportDictId":2,
                 "dataDefId":6,
                 "name":"hh_wominor",
                 "dataDefType":"type1"
             },
             {
-                "reportId":1,
+                "reportScheduleId":1,
                 "reportDictId":2,
                 "dataDefId":7,
                 "name":"hh_total",
                 "dataDefType":"type1"
             },
             {
-                "reportId":1,
+                "reportScheduleId":1,
                 "reportDictId":2,
                 "dataDefId":8,
                 "name":"indv_sen_hh_wminor",
                 "dataDefType":"type1"
             },
             {
-                "reportId":1,
+                "reportScheduleId":1,
                 "reportDictId":2,
                 "dataDefId":9,
                 "name":"indv_sen_hh_wominor",
                 "dataDefType":"type1"
             },
             {
-                "reportId":1,
+                "reportScheduleId":1,
                 "reportDictId":2,
                 "dataDefId":10,
                 "name":"indv_sen_total",
                 "dataDefType":"type1"
             },
             {
-                "reportId":1,
+                "reportScheduleId":1,
                 "reportDictId":2,
                 "dataDefId":11,
                 "name":"indv_adult_hh_wminor",
                 "dataDefType":"type1"
             },
             {
-                "reportId":1,
+                "reportScheduleId":1,
                 "reportDictId":2,
                 "dataDefId":12,
                 "name":"indv_adult_hh_wominor",
                 "dataDefType":"type1"
             },
             {
-                "reportId":1,
+                "reportScheduleId":1,
                 "reportDictId":2,
                 "dataDefId":13,
                 "name":"indv_adult_total",
                 "dataDefType":"type1"
             },
             {
-                "reportId":1,
+                "reportScheduleId":1,
                 "reportDictId":2,
                 "dataDefId":14,
                 "name":"indv_child_hh_wminor",
                 "dataDefType":"type1"
             },
             {
-                "reportId":1,
+                "reportScheduleId":1,
                 "reportDictId":2,
                 "dataDefId":15,
                 "name":"indv_child_hh_wominor",
                 "dataDefType":"type1"
             },
             {
-                "reportId":1,
+                "reportScheduleId":1,
                 "reportDictId":2,
                 "dataDefId":16,
                 "name":"indv_child_total",
                 "dataDefType":"type1"
             },
             {
-                "reportId":1,
+                "reportScheduleId":1,
                 "reportDictId":2,
                 "dataDefId":17,
                 "name":"indv_total_hh_wminor",
                 "dataDefType":"type1"
             },
             {
-                "reportId":1,
+                "reportScheduleId":1,
                 "reportDictId":2,
                 "dataDefId":18,
                 "name":"indv_total_hh_wominor",
                 "dataDefType":"type1"
             },
             {
-                "reportId":1,
+                "reportScheduleId":1,
                 "reportDictId":2,
                 "dataDefId":19,
                 "name":"indv_total",
@@ -240,21 +240,21 @@ def get_report_mofc(request):
         },
         "ReportInfo": [
             {
-                "reportId":1,
+                "reportScheduleId":1,
                 "reportDictId":3,
                 "dataDefId":20,
                 "name":"hh_wsenior",
                 "dataDefType":"type1"
             },
             {
-                "reportId":1,
+                "reportScheduleId":1,
                 "reportDictId":3,
                 "dataDefId":21,
                 "name":"hh_wosenior",
                 "dataDefType":"type1"
             },
             {
-                "reportId":1,
+                "reportScheduleId":1,
                 "reportDictId":3,
                 "dataDefId":22,
                 "name":"hh_grandparent",
@@ -315,7 +315,7 @@ def get_demo1_mofc(request):
     num_defs = len(Data_Service.data_def_function_switcher)
     for i in range(1, num_defs + 1):
         data_def = {
-            "reportId":1,
+            "reportScheduleId":1,
             "reportDictId":1,
             "dataDefId":i,
             "name": data_def_names[i-1],
@@ -377,7 +377,7 @@ def get_demo1_franklin(request):
     num_defs = len(Data_Service.data_def_function_switcher)
     for i in range(1, num_defs + 1):
         data_def = {
-            "reportId":1,
+            "reportScheduleId":1,
             "reportDictId":1,
             "dataDefId":i,
             "name": data_def_names[i-1],
@@ -442,10 +442,10 @@ def get_all_defs_typical(request):
         "fam_household_size_distribution_1_10",
         "fam_household_size_distribution_classic"
     ]
-    num_defs = len(Data_Service.data_def_function_switcher)
+    num_defs = len(data_def_names)
     for i in range(1, num_defs + 1):
         data_def = {
-            "reportId":1,
+            "reportScheduleId":1,
             "reportDictId":1,
             "dataDefId":i,
             "name": data_def_names[i-1],
@@ -476,21 +476,21 @@ def get_report_services(request):
         },
         "ReportInfo": [
             {
-                "reportId":1,
+                "reportScheduleId":1,
                 "reportDictId":1,
                 "dataDefId":23,
                 "name": "service_summary_service",
                 "dataDefType":3
             },
              {
-                "reportId":1,
+                "reportScheduleId":1,
                 "reportDictId":1,
                 "dataDefId":24,
                 "name": "service_summary_category",
                 "dataDefType":3
             },
             {
-                "reportId":1,
+                "reportScheduleId":1,
                 "reportDictId":1,
                 "dataDefId":25,
                 "name": "distribution_outlets",
@@ -519,35 +519,35 @@ def get_family_breakdown(request):
         },
         "ReportInfo": [
             {
-                "reportId":1,
+                "reportScheduleId":1,
                 "reportDictId":1,
                 "dataDefId":26,
                 "name": "frequency_visits",
                 "dataDefType":3
             },
             {
-                "reportId":1,
+                "reportScheduleId":1,
                 "reportDictId":1,
                 "dataDefId":28,
                 "name": "household_composition",
                 "dataDefType":3
             },
             {
-                "reportId":1,
+                "reportScheduleId":1,
                 "reportDictId":1,
                 "dataDefId":29,
                 "name": "family_composition_key_insight",
                 "dataDefType":3
             },
             {
-                "reportId":1,
+                "reportScheduleId":1,
                 "reportDictId":1,
                 "dataDefId":30,
                 "name": "household_size_distribution_1_to_10",
                 "dataDefType":3
             },
             {
-                "reportId":1,
+                "reportScheduleId":1,
                 "reportDictId":1,
                 "dataDefId":31,
                 "name": "household_composition",
@@ -566,5 +566,130 @@ def get_family_breakdown(request):
     return render(request, 'transformapi/get-report.html', context)
 
 
+def get_new_families(request):
+    input_dict = {
+        "Scope": {
+            "startDate":"01/01/2020",
+            "endDate":"12/31/2020",
+            "scope_field":"loc_id",
+            "scope_field_value":6,
+            "control_type_name":"Is Grocery Service",
+        },
+        "ReportInfo": [
+            {
+                "reportScheduleId":1,
+                "reportDictId":1,
+                "dataDefId":32,
+                "name": "newfam_undup_fam_total",
+                "dataDefType":1
+            },
+            {
+                "reportScheduleId":1,
+                "reportDictId":1,
+                "dataDefId":33,
+                "name": "newmem_undup_indv_total",
+                "dataDefType":1
+            },
+            {
+                "reportScheduleId":1,
+                "reportDictId":1,
+                "dataDefId":34,
+                "name": "newmem_oldfam_undup_indv_total",
+                "dataDefType":1
+            },
+            {
+                "reportScheduleId":1,
+                "reportDictId":1,
+                "dataDefId":35,
+                "name": "new_fam_services_total",
+                "dataDefType":1
+            },
+            {
+                "reportScheduleId":1,
+                "reportDictId":1,
+                "dataDefId":36,
+                "name": "global_first_services_total",
+                "dataDefType":1
+            },
+            {
+                "reportScheduleId":1,
+                "reportDictId":1,
+                "dataDefId":37,
+                "name": "newfam_freq_visits",
+                "dataDefType":3
+            },
+            {
+                "reportScheduleId":1,
+                "reportDictId":1,
+                "dataDefId":38,
+                "name": "new_fam_service_distribution",
+                "dataDefType":3
+            },
+            {
+                "reportScheduleId":1,
+                "reportDictId":1,
+                "dataDefId":39,
+                "name": "new_fam_household_composition",
+                "dataDefType":3
+            },
+            {
+                "reportScheduleId":1,
+                "reportDictId":1,
+                "dataDefId":40,
+                "name": "new_fam_composition_key_insight",
+                "dataDefType":3
+            },
+            {
+                "reportScheduleId":1,
+                "reportDictId":1,
+                "dataDefId":41,
+                "name": "newfam_hh_size_dist_1_to_10",
+                "dataDefType":3
+            },
+            {
+                "reportScheduleId":1,
+                "reportDictId":1,
+                "dataDefId":42,
+                "name": "newfam_hh_size_dist_classic",
+                "dataDefType":3  
+            },
+            {
+                "reportScheduleId":1,
+                "reportDictId":1,
+                "dataDefId":43,
+                "name": "relationship_length_fam_mean",
+                "dataDefType":3  
+            },
+             {
+                "reportScheduleId":1,
+                "reportDictId":1,
+                "dataDefId":44,
+                "name": "newfam_dist_length_of_relationship",
+                "dataDefType":3  
+            },
+            {
+                "reportScheduleId":1,
+                "reportDictId":1,
+                "dataDefId":45,
+                "name": "relationship_length_indv_mean",
+                "dataDefType":3  
+            },
+            {
+                "reportScheduleId":1,
+                "reportDictId":1,
+                "dataDefId":46,
+                "name": "new_fam_dist_of_length_of_relationships_for_individuals",
+                "dataDefType":3
+            }
+        ]
+    }
 
+    start_time = time.time()
+    cd = CalculationDispatcher(input_dict)
+    cd.run_calculations()
+
+    context = { 'report_output': format_dict(cd.request)}
+    print_dict(cd.request)
+    print(str(time.time() - start_time), ' seconds to run all queries')
+    return render(request, 'transformapi/get-report.html', context)
 
