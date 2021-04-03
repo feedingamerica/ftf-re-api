@@ -70,7 +70,11 @@ class ReportScheduleViewSet(viewsets.ModelViewSet):
 
 @api_view(['GET'])
 def get_reports(request, report_scope_id, report_scope_value):
+    control_type = request.GET.get('control_type')
     reports = Report.objects.filter(report_schedule__report_scope_id = report_scope_id,
                                     report_schedule__report_scope_value = report_scope_value)
+    if (control_type):
+        reports = reports.filter(report_schedule__control_type_id=control_type)
+
     serializer = ReportSerializer(reports, many=True)
     return Response(serializer.data)
