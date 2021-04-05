@@ -12,21 +12,21 @@ def get_data_definitions(report_schedule_id, startDate, endDate):
 
     # Setup the dictionary/json object
     d = dict()
-    d["Scope"] = dict()
+    d["Meta"] = dict()
     d["ReportInfo"] = []
 
     # Get ReportSchedule object of interest
     report_schedule = ReportSchedule.objects.get(pk=report_schedule_id)
 
     # Get startDate and endDate
-    d["Scope"]["startDate"] = startDate
-    d["Scope"]["endDate"] = endDate
+    d["Meta"]["startDate"] = startDate
+    d["Meta"]["endDate"] = endDate
 
-    # Complete all fields in Scope
-    d["Scope"]["scope_field"] = report_schedule.report_scope.field_reference
-    d["Scope"]["scope_field_value"] = report_schedule.report_scope_value
-    d["Scope"]["control_type_name"] = report_schedule.control_type.name
-    d["Scope"]["control_age_group_id"] = report_schedule.control_age_group_id
+    # Complete all fields in Meta
+    d["Meta"]["scope_field"] = report_schedule.report_scope.field_reference
+    d["Meta"]["scope_field_value"] = report_schedule.report_scope_value
+    d["Meta"]["control_type_name"] = report_schedule.control_type.name
+    d["Meta"]["control_age_group_id"] = report_schedule.control_age_group_id
 
     # Add all reports that reference the given ReportSchedule
     # TODO: Modify later for efficiency
