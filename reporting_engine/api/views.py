@@ -6,6 +6,7 @@ from rest_framework import status
 from rest_framework.decorators import api_view
 from .serializers import *
 from .tasks import one_time_report_generation
+from datetime import datetime
 
 class ReportViewSet(viewsets.ModelViewSet):
     """
@@ -75,6 +76,8 @@ def get_reports(request, report_scope_id, report_scope_value):
     timeframe_type = request.GET.get('timeframe_type')
     reporting_dictionary = request.GET.get('reporting_dictionary')
     control_age_group_id = request.GET.get('control_age_group_id')
+    start = datetime.strptime(request.GET.get('start_date'))
+    end = datetime.strptime(request.GET.get('end_date'))
     reports = Report.objects.filter(report_schedule__report_scope_id = report_scope_id,
                                     report_schedule__report_scope_value = report_scope_value)
     if (control_type):
@@ -87,5 +90,12 @@ def get_reports(request, report_scope_id, report_scope_value):
         reports = reports.filter(report_schedule__reporting_dictionary_id=reporting_dictionary)
     if (control_age_group_id):
         reports = reports.filter(report_schedule__control_age_group_id=control_age_group_id)
+    if (start and end):
+        reports = reports.filter(start_date = start)
+        reports = reports.filter(end_date = end)
+    elif(start):
+        reports = reports.filter(start_date__level__gte = start)
+    elif (end):
+        reports = reports.filter(end_date__level__lte = end)
     serializer = ReportSerializer(reports, many=True)
     return Response(serializer.data)
