@@ -7,6 +7,7 @@ from django.db import connections
 from transform_layer.services.utils import date_str_to_int, get_control_query
 
 import copy
+import time
 
 SCOPE_HIERARCHY = "hierarchy"
 SCOPE_GEOGRAPHY = "geography"
@@ -87,8 +88,12 @@ class DataService:
             AND t1.{scope_field} = {scope_value}
             AND fs.date >= {start_date} AND fs.date <= {end_date}
         """
-
-        return pd.read_sql(query, conn)
+        start_time = time.time()
+        result = pd.read_sql(query, conn)
+        print(str(time.time() - start_time), ' seconds to download fact services')
+        mem_usage = result.memory_usage(deep=True).sum() 
+        print(str(mem_usage), 'bytes for fact services')
+        return result
 
 
     def __get_service_types(self):
@@ -132,7 +137,12 @@ class DataService:
             AND fact_services.date >= {start_date} AND fact_services.date <= {end_date}
             AND {table1}.{scope_field} = {scope_value}
         """
-        return pd.read_sql(query, conn)
+        start_time = time.time()
+        result = pd.read_sql(query, conn) 
+        print(str(time.time() - start_time), ' seconds to download service types')
+        mem_usage = result.memory_usage(deep=True).sum() 
+        print(str(mem_usage), 'bytes for service types')
+        return result
 
 
     def __get_family_services(self):
@@ -180,8 +190,12 @@ class DataService:
             fact_services.research_family_key,
             dim_family_compositions.family_composition_type
         """
-        
-        return pd.read_sql(query, conn)
+        start_time = time.time()
+        result = pd.read_sql(query, conn)
+        print(str(time.time() - start_time), ' seconds to download family services')
+        mem_usage = result.memory_usage(deep=True).sum() 
+        print(str(mem_usage), 'bytes for family services')
+        return result
 
     def __get_new_family_services(self):
         conn = connections['source_db']
@@ -310,16 +324,20 @@ class DataService:
             fs_mem.research_member_key
         """
         
+        start_time = time.time()
         services = pd.read_sql(services_query, conn)
         families = pd.read_sql(families_query, conn)
         members = pd.read_sql(members_query, conn)
+        print(str(time.time() - start_time), ' seconds to download new family services')
+        mem_usage = services.memory_usage(deep=True).sum() + families.memory_usage(deep=True).sum() + members.memory_usage(deep=True).sum()
+        print(str(mem_usage), 'bytes for new family services')
         
         ## TODO remove, for testing only
-        print("SERVICES")
-        print(services)
-        print("FAMILIES")
-        print(families)
-        print("MEMBERS")
-        print(members)
+        #print("SERVICES")
+        #print(services)
+        #print("FAMILIES")
+        #print(families)
+        #print("MEMBERS")
+        #print(members)
 
         return [services, families, members]

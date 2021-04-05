@@ -69,17 +69,14 @@ def get_distribution_outlets(data):
 
 
 
-#A function that 
-
-# @param 
-# @param 
-# @param start_at - 
+#requires testing on indexes
 def fill_gap(dataframe, column_name):
     """Fills in the gaps between the values in the column specified by column_name of dataframe.
 
     Arguments:
     dataframe - the dataframe
     column_name - the column_name along which to fill in gaps
+
 
     Modifies:
     dataframe
