@@ -66,6 +66,3 @@ result='addin_ohio: \n'+json_output1+'\n'+'addin_mid_ohio_foodbank: \n'+json_out
 result=result+'families: \n'+json_fam+'\n'+'new_families: \n'+json_newF+'\n'+'geographic_origin: \n'+json_geo+'\n'
 result=result+'family_members: \n'+json_faMem+'\n'+'trends: \n'+json_tren
 print("data: \n"+result)
-#result=cursor.execute("SELECT CONCAT( '[',  GROUP_CONCAT(JSON_OBJECT('ID', ID, 'hh_wminor', hh_wminor)), ']' ) FROM addin_ohio;")
-#print (result)
-#print ('Hello')
