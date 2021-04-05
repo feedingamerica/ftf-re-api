@@ -71,10 +71,21 @@ class ReportScheduleViewSet(viewsets.ModelViewSet):
 @api_view(['GET'])
 def get_reports(request, report_scope_id, report_scope_value):
     control_type = request.GET.get('control_type')
+    run_type = request.GET.get('run_type')
+    timeframe_type = request.GET.get('timeframe_type')
+    reporting_dictionary = request.GET.get('reporting_dictionary')
+    control_age_group_id = request.GET.get('control_age_group_id')
     reports = Report.objects.filter(report_schedule__report_scope_id = report_scope_id,
                                     report_schedule__report_scope_value = report_scope_value)
     if (control_type):
         reports = reports.filter(report_schedule__control_type_id=control_type)
-
+    if (run_type):
+        reports = reports.filter(report_schedule__run_type_id=run_type)
+    if (timeframe_type):
+        reports = reports.filter(report_schedule__timeframe_type_id=timeframe_type)
+    if (reporting_dictionary):
+        reports = reports.filter(report_schedule__reporting_dictionary_id=reporting_dictionary)
+    if (control_age_group_id):
+        reports = reports.filter(report_schedule__control_age_group_id=control_age_group_id)
     serializer = ReportSerializer(reports, many=True)
     return Response(serializer.data)
