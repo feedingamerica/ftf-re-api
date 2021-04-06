@@ -74,7 +74,7 @@ class ReportScheduleViewSet(viewsets.ModelViewSet):
                 # if the schedule is "One Time", scheduling it to generate a report ASAP
                 if (schedule.run_type.name == "One Time"):
                     one_time_report_generation.delay(schedule.id)
-                    
+
                 # send data to functions to process report schedule
                 return Response(schedule_serializer.data, status=status.HTTP_201_CREATED)
             return Response(duplicate_schedule_serializer.data, status=status.HTTP_208_ALREADY_REPORTED)
@@ -87,8 +87,8 @@ def get_reports(request, report_scope_id, report_scope_value):
     timeframe_type = request.GET.get('timeframe_type')
     reporting_dictionary = request.GET.get('reporting_dictionary')
     control_age_group_id = request.GET.get('control_age_group_id')
-    start = datetime.strptime(request.GET.get('start_date'))
-    end = datetime.strptime(request.GET.get('end_date'))
+    start = request.GET.get('start_date')
+    end = request.GET.get('end_date')
     reports = Report.objects.filter(report_schedule__report_scope_id = report_scope_id,
                                     report_schedule__report_scope_value = report_scope_value)
     if (control_type):
