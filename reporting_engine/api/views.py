@@ -112,10 +112,10 @@ def get_reports(request, report_scope_id, report_scope_value):
         reports = reports.filter(end_date = end)
     # if given the start date but not end date, look at all start dates that are later or equal to the given
     elif(start):
-        reports = reports.filter(start_date__level__gte = start)
+        reports = reports.filter(start_date__gte = start)
     # if given the end date but not start date, look at all end dates that are before or equal to the given
     elif (end):
-        reports = reports.filter(end_date__level__lte = end)
+        reports = reports.filter(end_date__lte = end)
 
     # displaying the filtered list
     serializer = ReportSerializer(reports, many=True)
