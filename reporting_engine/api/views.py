@@ -7,6 +7,7 @@ from rest_framework.decorators import api_view
 from .serializers import *
 from .tasks import one_time_report_generation
 from datetime import datetime
+from addins import addin_helper
 
 class ReportViewSet(viewsets.ModelViewSet):
     """
@@ -56,14 +57,24 @@ class ReportScheduleViewSet(viewsets.ModelViewSet):
     serializer_class = ReportScheduleSerializer
     http_method_names=['get', 'post']
     # permission_classes = [permissions.IsAuthenticated]
+
     def create(self, request):
         schedule_serializer = self.serializer_class(data=request.data)
         if schedule_serializer.is_valid():
+            # checking that the requested POST is a unique report schedule
             duplicate_schedule_serializer = self.serializer_class.check_uniqueness(schedule_serializer)
+
+            # if the report is unique
             if (not(duplicate_schedule_serializer)):
                 schedule = schedule_serializer.save()
+
+                # generating any necessary addins for this schedule
+                addin_helper(schedule)
+
+                # if the schedule is "One Time", scheduling it to generate a report ASAP
                 if (schedule.run_type.name == "One Time"):
                     one_time_report_generation.delay(schedule.id)
+                    
                 # send data to functions to process report schedule
                 return Response(schedule_serializer.data, status=status.HTTP_201_CREATED)
             return Response(duplicate_schedule_serializer.data, status=status.HTTP_208_ALREADY_REPORTED)
