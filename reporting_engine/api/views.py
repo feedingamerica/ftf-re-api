@@ -80,8 +80,10 @@ class ReportScheduleViewSet(viewsets.ModelViewSet):
             return Response(duplicate_schedule_serializer.data, status=status.HTTP_208_ALREADY_REPORTED)
         return Response(schedule_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+# this gets a list of reports
 @api_view(['GET'])
 def get_reports(request, report_scope_id, report_scope_value):
+    # getting the report's fields (note that all of these are optional report schedule parameters)
     control_type = request.GET.get('control_type')
     run_type = request.GET.get('run_type')
     timeframe_type = request.GET.get('timeframe_type')
@@ -89,8 +91,12 @@ def get_reports(request, report_scope_id, report_scope_value):
     control_age_group_id = request.GET.get('control_age_group_id')
     start = request.GET.get('start_date')
     end = request.GET.get('end_date')
+
+    # getting all reports that match the given report scope id and value (these are the required report schedule parameters)
     reports = Report.objects.filter(report_schedule__report_scope_id = report_scope_id,
                                     report_schedule__report_scope_value = report_scope_value)
+
+    # further filtering the reports list on all of the optional parameters, if they are present
     if (control_type):
         reports = reports.filter(report_schedule__control_type_id=control_type)
     if (run_type):
@@ -104,9 +110,14 @@ def get_reports(request, report_scope_id, report_scope_value):
     if (start and end):
         reports = reports.filter(start_date = start)
         reports = reports.filter(end_date = end)
+    # if given the start date but not end date, look at all start dates that are later or equal to the given
     elif(start):
         reports = reports.filter(start_date__level__gte = start)
+    # if given the end date but not start date, look at all end dates that are before or equal to the given
     elif (end):
         reports = reports.filter(end_date__level__lte = end)
+
+    # displaying the filtered list
     serializer = ReportSerializer(reports, many=True)
+
     return Response(serializer.data)
