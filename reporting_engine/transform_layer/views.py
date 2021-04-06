@@ -700,3 +700,39 @@ def get_new_families(request):
    
     return render(request, 'transformapi/get-report.html', context)
 
+def get_geography(request):
+    input_dict = {
+        "Scope": {
+            "startDate":"01/01/2020",
+            "endDate":"12/31/2020",
+            "scope_field":"loc_id",
+            "scope_field_value":1,
+            "control_type_name":"Is Grocery Service",
+        },
+        "ReportInfo": [
+            {
+                "reportScheduleId":1,
+                "reportDictId":1,
+                "dataDefId":53,
+                "name": "direction_traveled",
+                "dataDefType":1
+            },
+            {
+                "reportScheduleId":1,
+                "reportDictId":1,
+                "dataDefId":54,
+                "name": "windrose",
+                "dataDefType":1
+            }
+        ]
+    }
+
+    start_time = time.time()
+    cd = CalculationDispatcher(input_dict)
+    cd.run_calculations()
+    print(str(time.time() - start_time), ' seconds to run geography queries')
+    context = { 'report_output': format_dict(cd.request)}
+    print_dict(cd.request)
+   
+    return render(request, 'transformapi/get-report.html', context)
+
