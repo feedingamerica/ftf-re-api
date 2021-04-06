@@ -27,9 +27,9 @@ base_scope = {
 TEST_DATA_SERVICE = DataService(base_scope)
 
 __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
-base_families = pyreadr.read_r(os.path.join(__location__, './test_data/base_families.rds'))[None]
-base_members = pyreadr.read_r(os.path.join(__location__, './test_data/base_members.rds'))[None]
-base_services = pyreadr.read_r(os.path.join(__location__, './test_data/base_services.rds'))[None]
+base_families = pyreadr.read_r(os.path.join(__location__, './test_data/test_calc_new_families/base_families.rds'))[None]
+base_members = pyreadr.read_r(os.path.join(__location__, './test_data/test_calc_new_families/base_members.rds'))[None]
+base_services = pyreadr.read_r(os.path.join(__location__, './test_data/test_calc_new_families/base_services.rds'))[None]
 
 #substitue the call to TEST_DATA_SERVICE.get_data_for_definition with this
 #its the data that david used in his calculations

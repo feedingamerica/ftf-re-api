@@ -124,6 +124,8 @@ data_calc_function_switcher = {
         45: calc_new_families.get_relationship_length_indv_mean,
         46: calc_new_families.get_new_fam_dist_of_length_of_relationships_for_individuals,
         53: calc_geographies.get_direction_traveled,
-        54: calc_geographies.get_windrose
+        54: calc_geographies.get_windrose,
+        55: calc_geographies.get_sites_visited_distribution,
+        56: calc_geographies.get_dummy_trip_coverage
     }
 
