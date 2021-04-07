@@ -332,75 +332,12 @@ def get_demo1_mofc(request):
     print_dict(input_dict)
     return render(request, 'transformapi/get-report.html', context)
 
-def get_demo1_franklin(request):
-    input_dict = {
-        "Scope": {
-            "startDate":"01/01/2019",
-            "endDate":"12/31/2019",
-            "scope_type": "geography",
-            "scope_field":"fips_cnty",
-            "scope_field_value":39049,
-            "control_type_name":"Is Grocery Service",
-            "control_type_value":1
-        },
-        "ReportInfo": []
-    }
-
-    data_def_names = [
-        "services_total",
-        "undup_hh_total",
-        "undup_indv_total",
-        "services_per_uhh_avg",
-        "hh_wminor",
-        "hh_wominor",
-        "hh_total",
-        "indv_sen_hh_wminor",
-        "indv_sen_hh_wominor",
-        "indv_sen_total",
-        "indv_adult_hh_wminor",
-        "indv_adult_hh_wominor",
-        "indv_adult_total",
-        "indv_child_hh_wminor",
-        "indv_child_hh_wominor",
-        "indv_child_total",
-        "indv_total_hh_wminor",
-        "indv_total_hh_wominor",
-        "indv_total",
-        "hh_wsenior",
-        "hh_wosenior",
-        "hh_grandparent",
-        "service_summary_service",
-        "service_summary_category",
-        "distribution_outlets"
-    ]
-
-    num_defs = len(Data_Service.data_def_function_switcher)
-    for i in range(1, num_defs + 1):
-        data_def = {
-            "reportScheduleId":1,
-            "reportDictId":1,
-            "dataDefId":i,
-            "name": data_def_names[i-1],
-            "dataDefType":"type1"
-        }
-        input_dict["ReportInfo"].append(data_def)
-    
-
-    # params = parse_request(input_dict)
-    cd = CalculationDispatcher(input_dict)
-    cd.run_calculations()
-
-    context = { 'report_output': format_dict(cd.request)}
-    print_dict(input_dict)
-    return render(request, 'transformapi/get-report.html', context)
-
-
 
 def get_all_defs_typical(request):
     input_dict = {
         "Scope": {
-            "startDate":"01/01/2019",
-            "endDate":"12/31/2019",
+            "startDate":"01/01/2020",
+            "endDate":"12/31/2020",
             "scope_field":"loc_id",
             "scope_field_value":1,
             "control_type_name":"Is Grocery Service",
@@ -440,7 +377,22 @@ def get_all_defs_typical(request):
         "fam_household_composition",
         "fam_family_composition_key_insight",
         "fam_household_size_distribution_1_10",
-        "fam_household_size_distribution_classic"
+        "fam_household_size_distribution_classic",
+        "newfam_undup_hh_total",
+        "newmem_allfams_undup_indv_total",
+        "newmem_oldfam_undup_indv_total",
+        "new_fam_services_total",
+        "global_first_services_total",
+        "new_fam_frequency_of_visits",
+        "new_fam_service_distribution",
+        "new_fam_household_composition",
+        "new_fam_family_composition_key_insight",
+        "new_fam_household_size_distribution_1_10",
+        "new_fam_household_size_distribution_classic",
+        "relationship_length_families_mean",
+        "relationship_length_families_distribution",
+        "relationship_length_indv_mean",
+        "relationship_length_indv_distribution"
     ]
     num_defs = len(data_def_names)
     for i in range(1, num_defs + 1):
@@ -457,22 +409,76 @@ def get_all_defs_typical(request):
     start_time = time.time()
     cd = CalculationDispatcher(input_dict)
     cd.run_calculations()
+    print(str(time.time() - start_time), ' seconds to run all queries')
+    context = { 'report_output': format_dict(cd.request)}
+    print_dict(input_dict)
+    return render(request, 'transformapi/get-report.html', context)
+
+def get_fact_services(request):
+    input_dict = {
+        "Scope": {
+            "startDate":"01/01/2020",
+            "endDate":"12/31/2020",
+            "scope_field":"loc_id",
+            "scope_field_value":1,
+            "control_type_name":"Is Grocery Service",
+        },
+        "ReportInfo": []
+    }
+
+    data_def_names = [
+        "services_total",
+        "undup_hh_total",
+        "undup_indv_total",
+        "services_per_uhh_avg",
+        "hh_wminor",
+        "hh_wominor",
+        "hh_total",
+        "indv_sen_hh_wminor",
+        "indv_sen_hh_wominor",
+        "indv_sen_total",
+        "indv_adult_hh_wminor",
+        "indv_adult_hh_wominor",
+        "indv_adult_total",
+        "indv_child_hh_wminor",
+        "indv_child_hh_wominor",
+        "indv_child_total",
+        "indv_total_hh_wminor",
+        "indv_total_hh_wominor",
+        "indv_total",
+        "hh_wsenior",
+        "hh_wosenior",
+        "hh_grandparent",
+    ]
+
+    num_defs = len(data_def_names)
+    for i in range(1, num_defs + 1):
+        data_def = {
+            "reportScheduleId":1,
+            "reportDictId":1,
+            "dataDefId":i,
+            "name": data_def_names[i-1],
+            "dataDefType":"type1"
+        }
+        input_dict["ReportInfo"].append(data_def)
+    
+    start_time = time.time()
+    cd = CalculationDispatcher(input_dict)
+    cd.run_calculations()
+    print(str(time.time() - start_time), ' seconds to run fact services queries')
 
     context = { 'report_output': format_dict(cd.request)}
     print_dict(input_dict)
-    print(str(time.time() - start_time), ' seconds to run all queries')
     return render(request, 'transformapi/get-report.html', context)
-
 
 def get_report_services(request):
     input_dict = {
         "Scope": {
             "startDate":"01/01/2020",
-            "endDate":"1/31/2020",
-            "scope_field":"fips_zcta",
-            "scope_field_value":43026,
+            "endDate":"12/31/2020",
+            "scope_field":"loc_id",
+            "scope_field_value":1,
             "control_type_name":"Is Grocery Service",
-            "control_type_value":1
         },
         "ReportInfo": [
             {
@@ -500,8 +506,10 @@ def get_report_services(request):
         ]
     }
 
+    start_time = time.time()
     cd = CalculationDispatcher(input_dict)
     cd.run_calculations()
+    print(str(time.time() - start_time), ' seconds to run service types queries')
 
     context = { 'report_output': format_dict(cd.request)}
     print_dict(cd.request)
@@ -511,11 +519,10 @@ def get_family_breakdown(request):
     input_dict = {
         "Scope": {
             "startDate":"01/01/2020",
-            "endDate":"1/31/2020",
-            "scope_field":"fips_zcta",
-            "scope_field_value":43026,
+            "endDate":"12/31/2020",
+            "scope_field":"loc_id",
+            "scope_field_value":1,
             "control_type_name":"Is Grocery Service",
-            "control_type_value":1
         },
         "ReportInfo": [
             {
@@ -559,10 +566,10 @@ def get_family_breakdown(request):
     start_time = time.time()
     cd = CalculationDispatcher(input_dict)
     cd.run_calculations()
-
+    print(str(time.time() - start_time), ' seconds to run families queries')
     context = { 'report_output': format_dict(cd.request)}
     print_dict(cd.request)
-    print(str(time.time() - start_time), ' seconds to run all queries')
+    
     return render(request, 'transformapi/get-report.html', context)
 
 
@@ -572,7 +579,7 @@ def get_new_families(request):
             "startDate":"01/01/2020",
             "endDate":"12/31/2020",
             "scope_field":"loc_id",
-            "scope_field_value":6,
+            "scope_field_value":1,
             "control_type_name":"Is Grocery Service",
         },
         "ReportInfo": [
@@ -687,9 +694,45 @@ def get_new_families(request):
     start_time = time.time()
     cd = CalculationDispatcher(input_dict)
     cd.run_calculations()
-
+    print(str(time.time() - start_time), ' seconds to run new families queries')
     context = { 'report_output': format_dict(cd.request)}
     print_dict(cd.request)
-    print(str(time.time() - start_time), ' seconds to run all queries')
+   
+    return render(request, 'transformapi/get-report.html', context)
+
+def get_geography(request):
+    input_dict = {
+        "Scope": {
+            "startDate":"01/01/2020",
+            "endDate":"12/31/2020",
+            "scope_field":"loc_id",
+            "scope_field_value":1,
+            "control_type_name":"Is Grocery Service",
+        },
+        "ReportInfo": [
+            {
+                "reportScheduleId":1,
+                "reportDictId":1,
+                "dataDefId":53,
+                "name": "direction_traveled",
+                "dataDefType":1
+            },
+            {
+                "reportScheduleId":1,
+                "reportDictId":1,
+                "dataDefId":54,
+                "name": "windrose",
+                "dataDefType":1
+            }
+        ]
+    }
+
+    start_time = time.time()
+    cd = CalculationDispatcher(input_dict)
+    cd.run_calculations()
+    print(str(time.time() - start_time), ' seconds to run geography queries')
+    context = { 'report_output': format_dict(cd.request)}
+    print_dict(cd.request)
+   
     return render(request, 'transformapi/get-report.html', context)
 

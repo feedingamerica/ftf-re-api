@@ -3,6 +3,7 @@ import transform_layer.calc_service_types as calc_service_types
 import transform_layer.calc_families as calc_families
 import transform_layer.calc_fact_services as calc_fact_services
 import transform_layer.calc_new_families as calc_new_families
+import transform_layer.calc_geographies as calc_geographies
 
 BIG_NUM_NAMES = ["services_total", "undup_hh_total", "undup_indv_total", "services_per_uhh_avg"]
 DEFAULT_CTRL = "Is Grocery Service"
@@ -54,8 +55,12 @@ class CalculationDispatcher:
         for group in self.data_dict.values():
             for data_def in group:
                 data = self.data_service.get_data_for_definition(data_def["dataDefId"])
-                func = data_calc_function_switcher[data_def["dataDefId"]]
-                data_def["value"] = func(data)
+                if self.has_data(data):
+                    self.params["no_data"] = False
+                    func = data_calc_function_switcher[data_def["dataDefId"]]
+                    data_def["value"] = func(data)
+                else:
+                    self.params["no_data"] = True
 
         return self.request["ReportInfo"]
 
@@ -74,6 +79,18 @@ class CalculationDispatcher:
             input_dict["Scope"]["control_type_name"] = DEFAULT_CTRL
 
         return input_dict
+
+    @staticmethod
+    def has_data(data):
+        if type(data) is list:
+            # Check if services dataframe is empty
+            if data[0].empty:
+                return False
+        else:
+            if data.empty:
+                return False
+
+        return True
 
 data_calc_function_switcher = {
         1: calc_fact_services.get_services_total,
@@ -121,6 +138,10 @@ data_calc_function_switcher = {
         43: calc_new_families.get_relationship_length_fam_mean,
         44: calc_new_families.get_new_fam_dist_of_length_of_relationship,
         45: calc_new_families.get_relationship_length_indv_mean,
-        46: calc_new_families.get_new_fam_dist_of_length_of_relationships_for_individuals
+        46: calc_new_families.get_new_fam_dist_of_length_of_relationships_for_individuals,
+        53: calc_geographies.get_direction_traveled,
+        54: calc_geographies.get_windrose,
+        55: calc_geographies.get_sites_visited_distribution,
+        56: calc_geographies.get_dummy_trip_coverage
     }
 

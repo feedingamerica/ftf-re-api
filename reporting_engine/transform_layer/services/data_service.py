@@ -7,6 +7,7 @@ from django.db import connections
 from transform_layer.services.utils import date_str_to_int, get_control_query
 
 import copy
+import time
 
 SCOPE_HIERARCHY = "hierarchy"
 SCOPE_GEOGRAPHY = "geography"
@@ -35,7 +36,8 @@ class DataService:
             if(self._family_services) is None:
                 self._family_services = self.__get_family_services()
             return self._family_services
-        elif id <= 46:
+        elif id <= 56:
+            #used same base data for new families(32-46) and geographies(47-56)
             if(self._new_familiy_services) is None:
                 self._new_familiy_services = self.__get_new_family_services()
             return self._new_familiy_services
@@ -87,8 +89,12 @@ class DataService:
             AND t1.{scope_field} = {scope_value}
             AND fs.date >= {start_date} AND fs.date <= {end_date}
         """
-
-        return pd.read_sql(query, conn)
+        start_time = time.time()
+        result = pd.read_sql(query, conn)
+        print(str(time.time() - start_time), ' seconds to download fact services')
+        mem_usage = result.memory_usage(deep=True).sum() 
+        print(str(mem_usage), 'bytes for fact services')
+        return result
 
 
     def __get_service_types(self):
@@ -132,7 +138,12 @@ class DataService:
             AND fact_services.date >= {start_date} AND fact_services.date <= {end_date}
             AND {table1}.{scope_field} = {scope_value}
         """
-        return pd.read_sql(query, conn)
+        start_time = time.time()
+        result = pd.read_sql(query, conn) 
+        print(str(time.time() - start_time), ' seconds to download service types')
+        mem_usage = result.memory_usage(deep=True).sum() 
+        print(str(mem_usage), 'bytes for service types')
+        return result
 
 
     def __get_family_services(self):
@@ -180,8 +191,12 @@ class DataService:
             fact_services.research_family_key,
             dim_family_compositions.family_composition_type
         """
-        
-        return pd.read_sql(query, conn)
+        start_time = time.time()
+        result = pd.read_sql(query, conn)
+        print(str(time.time() - start_time), ' seconds to download family services')
+        mem_usage = result.memory_usage(deep=True).sum() 
+        print(str(mem_usage), 'bytes for family services')
+        return result
 
     def __get_new_family_services(self):
         conn = connections['source_db']
@@ -194,7 +209,6 @@ class DataService:
             table1 = "dim_geos"
             left1 = "dimgeo_id"
             right1 = "id"
-            extra_join = """INNER JOIN dim_hierarchies ON fs.hierarchy_id = dim_hierarchies.loc_id"""
 
         control_type_name = self.scope["control_type_name"]
         control_query = get_control_query(control_type_name)
@@ -208,18 +222,33 @@ class DataService:
             fs.research_service_key,
             fs.research_family_key,
             fs.service_id,
+            fs.hierarchy_id,
+            dim_hierarchies.event_id,
+            dim_hierarchies.loc_id,
+            dim_geos_event.fips_cnty AS fips_cnty_event,
             dim_service_types.name as service_name,
             dim_service_types.service_category_code,
             dim_service_types.service_category_name,
             fs.served_total,
-            dim_hierarchies.loc_id,
-            fs.is_first_service_date
+            fs.is_first_service_date,
+            fs.served_children,
+            fs.served_adults,
+            fs.served_seniors,
+            fs.family_composition_type,
+            dim_geos.lattitude AS latitude_fs,
+            dim_geos.longitude AS longitude_fs,
+            dim_geos.fips_cnty AS fips_cnty_fs,
+            fs.dummy_trip,
+            fs.distance_miles,
+            fs.direction
         FROM
             fact_services AS fs
             INNER JOIN dim_service_types ON fs.service_id = dim_service_types.id
-            INNER JOIN {table1} ON fs.{left1} = {table1}.{right1}
+            INNER JOIN dim_hierarchies ON fs.hierarchy_id = dim_hierarchies.hierarchy_id
             INNER JOIN dim_dates ON fs.date = dim_dates.date_key
-            {extra_join if self.scope["scope_type"] == "geography" else ""}
+            INNER JOIN dim_hierarchy_events ON dim_hierarchies.event_id = dim_hierarchy_events.id
+            LEFT JOIN dim_geos ON fs.dimgeo_id = dim_geos.id
+            LEFT JOIN dim_geos AS dim_geos_event ON dim_hierarchy_events.dimgeo_id = dim_geos_event.id
         WHERE
             fs.service_status = 17 
             AND {control_query}
@@ -252,7 +281,6 @@ class DataService:
                 INNER JOIN dim_dates ON fs.date = dim_dates.date_key
                 INNER JOIN {table1} ON fs.{left1} = {table1}.{right1}
                 LEFT JOIN dim_geos ON dim_families.dimgeo_id = dim_geos.id
-                {extra_join if self.scope["scope_type"] == "geography" else ""}
             WHERE
                 fs.service_status = 17
                 AND {control_query}
@@ -274,6 +302,7 @@ class DataService:
         members_query = f"""
         SELECT
             fs_mem.research_member_key,
+            dim_members.research_family_key, 
             COUNT( fs.research_service_key ) AS num_services,
             SUM( fs_mem.is_first_service_date ) AS timeframe_has_first_service_date,
             AVG( fs_mem.days_since_first_service ) AS avg_days_since_first_service,
@@ -291,7 +320,10 @@ class DataService:
             dim_members.education_id,
             dim_members.employment_id,
             dim_families.datekey_first_service AS dim_families_datekey_first_service,
-            SUM( fs.is_first_service_date ) AS dim_families_timeframe_has_first_service_date
+            SUM( fs.is_first_service_date ) AS dim_families_timeframe_has_first_service_date,
+            dim_geos.fips_state,
+            dim_geos.fips_cnty,
+            dim_geos.fips_zcta
         FROM
             fact_services AS fs
             INNER JOIN dim_service_types ON fs.service_id = dim_service_types.id
@@ -300,7 +332,7 @@ class DataService:
             INNER JOIN fact_service_members AS fs_mem ON fs.research_service_key = fs_mem.research_service_key
             INNER JOIN dim_members ON fs_mem.research_member_key = dim_members.research_member_key
             INNER JOIN dim_families ON dim_members.research_family_key = dim_families.research_family_key
-            {extra_join if self.scope["scope_type"] == "geography" else ""}
+            LEFT JOIN dim_geos ON dim_families.dimgeo_id = dim_geos.id
         WHERE
             fs.service_status = 17
             AND {control_query}
@@ -310,16 +342,20 @@ class DataService:
             fs_mem.research_member_key
         """
         
+        start_time = time.time()
         services = pd.read_sql(services_query, conn)
         families = pd.read_sql(families_query, conn)
         members = pd.read_sql(members_query, conn)
+        print(str(time.time() - start_time), ' seconds to download new family services')
+        mem_usage = services.memory_usage(deep=True).sum() + families.memory_usage(deep=True).sum() + members.memory_usage(deep=True).sum()
+        print(str(mem_usage), 'bytes for new family services')
         
         ## TODO remove, for testing only
-        print("SERVICES")
-        print(services)
-        print("FAMILIES")
-        print(families)
-        print("MEMBERS")
-        print(members)
+        #print("SERVICES")
+        #print(services)
+        #print("FAMILIES")
+        #print(families)
+        #print("MEMBERS")
+        #print(members)
 
         return [services, families, members]

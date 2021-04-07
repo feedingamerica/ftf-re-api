@@ -27,9 +27,9 @@ base_scope = {
 TEST_DATA_SERVICE = DataService(base_scope)
 
 __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
-base_families = pyreadr.read_r(os.path.join(__location__, './test_data/base_families.rds'))[None]
-base_members = pyreadr.read_r(os.path.join(__location__, './test_data/base_members.rds'))[None]
-base_services = pyreadr.read_r(os.path.join(__location__, './test_data/base_services.rds'))[None]
+base_families = pyreadr.read_r(os.path.join(__location__, './test_data/test_calc_new_families/base_families.rds'))[None]
+base_members = pyreadr.read_r(os.path.join(__location__, './test_data/test_calc_new_families/base_members.rds'))[None]
+base_services = pyreadr.read_r(os.path.join(__location__, './test_data/test_calc_new_families/base_services.rds'))[None]
 
 #substitue the call to TEST_DATA_SERVICE.get_data_for_definition with this
 #its the data that david used in his calculations
@@ -56,7 +56,7 @@ class CalculationsTestCase(unittest.TestCase):
     def test_get_new_members_to_old_families(self):
         expected = 19160
         data = BASE_DATA
-        func =calc.data.data_calc_function_switcher[34]
+        func = calc.data_calc_function_switcher[34]
         result = func(data)
         self.assertTrue(math.isclose(result, expected))
 
@@ -104,8 +104,9 @@ class CalculationsTestCase(unittest.TestCase):
         data = BASE_DATA 
         func = calc.data_calc_function_switcher[39]
         result = func(data)
-        resultFrame = pandas.read_json(result)
-        assert_frame_equal(resultFrame, expected, check_like = True)
+        resultDict = json.loads(result)
+        self.maxDiff = None
+        self.assertDictEqual(resultDict, expected)
 
     #test for data def 40
     def test_get_new_fam_composition_key_insight(self):
@@ -117,8 +118,9 @@ class CalculationsTestCase(unittest.TestCase):
         data = BASE_DATA 
         func = calc.data_calc_function_switcher[40]
         result = func(data)
-        resultFrame = pandas.read_json(result)
-        assert_frame_equal(resultFrame, expected, check_like = True)
+        result = json.loads(result)
+        self.maxDiff = None
+        self.assertDictEqual(result, expected)
 
     #test for data def 41
     def test_get_new_fam_hh_size_dist_1_to_10(self):
@@ -168,26 +170,6 @@ class CalculationsTestCase(unittest.TestCase):
         func = calc.data_calc_function_switcher[45]
         result = func(data)
         self.assertTrue(math.isclose(round(result,4), expected))
-
-    #test for data def 46
-    def test_get_new_fam_dist_of_length_of_relationships_for_individuals(self):
-        # NOTE 
-        # Everything here is 0 because the exact numbers are not given yet 
-        expected = 792.9765
-
-        #data = TEST_DATA_SERVICE.get_data_for_definition(38)
-        data = BASE_DATA 
-        func = calc.data_calc_function_switcher[46]
-        result = func(data)
-        resultFrame = pandas.read_json(result)
-
-        average = 0;
-        for index, row in families.iterrows():
-            max_days = int(row["max_days_since_first_service"])
-            average+=max_days
-        average = average / resultFrame.count
-
-        self.assertTrue(math.isclose(round(average,4), expected))
 
 if __name__ == '__main__':
     unittest.main()
