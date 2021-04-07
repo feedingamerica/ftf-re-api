@@ -403,7 +403,7 @@ class GetPostTesting(TestCase):
                                                     "control_age_group_id": cagi,
                                                     "date_scheduled": ds}  )
         
-        self.assertEqual(responce.status_code, 200)
+        self.assertEqual(response.status_code, 200)
         
         response = c.post('/api/report_schedules', {"run_type": "dog",
                                                     "timeframe_type": tft,
@@ -413,7 +413,7 @@ class GetPostTesting(TestCase):
                                                     "reporting_dictionary": rd,
                                                     "control_age_group_id": cagi,
                                                     "date_scheduled": ds}  )
-        self.assertTrue(responce.status_code != 200)
+        self.assertTrue(response.status_code != 200)
         
         response = c.post('/api/report_schedules', {"run_type": rt,
                                                     "timeframe_type": "cat",
@@ -424,7 +424,7 @@ class GetPostTesting(TestCase):
                                                     "control_age_group_id": cagi,
                                                     "date_scheduled": ds}  )
         
-        self.assertEqual(responce.status_code, 200)
+        self.assertEqual(response.status_code, 200)
         
         response = c.post('/api/report_schedules', {"run_type": rt,
                                                     "timeframe_type": tft,
@@ -435,7 +435,7 @@ class GetPostTesting(TestCase):
                                                     "control_age_group_id": cagi,
                                                     "date_scheduled": ds}  )
         
-        self.assertEqual(responce.status_code, 200)
+        self.assertEqual(response.status_code, 200)
         
         response = c.post('/api/report_schedules', {"run_type": rt,
                                                     "timeframe_type": tft,
@@ -446,7 +446,7 @@ class GetPostTesting(TestCase):
                                                     "control_age_group_id": cagi,
                                                     "date_scheduled": ds}  )
         
-        self.assertEqual(responce.status_code, 200)
+        self.assertEqual(response.status_code, 200)
         
         
         response = c.post('/api/report_schedules', {"run_type": rt,
@@ -458,7 +458,7 @@ class GetPostTesting(TestCase):
                                                     "control_age_group_id": cagi,
                                                     "date_scheduled": ds}  )
         
-        self.assertEqual(responce.status_code, 200)
+        self.assertEqual(response.status_code, 200)
         
         
         response = c.post('/api/report_schedules', {"run_type": rt,
@@ -470,7 +470,7 @@ class GetPostTesting(TestCase):
                                                     "control_age_group_id": cagi,
                                                     "date_scheduled": ds}  )
         
-        self.assertEqual(responce.status_code, 200)
+        self.assertEqual(response.status_code, 200)
         
         
         response = c.post('/api/report_schedules', {"run_type": rt,
@@ -482,7 +482,7 @@ class GetPostTesting(TestCase):
                                                     "control_age_group_id": "hamster",
                                                     "date_scheduled": ds}  )
         
-        self.assertEqual(responce.status_code, 200)
+        self.assertEqual(response.status_code, 200)
         
         
         response = c.post('/api/report_schedules', {"run_type": rt,
@@ -494,7 +494,7 @@ class GetPostTesting(TestCase):
                                                     "control_age_group_id": cagi,
                                                     "date_scheduled": "Today"}  )
         
-        self.assertEqual(responce.status_code, 200)
+        self.assertEqual(response.status_code, 200)
 
 
 
