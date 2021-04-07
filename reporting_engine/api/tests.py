@@ -385,16 +385,16 @@ class GetPostTesting(TestCase):
     def setUpTestData(cls):
 		c = Client()
   		
-  	def postCleanTest(self):
+    def postCleanTest(self):
         rt = 1
         tft = 2
         rs = 3
         rsv = ""
-		ct = 1
+        ct = 1
         rd = 1
         cagi = 1
         ds = "2021-04-07"
-		response = c.post('/api/report_schedules', {"run_type": rt,
+        response = c.post('/api/report_schedules', {"run_type": rt,
                                                     "timeframe_type": tft,
                                                     "report_scope": rs,
                                                     "report_scope_value": rsv,
