@@ -1,4 +1,4 @@
-from django.test import TestCase
+from django.test import TestCase, Client
 from api.models import ReportSchedule, ControlType, TimeframeType, RunType, ReportScope, ReportingDictionary, Report, ReportScheduleAddinReport, ReportScheduleAddin, ReportDataInt
 import datetime
 from datetime import date
@@ -371,3 +371,36 @@ class TasksGenTesting(TestCase):
 
             # ensuring the generated report was actually saved to the database
             self.assertTrue(Report.objects.filter(report_schedule_id = rs.pk).exists())
+
+
+
+"""
+Testing the django POST and GET request
+"""
+class GetPostTesting(TestCase):
+    """
+    Setting up test model instances for the test database that Django creates
+    """
+    @classmethod
+    def setUpTestData(cls):
+		c = Client()
+  		
+  	def postCleanTest(self):
+   		rt = 1
+		tft = 2
+		rs = 3
+		rsv = ""
+  		ct = 1
+    	rd = 1
+     	cagi = 1
+      	ds = "2021-04-07"
+		response = c.post('/api/report_schedules', {"run_type": rt,
+                                                    "timeframe_type": tft,
+                                                    "report_scope": rs,
+                                                    "report_scope_value": rsv,
+                                                    "control_type": ct,
+                                                    "reporting_dictionary": rd,
+                                                    "control_age_group_id": cagi,
+                                                    "date_scheduled": ds}  )
+        self.assertTrue(responce.status_code != 200)
+        
