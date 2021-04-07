@@ -1,5 +1,5 @@
 from django.test import TestCase, Client
-from api.models import ReportSchedule, ControlType, TimeframeType, RunType, ReportScope, ReportingDictionary, Report, ReportScheduleAddinReport, ReportScheduleAddin, ReportDataInt
+from api.models import ReportSchedule, ControlType, TimeframeType, RunType, ReportScope, ReportingDictionary, Report, ReportScheduleAddinReport, ReportScheduleAddin
 import datetime
 from datetime import date
 from api.tasks import generate_report_and_save
