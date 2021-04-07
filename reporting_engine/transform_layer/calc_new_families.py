@@ -102,6 +102,7 @@ def get_new_families_freq_visits(data: 'list[DataFrame]'):
 # data def 39
 def get_new_fam_household_composition(data: 'list[DataFrame]'):
     families = data[1]
+    families = families[families['timeframe_has_first_service_date']>0]
     result_dict = {
         "adults_and_children":0,
         "adults_and_seniors":0,
@@ -125,7 +126,7 @@ def get_new_fam_composition_key_insight(data: 'list[DataFrame]'):
         "has_child_senior":0,
         "no_child_senior":0
     }
-
+    families = families[families['timeframe_has_first_service_date']>0]
     for index, row in families.iterrows():
         if row["family_composition_type"] == "adults_only":
             result_dict["no_child_senior"]+=1
@@ -149,13 +150,13 @@ def get_new_fam_hh_size_dist_1_to_10(data):
     """
 
     families = data[1]
-    families = families[families['timeframe_has_first_service_date'] > 0]
+    families = families[families['timeframe_has_first_service_date'] > 0].copy()
     return calc_families.get_household_size_distribution_1_to_10(families)
 
 #data def 42
 def get_new_fam_hh_size_dist_classic(data):
     families = data[1]
-    families = families[families['timeframe_has_first_service_date'] > 0]
+    families = families[families['timeframe_has_first_service_date'] > 0].copy()
     return calc_families.get_household_size_distribution_classic(families)
 
 #data def 43
@@ -178,43 +179,52 @@ def get_relationship_length_fam_mean(data):
 #data def 44
 def get_new_fam_dist_of_length_of_relationship(data: 'list[DataFrame]'):
     families = data[1]
+
+    set_max = 0
+
+    for index, row in families.iterrows():
+        if int(row["max_days_since_first_service"]) > set_max:
+            set_max = int(row["max_days_since_first_service"])
+
+    width = set_max / 10
+
     result_dict = {
-        '0 - 200':0,
-        '200 - 400':0,
-        '400 - 600':0,
-        '600 - 800':0,
-        '800 - 1000':0,
-        '1000 - 1200':0,
-        '1200 - 1400':0,
-        '1400 - 1600':0,
-        '1600 - 1800':0,
-        '1800 - 2000':0,
+        '0 - ' + str(width):0,
+        str(width) + ' - ' + str(width*2):0,
+        str(width*2) + ' - ' + str(width*3):0,
+        str(width*3) + ' - ' + str(width*4):0,
+        str(width*4) + ' - ' + str(width*5):0,
+        str(width*5) + ' - ' + str(width*6):0,
+        str(width*6) + ' - ' + str(width*7):0,
+        str(width*7) + ' - ' + str(width*8):0,
+        str(width*8) + ' - ' + str(width*9):0,
+        str(width*9) + ' - ' + str(set_max):0
     }
 
     for index, row in families.iterrows():
 
         max_days = int(row["max_days_since_first_service"])
 
-        if max_days >= 0 and max_days < 200:
-            result_dict["0 - 200"]+=1
-        elif max_days >= 200 and max_days < 400:
-            result_dict["200 - 400"]+=1
-        elif max_days >= 400 and max_days < 600:
-            result_dict["400 - 600"]+=1
-        elif max_days >= 600 and max_days < 800:
-            result_dict["600 - 800"]+=1
-        elif max_days >= 800 and max_days < 1000:
-            result_dict["800 - 1000"]+=1
-        elif max_days >= 1000 and max_days < 1200:
-            result_dict["1000 - 1200"]+=1
-        elif max_days >= 1200 and max_days < 1400:
-            result_dict["1200 - 1400"]+=1
-        elif max_days >= 1400 and max_days < 1600:
-            result_dict["1400 - 1600"]+=1
-        elif max_days >= 1600 and max_days < 1800:
-            result_dict["1600 - 1800"]+=1
-        elif max_days >= 1800 and max_days <= 2000:
-            result_dict["1800 - 2000"]+=1
+        if max_days >= 0 and max_days < width:
+            result_dict['0 - ' + str(width)]+=1
+        elif max_days >= width and max_days < (width*2):
+            result_dict[str(width) + ' - ' + str(width*2)]+=1
+        elif max_days >= (width*2) and max_days < (width*3):
+            result_dict[str(width*2) + ' - ' + str(width*3)]+=1
+        elif max_days >= (width*3) and max_days < (width*4):
+            result_dict[str(width*3) + ' - ' + str(width*4)]+=1
+        elif max_days >= (width*4) and max_days < (width*5):
+            result_dict[str(width*4) + ' - ' + str(width*5)]+=1
+        elif max_days >= (width*5) and max_days < (width*6):
+            result_dict[str(width*5) + ' - ' + str(width*6)]+=1
+        elif max_days >= (width*6) and max_days < (width*7):
+            result_dict[str(width*6) + ' - ' + str(width*7)]+=1
+        elif max_days >= (width*7) and max_days < (width*8):
+            result_dict[str(width*7) + ' - ' + str(width*8)]+=1
+        elif max_days >= (width*8) and max_days < (width*9):
+            result_dict[str(width*8) + ' - ' + str(width*9)]+=1
+        elif max_days >= (width*9) and max_days <= set_max:
+            result_dict[str(width*9) + ' - ' + str(set_max)]+=1
 
     return json.dumps(result_dict)
 
@@ -227,43 +237,51 @@ def get_relationship_length_indv_mean(data):
 def get_new_fam_dist_of_length_of_relationships_for_individuals(data: 'list[DataFrame]'):
     members = data[2]
 
+    set_max = 0
+
+    for index, row in members.iterrows():
+        if int(row["max_days_since_first_service"]) > set_max:
+            set_max = int(row["max_days_since_first_service"])
+
+    width = set_max / 10
+
     result_dict = {
-        '0 - 200':0,
-        '200 - 400':0,
-        '400 - 600':0,
-        '600 - 800':0,
-        '800 - 1000':0,
-        '1000 - 1200':0,
-        '1200 - 1400':0,
-        '1400 - 1600':0,
-        '1600 - 1800':0,
-        '1800 - 2000':0,
+        '0 - ' + str(width):0,
+        str(width) + ' - ' + str(width*2):0,
+        str(width*2) + ' - ' + str(width*3):0,
+        str(width*3) + ' - ' + str(width*4):0,
+        str(width*4) + ' - ' + str(width*5):0,
+        str(width*5) + ' - ' + str(width*6):0,
+        str(width*6) + ' - ' + str(width*7):0,
+        str(width*7) + ' - ' + str(width*8):0,
+        str(width*8) + ' - ' + str(width*9):0,
+        str(width*9) + ' - ' + str(set_max):0
     }
 
     for index, row in members.iterrows():
 
         max_days = int(row["max_days_since_first_service"])
 
-        if max_days >= 0 and max_days < 200:
-            result_dict["0 - 200"]+=1
-        elif max_days >= 200 and max_days < 400:
-            result_dict["200 - 400"]+=1
-        elif max_days >= 400 and max_days < 600:
-            result_dict["400 - 600"]+=1
-        elif max_days >= 600 and max_days < 800:
-            result_dict["600 - 800"]+=1
-        elif max_days >= 800 and max_days < 1000:
-            result_dict["800 - 1000"]+=1
-        elif max_days >= 1000 and max_days < 1200:
-            result_dict["1000 - 1200"]+=1
-        elif max_days >= 1200 and max_days < 1400:
-            result_dict["1200 - 1400"]+=1
-        elif max_days >= 1400 and max_days < 1600:
-            result_dict["1400 - 1600"]+=1
-        elif max_days >= 1600 and max_days < 1800:
-            result_dict["1600 - 1800"]+=1
-        elif max_days >= 1800 and max_days <= 2000:
-            result_dict["1800 - 2000"]+=1
+        if max_days >= 0 and max_days < width:
+            result_dict['0 - ' + str(width)]+=1
+        elif max_days >= width and max_days < (width*2):
+            result_dict[str(width) + ' - ' + str(width*2)]+=1
+        elif max_days >= (width*2) and max_days < (width*3):
+            result_dict[str(width*2) + ' - ' + str(width*3)]+=1
+        elif max_days >= (width*3) and max_days < (width*4):
+            result_dict[str(width*3) + ' - ' + str(width*4)]+=1
+        elif max_days >= (width*4) and max_days < (width*5):
+            result_dict[str(width*4) + ' - ' + str(width*5)]+=1
+        elif max_days >= (width*5) and max_days < (width*6):
+            result_dict[str(width*5) + ' - ' + str(width*6)]+=1
+        elif max_days >= (width*6) and max_days < (width*7):
+            result_dict[str(width*6) + ' - ' + str(width*7)]+=1
+        elif max_days >= (width*7) and max_days < (width*8):
+            result_dict[str(width*7) + ' - ' + str(width*8)]+=1
+        elif max_days >= (width*8) and max_days < (width*9):
+            result_dict[str(width*8) + ' - ' + str(width*9)]+=1
+        elif max_days >= (width*9) and max_days <= set_max:
+            result_dict[str(width*9) + ' - ' + str(set_max)]+=1
 
     return json.dumps(result_dict)
 
