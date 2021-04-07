@@ -54,8 +54,12 @@ class CalculationDispatcher:
         for group in self.data_dict.values():
             for data_def in group:
                 data = self.data_service.get_data_for_definition(data_def["dataDefId"])
-                func = data_calc_function_switcher[data_def["dataDefId"]]
-                data_def["value"] = func(data)
+                if self.has_data(data):
+                    self.params["no_data"] = False
+                    func = data_calc_function_switcher[data_def["dataDefId"]]
+                    data_def["value"] = func(data)
+                else:
+                    self.params["no_data"] = True
 
         return self.request["ReportInfo"]
 
@@ -74,6 +78,18 @@ class CalculationDispatcher:
             input_dict["Scope"]["control_type_name"] = DEFAULT_CTRL
 
         return input_dict
+
+    @staticmethod
+    def has_data(data):
+        if type(data) is list:
+            # Check if services dataframe is empty
+            if data[0].empty:
+                return False
+        else:
+            if data.empty:
+                return False
+
+        return True
 
 data_calc_function_switcher = {
         1: calc_fact_services.get_services_total,
