@@ -3,6 +3,51 @@ import dateutil.parser as parser
 import pandas as pd
 import json
 import statistics
+import numpy as np
+
+# data def 51
+def get_services_flow_event_fips(data: 'list[DataFrame]'):
+    services = data[0]
+    services = services.groupby(['fips_cnty_event', 'fips_cnty_fs'], dropna=False).size().to_frame('n').reset_index()
+    return services.to_json()
+
+# data def 52
+def get_distance_traveled(data: 'list[DataFrame]'):
+    services = data[0]
+    services = services[services['dummy_trip'] == 1]
+    services = services.sort_values(by = 'distance_miles', ascending = True)
+
+    conditions = [
+        (services['distance_miles'] < 1),
+        (services['distance_miles'] < 2),
+        (services['distance_miles'] < 3),
+        (services['distance_miles'] < 6),
+        (services['distance_miles'] < 10),
+        (services['distance_miles'] < 15),
+        (services['distance_miles'] < 25),
+        (services['distance_miles'] >= 25)
+    ]
+    values = [
+        '< 1 mile',
+        '1 - 1.99 miles',
+        '2 - 2.99 miles',
+        '3 - 5.99 miles',
+        '6 - 9.99 miles',
+        '10 - 14.99 miles',
+        '15 - 24.99 miles',
+        '25+ miles'
+    ]
+
+    services['distance_roll'] = np.select(conditions, values)
+    services = services.groupby('distance_roll').agg(
+        services = ('research_service_key', 'count'),
+        mean_distance = ('distance_miles', 'mean'),
+        median_distance = ('distance_miles', 'median'),
+        min_distance = ('distance_miles', 'min'),
+        max_distance = ('distance_miles', 'max')
+    )
+    services = services.sort_values(by = 'min_distance', ascending = True).reset_index()
+    return services.to_json()
 
 # data def 53
 def get_direction_traveled(data: 'list[DataFrame]'):
