@@ -69,19 +69,23 @@ def save_report(schedule, results):
 
     # checking if no_data is in the Scope dict of results
     # this should always be there, but just in case a new data definition has been added but not taken into account when checking for data,
-    # or something else happens, checking for that field before saving the new Report
+    # or something else happens, checking for that field before using it to populate the new Report
+    # once we get changes from other teams, change "Scope" to "Meta"...
+    # if 'no_data' in results['Meta']:
     if 'no_data' in results['Scope']:
         new_report = Report(report_schedule = schedule, start_date = results['Scope']['startDate'], end_date = results['Scope']['endDate'], date_completed = dateCompleted, no_data = results['Scope']['no_data'])
     else:
         new_report = Report(report_schedule = schedule, start_date = results['Scope']['startDate'], end_date = results['Scope']['endDate'], date_completed = dateCompleted)
-    # once we get changes from other teams, change "Scope" to "Meta"..
+    # once we get changes from other teams, change "Scope" to "Meta"...
     # new_report = Report(report_schedule = schedule, start_date = results['Meta']['startDate'], end_date = results['Meta']['endDate'], date_completed = dateCompleted, no_data = results['Meta']['no_data'])
+    # new_report = Report(report_schedule = schedule, start_date = results['Meta']['startDate'], end_date = results['Meta']['endDate'], date_completed = dateCompleted)
+
     new_report.save()
 
     # New rows to report_data_int/report_data_float
     if ('no_data' in results['Scope'] and results['Scope']['no_data'] == False):
     # once we get changes from other teams, change "Scope" to "Meta"...
-    # if (results['Meta']['no_data'] == False):
+    # if ('no_data' in results['Meta'] and results['Meta']['no_data'] == False):
         for values in results['ReportInfo']:
             if(values['dataDefType'] == 'integer'):
                 new_data_int = ReportDataInt(report = new_report, data_definition_id = values['dataDefId'], int_value = values['value'])
