@@ -349,13 +349,5 @@ class DataService:
         print(str(time.time() - start_time), ' seconds to download new family services')
         mem_usage = services.memory_usage(deep=True).sum() + families.memory_usage(deep=True).sum() + members.memory_usage(deep=True).sum()
         print(str(mem_usage), 'bytes for new family services')
-        
-        ## TODO remove, for testing only
-        #print("SERVICES")
-        #print(services)
-        #print("FAMILIES")
-        #print(families)
-        #print("MEMBERS")
-        #print(members)
 
         return [services, families, members]

@@ -1,8 +1,33 @@
+from pandas.core.base import DataError
 from pandas.core.frame import DataFrame
 import dateutil.parser as parser
 import pandas as pd
+import numpy as np
 import json
 import statistics
+
+#data def 47
+def get_geo_coverage(data: 'list[DataFrame]'):
+    families = data[1]
+
+    families = families.assign(has_dim_geo_id=np.where(families.dimgeo_id>0, 1, 0))
+    families = families.groupby('has_dim_geo_id').agg(n = ('has_dim_geo_id','size')).sort_values('has_dim_geo_id')
+
+    num_has_geo = families.iloc[1]['n']
+    sum = families['n'].sum()
+
+    return np.round(num_has_geo / sum, 3)
+
+#data def 48
+def get_geo_breakdown_fam_state(data: 'list[DataFrame]'):
+    members = data[2]
+
+    members = members.groupby('fips_state').agg(
+        n_families = ('research_family_key','nunique'),
+        n_indv = ('research_family_key','size')
+    )
+
+    return members.to_json()
 
 # data def 53
 def get_direction_traveled(data: 'list[DataFrame]'):
