@@ -713,6 +713,20 @@ def get_geography(request):
             {
                 "reportScheduleId":1,
                 "reportDictId":1,
+                "dataDefId":47,
+                "name": "dimgeo_coverage",
+                "dataDefType":3
+            },
+            {
+                "reportScheduleId":1,
+                "reportDictId":1,
+                "dataDefId":48,
+                "name": "geographic_breakdown_fam_state",
+                "dataDefType":2
+            },
+            {
+                "reportScheduleId":1,
+                "reportDictId":1,
                 "dataDefId":53,
                 "name": "direction_traveled",
                 "dataDefType":1
