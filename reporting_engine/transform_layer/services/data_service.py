@@ -279,13 +279,13 @@ class DataService:
                 INNER JOIN dim_family_compositions ON dim_families.family_composition_type = dim_family_compositions.id
                 INNER JOIN dim_service_types ON fs.service_id = dim_service_types.id
                 INNER JOIN dim_dates ON fs.date = dim_dates.date_key
-                INNER JOIN {table1} ON fs.{left1} = {table1}.{right1}
+                INNER JOIN {table1} AS t1 ON fs.{left1} = t1.{right1}
                 LEFT JOIN dim_geos ON dim_families.dimgeo_id = dim_geos.id
             WHERE
                 fs.service_status = 17
                 AND {control_query}
                 AND fs.date >= {start_date} AND fs.date <= {end_date}
-                AND {table1}.{scope_field} = {scope_value}
+                AND t1.{scope_field} = {scope_value}
             GROUP BY
                 fs.research_family_key,
                 dim_family_compositions.family_composition_type,
@@ -327,7 +327,7 @@ class DataService:
         FROM
             fact_services AS fs
             INNER JOIN dim_service_types ON fs.service_id = dim_service_types.id
-            INNER JOIN {table1} ON fs.{left1} = {table1}.{right1}
+            INNER JOIN {table1} AS t1 ON fs.{left1} = t1.{right1}
             INNER JOIN dim_dates ON fs.date = dim_dates.date_key
             INNER JOIN fact_service_members AS fs_mem ON fs.research_service_key = fs_mem.research_service_key
             INNER JOIN dim_members ON fs_mem.research_member_key = dim_members.research_member_key
@@ -336,12 +336,19 @@ class DataService:
         WHERE
             fs.service_status = 17
             AND {control_query}
-            AND {table1}.{scope_field} = {scope_value}
+            AND t1.{scope_field} = {scope_value}
             AND fs.date >= {start_date} AND fs.date <= {end_date}
         GROUP BY
             fs_mem.research_member_key
         """
         
+        print("Services Query:")
+        print(services_query)
+        print("Families Query:")
+        print(families_query)
+        print("Members Query")
+        print(members_query)
+
         start_time = time.time()
         services = pd.read_sql(services_query, conn)
         families = pd.read_sql(families_query, conn)
@@ -349,13 +356,7 @@ class DataService:
         print(str(time.time() - start_time), ' seconds to download new family services')
         mem_usage = services.memory_usage(deep=True).sum() + families.memory_usage(deep=True).sum() + members.memory_usage(deep=True).sum()
         print(str(mem_usage), 'bytes for new family services')
+
         
-        ## TODO remove, for testing only
-        #print("SERVICES")
-        #print(services)
-        #print("FAMILIES")
-        #print(families)
-        #print("MEMBERS")
-        #print(members)
 
         return [services, families, members]
