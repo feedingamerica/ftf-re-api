@@ -38,6 +38,30 @@ BASE_DATA = [base_services, base_families, base_members]
 
 class CalculationsTestCase(unittest.TestCase):
 
+    #test data def 51
+    def test_get_services_flow_event_fips(self):
+        expected = pandas.read_csv(
+            os.path.join(__location__, './expected_results/results_services_flow_event_fips.csv'),
+            index_col = 'index'
+        )
+        data = BASE_DATA 
+        func = calc.data_calc_function_switcher[51]
+        result = func(data)
+        resultFrame = pandas.read_json(result)
+        assert_frame_equal(resultFrame, expected, check_like = True)
+
+    #test data def 52
+    def test_get_distance_traveled(self):
+        expected = pandas.read_csv(
+            os.path.join(__location__, './expected_results/results_distance_traveled.csv'),
+            index_col = 'distance_roll'
+        )
+        data = BASE_DATA 
+        func = calc.data_calc_function_switcher[52]
+        result = func(data)
+        resultFrame = pandas.read_json(result)
+        assert_frame_equal(resultFrame, expected, check_like = True)
+
     #test data def 53
     def test_direction_traveled(self):
         expected = {
