@@ -727,6 +727,20 @@ def get_geography(request):
             {
                 "reportScheduleId":1,
                 "reportDictId":1,
+                "dataDefId":49,
+                "name": "geographic_breakdown_fam_cnty",
+                "dataDefType":2
+            },
+            {
+                "reportScheduleId":1,
+                "reportDictId":1,
+                "dataDefId":50,
+                "name": "geographic_breakdown_fam_zcta",
+                "dataDefType":2
+            },
+            {
+                "reportScheduleId":1,
+                "reportDictId":1,
                 "dataDefId":53,
                 "name": "direction_traveled",
                 "dataDefType":1

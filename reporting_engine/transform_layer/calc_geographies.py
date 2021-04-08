@@ -7,6 +7,21 @@ import json
 import statistics
 import numpy as np
 
+
+#data def 49
+def get_geographic_breakdown_fam_county(data: 'list[DataFrame]'):
+    members = data[2]
+    members =members.groupby(['fips_cnty'])
+    members = members.agg(n_families = ("research_family_key", "nunique"), n_indv = ("research_member_key","count"))
+    return members.to_json()
+
+#data def 50
+def get_geographic_breakdown_fam_zcta(data: 'list[DataFrame]'):
+     members = data[2]
+     members =members.groupby(['fips_zcta'])
+     members = members.agg(n_families = ("research_family_key", "nunique"), n_indv = ("research_member_key","count"))
+     return members.to_json()
+
 # data def 51
 def get_services_flow_event_fips(data: 'list[DataFrame]'):
     services = data[0]
@@ -48,7 +63,7 @@ def get_distance_traveled(data: 'list[DataFrame]'):
         min_distance = ('distance_miles', 'min'),
         max_distance = ('distance_miles', 'max')
     )
-    services = services.sort_values(by = 'min_distance', ascending = True).reset_index()
+    services = services.sort_values(by = 'min_distance', ascending = True)
     return services.to_json()
 
 #data def 47
