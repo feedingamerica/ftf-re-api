@@ -66,21 +66,29 @@ def one_time_report_generation(schedule_id):
 def save_report(schedule, results):
     # New report to the database
     dateCompleted = date.today().strftime('%Y-%m-%d')
-    new_report = Report(report_schedule = schedule, start_date = results['Scope']['startDate'], end_date = results['Scope']['endDate'], date_completed = dateCompleted)
-    # once we get changes from other teams, this will become...
+
+    # checking if no_data is in the Scope dict of results
+    # this should always be there, but just in case a new data definition has been added but not taken into account when checking for data,
+    # or something else happens, checking for that field before saving the new Report
+    if 'no_data' in results['Scope']:
+        new_report = Report(report_schedule = schedule, start_date = results['Scope']['startDate'], end_date = results['Scope']['endDate'], date_completed = dateCompleted, no_data = results['Scope']['no_data'])
+    else:
+        new_report = Report(report_schedule = schedule, start_date = results['Scope']['startDate'], end_date = results['Scope']['endDate'], date_completed = dateCompleted)
+    # once we get changes from other teams, change "Scope" to "Meta"..
     # new_report = Report(report_schedule = schedule, start_date = results['Meta']['startDate'], end_date = results['Meta']['endDate'], date_completed = dateCompleted, no_data = results['Meta']['no_data'])
     new_report.save()
 
     # New rows to report_data_int/report_data_float
-    # once we get changes from other teams, add the below statement...
+    if ('no_data' in results['Scope'] and results['Scope']['no_data'] == False):
+    # once we get changes from other teams, change "Scope" to "Meta"...
     # if (results['Meta']['no_data'] == False):
-    for values in results['ReportInfo']:
-        if(values['dataDefType'] == 'integer'):
-            new_data_int = ReportDataInt(report = new_report, data_definition_id = values['dataDefId'], int_value = values['value'])
-            new_data_int.save()
-        elif(values['dataDefType'] == 'float'):
-            new_data_float = ReportDataFloat(report = new_report, data_definition_id = values['dataDefId'], float_value = values['value'])
-            new_data_float.save()
+        for values in results['ReportInfo']:
+            if(values['dataDefType'] == 'integer'):
+                new_data_int = ReportDataInt(report = new_report, data_definition_id = values['dataDefId'], int_value = values['value'])
+                new_data_int.save()
+            elif(values['dataDefType'] == 'float'):
+                new_data_float = ReportDataFloat(report = new_report, data_definition_id = values['dataDefId'], float_value = values['value'])
+                new_data_float.save()
     
 
 # used for testing purposes
