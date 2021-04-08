@@ -1,4 +1,4 @@
-from django.test import TestCase, Client
+from django.test import TestCase, Client, tag
 from api.models import ReportSchedule, ControlType, TimeframeType, RunType, ReportScope, ReportingDictionary, Report, ReportScheduleAddinReport, ReportScheduleAddin
 import datetime
 from datetime import date
@@ -8,11 +8,15 @@ from api.tasks import calculate_dates
 """
 The tests in this file can be run using: python manage.py test api
 This will run all of the tests, and Django will automatically create a test database, so nothing is added to the actual reports database
+
+The tests that test the calculate_dates function are tagged with 'calculate_dates'. To run just these tests, use: python manage.py test api --tag=calculate_dates
+Similarly, to run only the ones that test the generate_report_and_save function, use: python manage.py test api --tag=generate_report_and_save
 """
 
 """
 Testing the calculate_dates(schedule) function in api/tasks.py
 """
+@tag('calculate_dates')
 class TasksCalcTesting(TestCase):
     """
     Setting up test model instances for the test database that Django creates
@@ -141,7 +145,10 @@ class TasksCalcTesting(TestCase):
 
 """
 Testing the generate_report_and_save(schedule) function in api/tasks.py
+Note that for efficiency, these tests do not query the source database; no data/values are assigned to the report
+These tests only test that a report is in fact created and then saved to the test reports database
 """
+@tag('generate_report_and_save')
 class TasksGenTesting(TestCase):
     """
     Setting up test model instances for the test database that Django creates
@@ -151,10 +158,11 @@ class TasksGenTesting(TestCase):
         # the tests below create a ReportSchedule object, which has several foreign keys
         # Django sets up a test database for unit testing, but it is not populated
         # so, this function creates the needed model instances so that the tests can run and refer to these models without error
-
+        
         # needed for all tests:
-        testRT1 = RunType.objects.create(id = 1)
-        testRT2 = RunType.objects.create(id = 2)
+        # RunType objects
+        for x in range(1, 3):
+            testRT = RunType.objects.create(id = x)
 
         # needed for the timeframe_type test:
         testTfT1 = TimeframeType.objects.create(id = 1, name = "Last Month")
@@ -170,27 +178,25 @@ class TasksGenTesting(TestCase):
         testCT4 = ControlType.objects.create(id = 4, name = "Everything")
         testCT5 = ControlType.objects.create(id = 5, name = "TEFAP")
 
-        # needed for the report_scope test:
-        testRSc1 = ReportScope.objects.create(id = 1)
-        testRSc2 = ReportScope.objects.create(id = 2)
-        testRSc3 = ReportScope.objects.create(id = 3)
-        testRSc4 = ReportScope.objects.create(id = 4)
-        testRSc5 = ReportScope.objects.create(id = 5)
-        testRSc6 = ReportScope.objects.create(id = 6)
-        testRSc9 = ReportScope.objects.create(id = 9)
-        testRSc10 = ReportScope.objects.create(id = 10)
-        testRSc11 = ReportScope.objects.create(id = 11)
-        testRSc12 = ReportScope.objects.create(id = 12)
-        testRSc13 = ReportScope.objects.create(id = 13)
-        testRSc14 = ReportScope.objects.create(id = 14)
-        testRSc15 = ReportScope.objects.create(id = 15)
-        testRSc16 = ReportScope.objects.create(id = 16)
+        # needed for the report_scope test: 
+        testRSc1 = ReportScope.objects.create(id = 1, field_reference = "event_id")
+        testRSc2 = ReportScope.objects.create(id = 2, field_reference = "loc_id")
+        testRSc3 = ReportScope.objects.create(id = 3, field_reference = "org_id")
+        testRSc4 = ReportScope.objects.create(id = 4, field_reference = "cnty_id")
+        testRSc5 = ReportScope.objects.create(id = 5, field_reference = "fb_id")
+        testRSc6 = ReportScope.objects.create(id = 6, field_reference = "state_id")
+        testRSc9 = ReportScope.objects.create(id = 9, field_reference = "fips_state")
+        testRSc10 = ReportScope.objects.create(id = 10, field_reference = "fips_cnty")
+        testRSc11 = ReportScope.objects.create(id = 11, field_reference = "fips_tract")
+        testRSc12 = ReportScope.objects.create(id = 12, field_reference = "fips_zcta")
+        testRSc13 = ReportScope.objects.create(id = 13, field_reference = "fips_sldl")
+        testRSc14 = ReportScope.objects.create(id = 14, field_reference = "fips_sldu")
+        testRSc15 = ReportScope.objects.create(id = 15, field_reference = "fips_cd")
+        testRSc16 = ReportScope.objects.create(id = 16, field_reference = "fips_unsd")
 
         # needed for the reporting_dictionary test:
-        testRD1 = ReportingDictionary.objects.create(id = 1)
-        testRD2 = ReportingDictionary.objects.create(id = 2)
-        testRD3 = ReportingDictionary.objects.create(id = 3)
-        testRD4 = ReportingDictionary.objects.create(id = 4)
+        for x in range(1, 5):
+            testRD = ReportingDictionary.objects.create(id = x)
     
     """
     Testing the generate_report_and_save(schedule) function from tasks.py
@@ -372,8 +378,6 @@ class TasksGenTesting(TestCase):
             # ensuring the generated report was actually saved to the database
             self.assertTrue(Report.objects.filter(report_schedule_id = rs.pk).exists())
 
-
-
 """
 Testing the django POST and GET request
 """
@@ -495,6 +499,3 @@ class GetPostTesting(TestCase):
                                                     "date_scheduled": "Today"}  )
         
         self.assertEqual(response.status_code, 200)
-
-
-
