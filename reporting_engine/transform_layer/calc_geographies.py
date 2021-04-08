@@ -48,7 +48,7 @@ def get_distance_traveled(data: 'list[DataFrame]'):
         min_distance = ('distance_miles', 'min'),
         max_distance = ('distance_miles', 'max')
     )
-    services = services.sort_values(by = 'min_distance', ascending = True).reset_index()
+    services = services.sort_values(by = 'min_distance', ascending = True)
     return services.to_json()
 
 #data def 47
