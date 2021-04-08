@@ -164,6 +164,8 @@ def get_direction_traveled(data: 'list[DataFrame]'):
 
 # data def 54
 def get_windrose(data: 'list[DataFrame]'):
+    services = data[0]
+    print(str(services.iloc[0]))
     pass
 
 #data def 55
