@@ -69,6 +69,18 @@ class CalculationsTestCase(unittest.TestCase):
         result = func(data)
         resultFrame = pandas.read_json(result).reset_index().rename(columns={"index": "fips_cnty"})
         assert_frame_equal(resultFrame, expected, check_like = True)
+    
+     #test data def 50
+    def test_get_geo_breakdown_fam_zcta(self):
+        expected = pandas.read_csv(
+            os.path.join(__location__, './expected_results/results_geographic_breakdown_fam_zcta.csv'),
+            dtype={'fips_zcta':str}
+        ).fillna('<NA>')
+        data = BASE_DATA
+        func = calc.data_calc_function_switcher[50]
+        result = func(data)
+        resultFrame = pandas.read_json(result).reset_index().rename(columns={"index": "fips_zcta"})
+        assert_frame_equal(resultFrame, expected, check_like = True)
 
 
     #test data def 51
