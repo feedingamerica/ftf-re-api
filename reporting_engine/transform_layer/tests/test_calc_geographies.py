@@ -149,6 +149,18 @@ class CalculationsTestCase(unittest.TestCase):
         resultFrame = pandas.read_json(result)
         assert_frame_equal(resultFrame, expected, check_like = True)
 
+    #test data def 54
+    def test_get_windrose(self):
+        expected = pandas.read_csv(
+            os.path.join(__location__, './expected_results/results_data_def_54.csv'),
+            index_col = 'distance_roll'
+        )
+        data = BASE_DATA 
+        func = calc.data_calc_function_switcher[54]
+        result = func(data)
+        resultFrame = pandas.read_json(result)
+        assert_frame_equal(resultFrame, expected, check_like = True)
+
     #test data def 55
     def test_sites_visited_distribution(self):
         expected = {
