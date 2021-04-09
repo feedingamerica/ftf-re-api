@@ -12,7 +12,7 @@ from .services.data_service import DataService
 
 def test_data_service(request, id):
     sample_dict = {
-        "Scope": {
+        "Meta": {
             "startDate":"01/01/2019",
             "endDate":"1/31/2019",
             "scope_field":"fb_id",
@@ -53,7 +53,7 @@ def test_data_service(request, id):
 
 def get_report_big_numbers(request):
     input_dict = {
-        "Scope": {
+        "Meta": {
             "startDate":"01/01/2019",
             "endDate":"12/31/2019",
             "scope_field":"fb_id",
@@ -103,7 +103,7 @@ def get_report_big_numbers(request):
 
 def get_report_ohio(request):
     input_dict = {
-        "Scope": {
+        "Meta": {
             "startDate":"01/01/2019",
             "endDate":"12/31/2019",
             "scope_field":"fb_id",
@@ -230,7 +230,7 @@ def get_report_ohio(request):
 
 def get_report_mofc(request):
     input_dict = {
-        "Scope": {
+        "Meta": {
             "startDate":"01/01/2019",
             "endDate":"12/31/2019",
             "scope_field":"fb_id",
@@ -273,7 +273,7 @@ def get_report_mofc(request):
 
 def get_demo1_mofc(request):
     input_dict = {
-        "Scope": {
+        "Meta": {
             "startDate":"01/01/2019",
             "endDate":"12/31/2019",
             "scope_field":"fb_id",
@@ -335,7 +335,7 @@ def get_demo1_mofc(request):
 
 def get_all_defs_typical(request):
     input_dict = {
-        "Scope": {
+        "Meta": {
             "startDate":"01/01/2020",
             "endDate":"12/31/2020",
             "scope_field":"loc_id",
@@ -416,7 +416,7 @@ def get_all_defs_typical(request):
 
 def get_fact_services(request):
     input_dict = {
-        "Scope": {
+        "Meta": {
             "startDate":"01/01/2020",
             "endDate":"12/31/2020",
             "scope_field":"loc_id",
@@ -473,7 +473,7 @@ def get_fact_services(request):
 
 def get_report_services(request):
     input_dict = {
-        "Scope": {
+        "Meta": {
             "startDate":"01/01/2020",
             "endDate":"12/31/2020",
             "scope_field":"loc_id",
@@ -517,7 +517,7 @@ def get_report_services(request):
 
 def get_family_breakdown(request):
     input_dict = {
-        "Scope": {
+        "Meta": {
             "startDate":"01/01/2020",
             "endDate":"12/31/2020",
             "scope_field":"loc_id",
@@ -575,7 +575,7 @@ def get_family_breakdown(request):
 
 def get_new_families(request):
     input_dict = {
-        "Scope": {
+        "Meta": {
             "startDate":"01/01/2020",
             "endDate":"12/31/2020",
             "scope_field":"loc_id",
@@ -702,7 +702,7 @@ def get_new_families(request):
 
 def get_geography(request):
     input_dict = {
-        "Scope": {
+        "Meta": {
             "startDate":"01/01/2020",
             "endDate":"12/31/2020",
             "scope_field":"loc_id",
