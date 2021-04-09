@@ -14,9 +14,9 @@ class CalculationDispatcher:
         # now on construction, it will automatically run parse request on the input request, so theres no extra in between step
         self.request = self.parse_request(request)
         data_list = request["ReportInfo"]
-        self.params = request["Scope"]
+        self.params = request["Meta"]
         self.data_dict = CalculationDispatcher.__group_by_data_def(data_list)
-        self.data_service = DataService(request["Scope"])
+        self.data_service = DataService(request["Meta"])
         
     @staticmethod
     def __group_by_data_def(data_list):
@@ -68,15 +68,15 @@ class CalculationDispatcher:
     @staticmethod
     def parse_request(input_dict):
         # Setting the scope type
-        scope_field = input_dict["Scope"]["scope_field"]
+        scope_field = input_dict["Meta"]["scope_field"]
         if scope_field.startswith("fip"):
-            input_dict["Scope"]["scope_type"] = "geography"
+            input_dict["Meta"]["scope_type"] = "geography"
         else:
-            input_dict["Scope"]["scope_type"] = "hierarchy"
+            input_dict["Meta"]["scope_type"] = "hierarchy"
         
         # Setting the control type
-        if "control_type_name" not in input_dict["Scope"]:
-            input_dict["Scope"]["control_type_name"] = DEFAULT_CTRL
+        if "control_type_name" not in input_dict["Meta"]:
+            input_dict["Meta"]["control_type_name"] = DEFAULT_CTRL
 
         return input_dict
 
