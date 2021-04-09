@@ -210,9 +210,9 @@ def get_new_fam_dist_of_length_of_relationship(data: 'list[DataFrame]'):
 
     families['buckets'] = np.select(conditions, values)
     families = families.groupby('buckets').size().to_frame('count')
-    families = families.sort_values(by = 'buckets', key = lambda x: x.map(sort_buckets_dict)).reset_index()
+    families = families.sort_values(by = 'buckets', key = lambda x: x.map(sort_buckets_dict))
 
-    return families.to_json()
+    return families['count'].to_json()
 
 #data def 45
 def get_relationship_length_indv_mean(data):
