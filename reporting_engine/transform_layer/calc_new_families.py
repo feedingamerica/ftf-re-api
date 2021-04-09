@@ -102,21 +102,9 @@ def get_new_families_freq_visits(data: 'list[DataFrame]'):
 # data def 39
 def get_new_fam_household_composition(data: 'list[DataFrame]'):
     families = data[1]
-    families = families[families['timeframe_has_first_service_date']>0]
-    result_dict = {
-        "adults_and_children":0,
-        "adults_and_seniors":0,
-        "adults_only":0,
-        "adults_seniors_and_children":0,
-        "children_and_seniors":0,
-        "children_only":0,
-        "seniors_only":0
-    }
-
-    for index, row in families.iterrows():
-        result_dict[row["family_composition_type"]]+=1
+    families = families[families['timeframe_has_first_service_date']>0].copy()
+    return calc_families.get_household_composition(families)
     
-    return json.dumps(result_dict)
 
 # data def 40
 def get_new_fam_composition_key_insight(data: 'list[DataFrame]'):

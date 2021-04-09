@@ -7,19 +7,46 @@ import json
 import statistics
 import numpy as np
 
+#data def 47
+def get_geo_coverage(data: 'list[DataFrame]'):
+    families = data[1]
+
+    families = families.assign(has_dim_geo_id=np.where(families.dimgeo_id>0, 1, 0))
+    families = families.groupby('has_dim_geo_id').agg(n = ('has_dim_geo_id','size'))
+
+    num_has_geo = families.iloc[1]['n']
+    sum = families['n'].sum()
+
+    return np.round(num_has_geo / sum, 3)
+
+#data def 48
+def get_geo_breakdown_fam_state(data: 'list[DataFrame]'):
+    members = data[2]
+
+    members = members.groupby('fips_state', dropna=False).agg(
+        n_families = ('research_family_key','nunique'),
+        n_indv = ('research_family_key','size')
+    )
+    # because of NA values, groupby forces index as float,
+    # so to send properly float -> int -> str
+    members.index = members.index.astype("Int64").astype(str)
+    return members.to_json()
 
 #data def 49
 def get_geographic_breakdown_fam_county(data: 'list[DataFrame]'):
     members = data[2]
-    members =members.groupby(['fips_cnty'])
+    members =members.groupby(['fips_cnty'], dropna = False)
     members = members.agg(n_families = ("research_family_key", "nunique"), n_indv = ("research_member_key","count"))
+    members.index = members.index.astype("Int64").astype(str)
+
     return members.to_json()
 
 #data def 50
 def get_geographic_breakdown_fam_zcta(data: 'list[DataFrame]'):
      members = data[2]
-     members =members.groupby(['fips_zcta'])
+     members =members.groupby(['fips_zcta'], dropna=False)
      members = members.agg(n_families = ("research_family_key", "nunique"), n_indv = ("research_member_key","count"))
+     members.index = members.index.astype("Int64").astype(str)
      return members.to_json()
 
 # data def 51
@@ -65,29 +92,6 @@ def get_distance_traveled(data: 'list[DataFrame]'):
     )
     services = services.sort_values(by = 'min_distance', ascending = True)
     return services.to_json()
-
-#data def 47
-def get_geo_coverage(data: 'list[DataFrame]'):
-    families = data[1]
-
-    families = families.assign(has_dim_geo_id=np.where(families.dimgeo_id>0, 1, 0))
-    families = families.groupby('has_dim_geo_id').agg(n = ('has_dim_geo_id','size')).sort_values('has_dim_geo_id')
-
-    num_has_geo = families.iloc[1]['n']
-    sum = families['n'].sum()
-
-    return np.round(num_has_geo / sum, 3)
-
-#data def 48
-def get_geo_breakdown_fam_state(data: 'list[DataFrame]'):
-    members = data[2]
-
-    members = members.groupby('fips_state').agg(
-        n_families = ('research_family_key','nunique'),
-        n_indv = ('research_family_key','size')
-    )
-
-    return members.to_json()
 
 # data def 53
 def get_direction_traveled(data: 'list[DataFrame]'):
@@ -179,7 +183,153 @@ def get_direction_traveled(data: 'list[DataFrame]'):
 
 # data def 54
 def get_windrose(data: 'list[DataFrame]'):
-    pass
+    services = data[0]
+    services = services[services['dummy_trip'] == 1]
+    services = services.sort_values(by = ['distance_miles','direction'], ascending = True)
+
+    conditions = [
+        (services['distance_miles'] < 1) & (services['direction'] == 'NE'),
+        (services['distance_miles'] < 1) & (services['direction'] == 'N'),
+        (services['distance_miles'] < 1) & (services['direction'] == 'SE'),
+        (services['distance_miles'] < 1) & (services['direction'] == 'E'),
+        (services['distance_miles'] < 1) & (services['direction'] == 'W'),
+        (services['distance_miles'] < 1) & (services['direction'] == 'SW'),
+        (services['distance_miles'] < 1) & (services['direction'] == 'NW'),
+        (services['distance_miles'] < 1) & (services['direction'] == 'S'),
+        (services['distance_miles'] < 2) & (services['direction'] == 'NE'),
+        (services['distance_miles'] < 2) & (services['direction'] == 'N'),
+        (services['distance_miles'] < 2) & (services['direction'] == 'SE'),
+        (services['distance_miles'] < 2) & (services['direction'] == 'E'),
+        (services['distance_miles'] < 2) & (services['direction'] == 'W'),
+        (services['distance_miles'] < 2) & (services['direction'] == 'SW'),
+        (services['distance_miles'] < 2) & (services['direction'] == 'NW'),
+        (services['distance_miles'] < 2) & (services['direction'] == 'S'),
+        (services['distance_miles'] < 3) & (services['direction'] == 'NE'),
+        (services['distance_miles'] < 3) & (services['direction'] == 'N'),
+        (services['distance_miles'] < 3) & (services['direction'] == 'SE'),
+        (services['distance_miles'] < 3) & (services['direction'] == 'E'),
+        (services['distance_miles'] < 3) & (services['direction'] == 'W'),
+        (services['distance_miles'] < 3) & (services['direction'] == 'SW'),
+        (services['distance_miles'] < 3) & (services['direction'] == 'NW'),
+        (services['distance_miles'] < 3) & (services['direction'] == 'S'),
+        (services['distance_miles'] < 6) & (services['direction'] == 'NE'),
+        (services['distance_miles'] < 6) & (services['direction'] == 'N'),
+        (services['distance_miles'] < 6) & (services['direction'] == 'SE'),
+        (services['distance_miles'] < 6) & (services['direction'] == 'E'),
+        (services['distance_miles'] < 6) & (services['direction'] == 'W'),
+        (services['distance_miles'] < 6) & (services['direction'] == 'SW'),
+        (services['distance_miles'] < 6) & (services['direction'] == 'NW'),
+        (services['distance_miles'] < 6) & (services['direction'] == 'S'),
+        (services['distance_miles'] < 10) & (services['direction'] == 'NE'),
+        (services['distance_miles'] < 10) & (services['direction'] == 'N'),
+        (services['distance_miles'] < 10) & (services['direction'] == 'SE'),
+        (services['distance_miles'] < 10) & (services['direction'] == 'E'),
+        (services['distance_miles'] < 10) & (services['direction'] == 'W'),
+        (services['distance_miles'] < 10) & (services['direction'] == 'SW'),
+        (services['distance_miles'] < 10) & (services['direction'] == 'NW'),
+        (services['distance_miles'] < 10) & (services['direction'] == 'S'),
+        (services['distance_miles'] < 15) & (services['direction'] == 'NE'),
+        (services['distance_miles'] < 15) & (services['direction'] == 'N'),
+        (services['distance_miles'] < 15) & (services['direction'] == 'SE'),
+        (services['distance_miles'] < 15) & (services['direction'] == 'E'),
+        (services['distance_miles'] < 15) & (services['direction'] == 'W'),
+        (services['distance_miles'] < 15) & (services['direction'] == 'SW'),
+        (services['distance_miles'] < 15) & (services['direction'] == 'NW'),
+        (services['distance_miles'] < 15) & (services['direction'] == 'S'),
+        (services['distance_miles'] < 25) & (services['direction'] == 'NE'),
+        (services['distance_miles'] < 25) & (services['direction'] == 'N'),
+        (services['distance_miles'] < 25) & (services['direction'] == 'SE'),
+        (services['distance_miles'] < 25) & (services['direction'] == 'E'),
+        (services['distance_miles'] < 25) & (services['direction'] == 'W'),
+        (services['distance_miles'] < 25) & (services['direction'] == 'SW'),
+        (services['distance_miles'] < 25) & (services['direction'] == 'NW'),
+        (services['distance_miles'] < 25) & (services['direction'] == 'S'),
+        (services['distance_miles'] >= 25) & (services['direction'] == 'NE'),
+        (services['distance_miles'] >= 25) & (services['direction'] == 'N'),
+        (services['distance_miles'] >= 25) & (services['direction'] == 'SE'),
+        (services['distance_miles'] >= 25) & (services['direction'] == 'E'),
+        (services['distance_miles'] >= 25) & (services['direction'] == 'W'),
+        (services['distance_miles'] >= 25) & (services['direction'] == 'SW'),
+        (services['distance_miles'] >= 25) & (services['direction'] == 'NW'),
+        (services['distance_miles'] >= 25) & (services['direction'] == 'S')
+    ]
+    values = [
+        '< 1 mile',
+        '< 1 mile',
+        '< 1 mile',
+        '< 1 mile',
+        '< 1 mile',
+        '< 1 mile',
+        '< 1 mile',
+        '< 1 mile',
+        '1 - 1.99 miles',
+        '1 - 1.99 miles',
+        '1 - 1.99 miles',
+        '1 - 1.99 miles',
+        '1 - 1.99 miles',
+        '1 - 1.99 miles',
+        '1 - 1.99 miles',
+        '1 - 1.99 miles',
+        '2 - 2.99 miles',
+        '2 - 2.99 miles',
+        '2 - 2.99 miles',
+        '2 - 2.99 miles',
+        '2 - 2.99 miles',
+        '2 - 2.99 miles',
+        '2 - 2.99 miles',
+        '2 - 2.99 miles',
+        '3 - 5.99 miles',
+        '3 - 5.99 miles',
+        '3 - 5.99 miles',
+        '3 - 5.99 miles',
+        '3 - 5.99 miles',
+        '3 - 5.99 miles',
+        '3 - 5.99 miles',
+        '3 - 5.99 miles',
+        '6 - 9.99 miles',
+        '6 - 9.99 miles',
+        '6 - 9.99 miles',
+        '6 - 9.99 miles',
+        '6 - 9.99 miles',
+        '6 - 9.99 miles',
+        '6 - 9.99 miles',
+        '6 - 9.99 miles',
+        '10 - 14.99 miles',
+        '10 - 14.99 miles',
+        '10 - 14.99 miles',
+        '10 - 14.99 miles',
+        '10 - 14.99 miles',
+        '10 - 14.99 miles',
+        '10 - 14.99 miles',
+        '10 - 14.99 miles',
+        '15 - 24.99 miles',
+        '15 - 24.99 miles',
+        '15 - 24.99 miles',
+        '15 - 24.99 miles',
+        '15 - 24.99 miles',
+        '15 - 24.99 miles',
+        '15 - 24.99 miles',
+        '15 - 24.99 miles',
+        '25+ miles',
+        '25+ miles',
+        '25+ miles',
+        '25+ miles',
+        '25+ miles',
+        '25+ miles',
+        '25+ miles',
+        '25+ miles'
+    ]
+
+    services['distance_roll'] = np.select(conditions, values)
+    services = services.groupby(['distance_roll','direction']).agg(
+        services = ('research_service_key', 'count'),
+        mean_distance = ('distance_miles', 'mean'),
+        median_distance = ('distance_miles', 'median'),
+        min_distance = ('distance_miles', 'min'),
+        max_distance = ('distance_miles', 'max')
+    )
+    services = services.sort_values(by = 'min_distance', ascending = True)
+    return services.to_json()
 
 #data def 55
 def get_sites_visited_distribution(data):

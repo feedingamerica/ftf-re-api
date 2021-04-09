@@ -92,13 +92,24 @@ class CalculationsTestCase(unittest.TestCase):
     #test for data def 39
     def test_get_new_fam_household_composition(self):
         expected = {
-            "adults_and_children":2622,
-            "adults_and_seniors":447,
-            "adults_only":2467,
-            "adults_seniors_and_children":297,
-            "children_and_seniors":36,
-            "children_only":16,
-            "seniors_only":422
+            "family_composition_type": {
+               "0":"adults_and_children",
+               "1": "adults_and_seniors",
+               "2": "adults_only",
+               "3": "adults_seniors_and_children",
+               "4": "children_and_seniors",
+               "5": "children_only",
+               "6": "seniors_only"
+            },
+            "num_families": {
+                "0":2622,
+               "1": 447,
+               "2": 2467,
+               "3": 297,
+               "4": 36,
+               "5": 16,
+               "6": 422
+            }
         }
         #data = TEST_DATA_SERVICE.get_data_for_definition(38)
         data = BASE_DATA 
