@@ -706,7 +706,7 @@ def get_geography(request):
             "startDate":"01/01/2020",
             "endDate":"12/31/2020",
             "scope_field":"loc_id",
-            "scope_field_value":1,
+            "scope_field_value":6,
             "control_type_name":"Is Grocery Service",
         },
         "ReportInfo": [
@@ -736,6 +736,13 @@ def get_geography(request):
                 "reportDictId":1,
                 "dataDefId":50,
                 "name": "geographic_breakdown_fam_zcta",
+                "dataDefType":2
+            },
+            {
+                "reportScheduleId":1,
+                "reportDictId":1,
+                "dataDefId":52,
+                "name": "distance_traveled",
                 "dataDefType":2
             },
             {
