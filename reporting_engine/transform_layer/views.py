@@ -741,6 +741,13 @@ def get_geography(request):
             {
                 "reportScheduleId":1,
                 "reportDictId":1,
+                "dataDefId":51,
+                "name": "services_flow_event_fips",
+                "dataDefType":2
+            },
+            {
+                "reportScheduleId":1,
+                "reportDictId":1,
                 "dataDefId":52,
                 "name": "distance_traveled",
                 "dataDefType":2
@@ -757,6 +764,20 @@ def get_geography(request):
                 "reportDictId":1,
                 "dataDefId":54,
                 "name": "windrose",
+                "dataDefType":1
+            },
+            {
+                "reportScheduleId":1,
+                "reportDictId":1,
+                "dataDefId":55,
+                "name": "sites_visited_distribution",
+                "dataDefType":1
+            },
+            {
+                "reportScheduleId":1,
+                "reportDictId":1,
+                "dataDefId":56,
+                "name": "dummy_trip_coverage",
                 "dataDefType":1
             }
         ]
