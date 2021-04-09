@@ -2,6 +2,7 @@ from pandas.core.frame import DataFrame
 import dateutil.parser as parser
 import pandas as pd
 import json
+import numpy as np
 
 import transform_layer.calc_families as calc_families
 
@@ -179,54 +180,51 @@ def get_relationship_length_fam_mean(data):
 #data def 44
 def get_new_fam_dist_of_length_of_relationship(data: 'list[DataFrame]'):
     families = data[1]
-
-    set_max = 0
-
-    for index, row in families.iterrows():
-        if int(row["max_days_since_first_service"]) > set_max:
-            set_max = int(row["max_days_since_first_service"])
-
+    set_max = families['max_days_since_first_service'].max()
     width = set_max / 10
 
-    result_dict = {
-        '0 - ' + str(width):0,
-        str(width) + ' - ' + str(width*2):0,
-        str(width*2) + ' - ' + str(width*3):0,
-        str(width*3) + ' - ' + str(width*4):0,
-        str(width*4) + ' - ' + str(width*5):0,
-        str(width*5) + ' - ' + str(width*6):0,
-        str(width*6) + ' - ' + str(width*7):0,
-        str(width*7) + ' - ' + str(width*8):0,
-        str(width*8) + ' - ' + str(width*9):0,
-        str(width*9) + ' - ' + str(set_max):0
+    conditions = [
+        (families['max_days_since_first_service'] >= 0) & (families['max_days_since_first_service'] < width),
+        (families['max_days_since_first_service'] >= width) & (families['max_days_since_first_service'] < width * 2),
+        (families['max_days_since_first_service'] >= width * 2) & (families['max_days_since_first_service'] < width * 3),
+        (families['max_days_since_first_service'] >= width * 3) & (families['max_days_since_first_service'] < width * 4),
+        (families['max_days_since_first_service'] >= width * 4) & (families['max_days_since_first_service'] < width * 5),
+        (families['max_days_since_first_service'] >= width * 5) & (families['max_days_since_first_service'] < width * 6),
+        (families['max_days_since_first_service'] >= width * 6) & (families['max_days_since_first_service'] < width * 7),
+        (families['max_days_since_first_service'] >= width * 7) & (families['max_days_since_first_service'] < width * 8),
+        (families['max_days_since_first_service'] >= width * 8) & (families['max_days_since_first_service'] < width * 9),
+        (families['max_days_since_first_service'] >= width * 9) & (families['max_days_since_first_service'] <= set_max)
+    ]
+    values = [
+        '0 - ' + str(width),
+        str(width) + ' - ' + str(width*2),
+        str(width*2) + ' - ' + str(width*3),
+        str(width*3) + ' - ' + str(width*4),
+        str(width*4) + ' - ' + str(width*5),
+        str(width*5) + ' - ' + str(width*6),
+        str(width*6) + ' - ' + str(width*7),
+        str(width*7) + ' - ' + str(width*8),
+        str(width*8) + ' - ' + str(width*9),
+        str(width*9) + ' - ' + str(set_max)
+    ]
+    sort_buckets_dict = {
+        values[0]: 0,
+        values[1]: 1,
+        values[2]: 2,
+        values[3]: 3,
+        values[4]: 4,
+        values[5]: 5,
+        values[6]: 6,
+        values[7]: 7,
+        values[8]: 8,
+        values[9]: 9
     }
 
-    for index, row in families.iterrows():
+    families['buckets'] = np.select(conditions, values)
+    families = families.groupby('buckets').size().to_frame('count')
+    families = families.sort_values(by = 'buckets', key = lambda x: x.map(sort_buckets_dict)).reset_index()
 
-        max_days = int(row["max_days_since_first_service"])
-
-        if max_days >= 0 and max_days < width:
-            result_dict['0 - ' + str(width)]+=1
-        elif max_days >= width and max_days < (width*2):
-            result_dict[str(width) + ' - ' + str(width*2)]+=1
-        elif max_days >= (width*2) and max_days < (width*3):
-            result_dict[str(width*2) + ' - ' + str(width*3)]+=1
-        elif max_days >= (width*3) and max_days < (width*4):
-            result_dict[str(width*3) + ' - ' + str(width*4)]+=1
-        elif max_days >= (width*4) and max_days < (width*5):
-            result_dict[str(width*4) + ' - ' + str(width*5)]+=1
-        elif max_days >= (width*5) and max_days < (width*6):
-            result_dict[str(width*5) + ' - ' + str(width*6)]+=1
-        elif max_days >= (width*6) and max_days < (width*7):
-            result_dict[str(width*6) + ' - ' + str(width*7)]+=1
-        elif max_days >= (width*7) and max_days < (width*8):
-            result_dict[str(width*7) + ' - ' + str(width*8)]+=1
-        elif max_days >= (width*8) and max_days < (width*9):
-            result_dict[str(width*8) + ' - ' + str(width*9)]+=1
-        elif max_days >= (width*9) and max_days <= set_max:
-            result_dict[str(width*9) + ' - ' + str(set_max)]+=1
-
-    return json.dumps(result_dict)
+    return families.to_json()
 
 #data def 45
 def get_relationship_length_indv_mean(data):
