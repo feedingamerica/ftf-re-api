@@ -35,15 +35,18 @@ def get_geo_breakdown_fam_state(data: 'list[DataFrame]'):
 #data def 49
 def get_geographic_breakdown_fam_county(data: 'list[DataFrame]'):
     members = data[2]
-    members =members.groupby(['fips_cnty'])
+    members =members.groupby(['fips_cnty'], dropna = False)
     members = members.agg(n_families = ("research_family_key", "nunique"), n_indv = ("research_member_key","count"))
+    members.index = members.index.astype("Int64").astype(str)
+
     return members.to_json()
 
 #data def 50
 def get_geographic_breakdown_fam_zcta(data: 'list[DataFrame]'):
      members = data[2]
-     members =members.groupby(['fips_zcta'])
+     members =members.groupby(['fips_zcta'], dropna=False)
      members = members.agg(n_families = ("research_family_key", "nunique"), n_indv = ("research_member_key","count"))
+     members.index = members.index.astype("Int64").astype(str)
      return members.to_json()
 
 # data def 51

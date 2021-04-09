@@ -57,6 +57,19 @@ class CalculationsTestCase(unittest.TestCase):
         result = func(data)
         resultFrame = pandas.read_json(result).reset_index().rename(columns={"index": "fips_state"})
         assert_frame_equal(resultFrame, expected, check_like = True)
+    
+    #test data def 49
+    def test_get_geo_breakdown_fam_cnty(self):
+        expected = pandas.read_csv(
+            os.path.join(__location__, './expected_results/results_geographic_breakdown_fam_county.csv'),
+            dtype={'fips_cnty':str}
+        ).fillna('<NA>')
+        data = BASE_DATA
+        func = calc.data_calc_function_switcher[49]
+        result = func(data)
+        resultFrame = pandas.read_json(result).reset_index().rename(columns={"index": "fips_cnty"})
+        assert_frame_equal(resultFrame, expected, check_like = True)
+
 
     #test data def 51
     def test_get_services_flow_event_fips(self):
