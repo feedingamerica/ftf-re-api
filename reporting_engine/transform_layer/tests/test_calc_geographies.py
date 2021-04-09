@@ -1,3 +1,4 @@
+from time import daylight
 from django.test import TestCase
 from django.db import connections
 import pandas
@@ -37,6 +38,25 @@ BASE_DATA = [base_services, base_families, base_members]
 
 
 class CalculationsTestCase(unittest.TestCase):
+    #test data def 47
+    def test_get_geo_coverage(self):
+        expected = 0.988
+        data = BASE_DATA 
+        func = calc.data_calc_function_switcher[47]
+        result = func(data)
+        self.assertTrue(math.isclose(result, expected, rel_tol = REL_TOL))
+
+    #test data def 48
+    def test_get_geo_breakdown_fam_state(self):
+        expected = pandas.read_csv(
+            os.path.join(__location__, './expected_results/results_geographic_breakdown_fam_state.csv'),
+            dtype={'fips_state':str}
+        ).fillna('<NA>')
+        data = BASE_DATA
+        func = calc.data_calc_function_switcher[48]
+        result = func(data)
+        resultFrame = pandas.read_json(result).reset_index().rename(columns={"index": "fips_state"})
+        assert_frame_equal(resultFrame, expected, check_like = True)
 
     #test data def 51
     def test_get_services_flow_event_fips(self):
