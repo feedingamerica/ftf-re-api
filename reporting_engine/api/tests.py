@@ -296,7 +296,7 @@ class TasksGenTesting(TestCase):
         #   16: Geography; School District; fips_unsd
         for x in range(1, 17): 
             if (x == 7 or x == 8): 
-                print(f"\nSkipping report_scope_id = {x} because it is not available.")
+                print(f"\nIn test_generate_report_and_save_report_scope, skipping report_scope_id = {x} because it is not available.")
             else: 
                 # use this print statement to help debug, if needed
                 # print(f"\nTesting report_scope_id = {x}...")
