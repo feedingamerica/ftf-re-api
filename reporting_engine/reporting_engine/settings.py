@@ -47,6 +47,8 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'rest_framework_api_key',
     'transform_layer',
+    'django_celery_beat',
+    'drf_yasg'
 ]
 
 REST_FRAMEWORK ={
@@ -106,7 +108,21 @@ DATABASES = {
         'PORT': os.getenv( 'SOURCE_DB_PORT' ),
     }
 }
+"""
 
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    }
+}
+"""
+
+
+REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 10,
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
@@ -145,5 +161,5 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
-
 API_KEY_CUSTOM_HEADER = "HTTP_X_API_KEY"
+
