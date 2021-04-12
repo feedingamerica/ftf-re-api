@@ -110,18 +110,14 @@ def get_new_fam_household_composition(data: 'list[DataFrame]'):
 # data def 40
 def get_new_fam_composition_key_insight(data: 'list[DataFrame]'):
     families = data[1]
-
+    families = families[families['timeframe_has_first_service_date']>0]
     result_dict = {
         "has_child_senior":0,
         "no_child_senior":0
     }
-    families = families[families['timeframe_has_first_service_date']>0]
-    for index, row in families.iterrows():
-        if row["family_composition_type"] == "adults_only":
-            result_dict["no_child_senior"]+=1
-        else:
-            result_dict["has_child_senior"]+=1
-
+    families = families.groupby(["family_composition_type"]).count()
+    result_dict["no_child_senior"] = int(families.at['adults_only','research_family_key'])
+    result_dict["has_child_senior"] = int(families['research_family_key'].sum()-families.at['adults_only','research_family_key'])
     return json.dumps(result_dict)
 
 #data def 41
