@@ -110,18 +110,14 @@ def get_new_fam_household_composition(data: 'list[DataFrame]'):
 # data def 40
 def get_new_fam_composition_key_insight(data: 'list[DataFrame]'):
     families = data[1]
-
+    families = families[families['timeframe_has_first_service_date']>0]
     result_dict = {
         "has_child_senior":0,
         "no_child_senior":0
     }
-    families = families[families['timeframe_has_first_service_date']>0]
-    for index, row in families.iterrows():
-        if row["family_composition_type"] == "adults_only":
-            result_dict["no_child_senior"]+=1
-        else:
-            result_dict["has_child_senior"]+=1
-
+    families = families.groupby(["family_composition_type"]).count()
+    result_dict["no_child_senior"] = int(families.at['adults_only','research_family_key'])
+    result_dict["has_child_senior"] = int(families['research_family_key'].sum()-families.at['adults_only','research_family_key'])
     return json.dumps(result_dict)
 
 #data def 41
@@ -222,53 +218,50 @@ def get_relationship_length_indv_mean(data):
 # data def 46
 def get_new_fam_dist_of_length_of_relationships_for_individuals(data: 'list[DataFrame]'):
     members = data[2]
-
-    set_max = 0
-
-    for index, row in members.iterrows():
-        if int(row["max_days_since_first_service"]) > set_max:
-            set_max = int(row["max_days_since_first_service"])
-
+    set_max = members['max_days_since_first_service'].max()
     width = set_max / 10
 
-    result_dict = {
-        '0 - ' + str(width):0,
-        str(width) + ' - ' + str(width*2):0,
-        str(width*2) + ' - ' + str(width*3):0,
-        str(width*3) + ' - ' + str(width*4):0,
-        str(width*4) + ' - ' + str(width*5):0,
-        str(width*5) + ' - ' + str(width*6):0,
-        str(width*6) + ' - ' + str(width*7):0,
-        str(width*7) + ' - ' + str(width*8):0,
-        str(width*8) + ' - ' + str(width*9):0,
-        str(width*9) + ' - ' + str(set_max):0
+    conditions = [
+        (members['max_days_since_first_service'] >= 0) & (members['max_days_since_first_service'] < width),
+        (members['max_days_since_first_service'] >= width) & (members['max_days_since_first_service'] < width * 2),
+        (members['max_days_since_first_service'] >= width * 2) & (members['max_days_since_first_service'] < width * 3),
+        (members['max_days_since_first_service'] >= width * 3) & (members['max_days_since_first_service'] < width * 4),
+        (members['max_days_since_first_service'] >= width * 4) & (members['max_days_since_first_service'] < width * 5),
+        (members['max_days_since_first_service'] >= width * 5) & (members['max_days_since_first_service'] < width * 6),
+        (members['max_days_since_first_service'] >= width * 6) & (members['max_days_since_first_service'] < width * 7),
+        (members['max_days_since_first_service'] >= width * 7) & (members['max_days_since_first_service'] < width * 8),
+        (members['max_days_since_first_service'] >= width * 8) & (members['max_days_since_first_service'] < width * 9),
+        (members['max_days_since_first_service'] >= width * 9) & (members['max_days_since_first_service'] <= set_max)
+    ]
+    values = [
+        '0 - ' + str(width),
+        str(width) + ' - ' + str(width*2),
+        str(width*2) + ' - ' + str(width*3),
+        str(width*3) + ' - ' + str(width*4),
+        str(width*4) + ' - ' + str(width*5),
+        str(width*5) + ' - ' + str(width*6),
+        str(width*6) + ' - ' + str(width*7),
+        str(width*7) + ' - ' + str(width*8),
+        str(width*8) + ' - ' + str(width*9),
+        str(width*9) + ' - ' + str(set_max)
+    ]
+    sort_buckets_dict = {
+        values[0]: 0,
+        values[1]: 1,
+        values[2]: 2,
+        values[3]: 3,
+        values[4]: 4,
+        values[5]: 5,
+        values[6]: 6,
+        values[7]: 7,
+        values[8]: 8,
+        values[9]: 9
     }
 
-    for index, row in members.iterrows():
+    members['buckets'] = np.select(conditions, values)
+    members = members.groupby('buckets').size().to_frame('count')
+    members = members.sort_values(by = 'buckets', key = lambda x: x.map(sort_buckets_dict))
 
-        max_days = int(row["max_days_since_first_service"])
-
-        if max_days >= 0 and max_days < width:
-            result_dict['0 - ' + str(width)]+=1
-        elif max_days >= width and max_days < (width*2):
-            result_dict[str(width) + ' - ' + str(width*2)]+=1
-        elif max_days >= (width*2) and max_days < (width*3):
-            result_dict[str(width*2) + ' - ' + str(width*3)]+=1
-        elif max_days >= (width*3) and max_days < (width*4):
-            result_dict[str(width*3) + ' - ' + str(width*4)]+=1
-        elif max_days >= (width*4) and max_days < (width*5):
-            result_dict[str(width*4) + ' - ' + str(width*5)]+=1
-        elif max_days >= (width*5) and max_days < (width*6):
-            result_dict[str(width*5) + ' - ' + str(width*6)]+=1
-        elif max_days >= (width*6) and max_days < (width*7):
-            result_dict[str(width*6) + ' - ' + str(width*7)]+=1
-        elif max_days >= (width*7) and max_days < (width*8):
-            result_dict[str(width*7) + ' - ' + str(width*8)]+=1
-        elif max_days >= (width*8) and max_days < (width*9):
-            result_dict[str(width*8) + ' - ' + str(width*9)]+=1
-        elif max_days >= (width*9) and max_days <= set_max:
-            result_dict[str(width*9) + ' - ' + str(set_max)]+=1
-
-    return json.dumps(result_dict)
+    return members['count'].to_json()
 
 
