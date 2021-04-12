@@ -12,11 +12,13 @@ def get_geo_coverage(data: 'list[DataFrame]'):
     families = data[1]
 
     families = families.assign(has_dim_geo_id=np.where(families.dimgeo_id>0, 1, 0))
-    families = families.groupby('has_dim_geo_id').agg(n = ('has_dim_geo_id','size'))
+    families = families.groupby('has_dim_geo_id', as_index=False).agg(n = ('has_dim_geo_id','size'))
 
-    num_has_geo = families.iloc[1]['n']
-    sum = families['n'].sum()
+    has_geo = families[families['has_dim_geo_id']==1]
+    no_geo = families[families['has_dim_geo_id']==0]
 
+    num_has_geo = has_geo['n'].sum()
+    sum = has_geo['n'].sum() + no_geo['n'].sum()
     return np.round(num_has_geo / sum, 3)
 
 #data def 48
@@ -35,15 +37,17 @@ def get_geo_breakdown_fam_state(data: 'list[DataFrame]'):
 #data def 49
 def get_geographic_breakdown_fam_county(data: 'list[DataFrame]'):
     members = data[2]
-    members =members.groupby(['fips_cnty'])
+    members =members.groupby('fips_cnty',dropna=False)
     members = members.agg(n_families = ("research_family_key", "nunique"), n_indv = ("research_member_key","count"))
+    members.index = members.index.astype("Int64").astype(str)
     return members.to_json()
 
 #data def 50
 def get_geographic_breakdown_fam_zcta(data: 'list[DataFrame]'):
      members = data[2]
-     members =members.groupby(['fips_zcta'])
+     members =members.groupby('fips_zcta',dropna=False)
      members = members.agg(n_families = ("research_family_key", "nunique"), n_indv = ("research_member_key","count"))
+     members.index = members.index.astype("Int64").astype(str)
      return members.to_json()
 
 # data def 51
