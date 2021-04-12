@@ -379,124 +379,124 @@ class TasksGenTesting(TestCase):
             # ensuring the generated report was actually saved to the database
             self.assertTrue(Report.objects.filter(report_schedule_id = rs.pk).exists())
 
-# """
-# Testing the django POST and GET request
-# """
-# class GetPostTesting(TestCase):
-#     """
-#     Setting up test model instances for the test database that Django creates
-#     """
-#     @classmethod
-#     def setUpTestData(cls):
-# 		c = Client()
+"""
+Testing the django POST and GET request
+"""
+class GetPostTesting(TestCase):
+    """
+    Setting up test model instances for the test database that Django creates
+    """
+    @classmethod
+    def setUpTestData(cls):
+		c = Client()
   		
-#     def postCleanTest(self):
-#         rt = 1
-#         tft = 2
-#         rs = 3
-#         rsv = ""
-#         ct = 1
-#         rd = 1
-#         cagi = 1
-#         ds = "2021-04-07"
-#         response = c.post('/api/report_schedules', {"run_type": rt,
-#                                                     "timeframe_type": tft,
-#                                                     "report_scope": rs,
-#                                                     "report_scope_value": rsv,
-#                                                     "control_type": ct,
-#                                                     "reporting_dictionary": rd,
-#                                                     "control_age_group_id": cagi,
-#                                                     "date_scheduled": ds}  )
+    def postCleanTest(self):
+        rt = 1
+        tft = 2
+        rs = 3
+        rsv = ""
+        ct = 1
+        rd = 1
+        cagi = 1
+        ds = "2021-04-07"
+        response = c.post('/api/report_schedules', {"run_type": rt,
+                                                    "timeframe_type": tft,
+                                                    "report_scope": rs,
+                                                    "report_scope_value": rsv,
+                                                    "control_type": ct,
+                                                    "reporting_dictionary": rd,
+                                                    "control_age_group_id": cagi,
+                                                    "date_scheduled": ds}  )
         
-#         self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
         
-#         response = c.post('/api/report_schedules', {"run_type": "dog",
-#                                                     "timeframe_type": tft,
-#                                                     "report_scope": rs,
-#                                                     "report_scope_value": rsv,
-#                                                     "control_type": ct,
-#                                                     "reporting_dictionary": rd,
-#                                                     "control_age_group_id": cagi,
-#                                                     "date_scheduled": ds}  )
-#         self.assertTrue(response.status_code != 200)
+        response = c.post('/api/report_schedules', {"run_type": "dog",
+                                                    "timeframe_type": tft,
+                                                    "report_scope": rs,
+                                                    "report_scope_value": rsv,
+                                                    "control_type": ct,
+                                                    "reporting_dictionary": rd,
+                                                    "control_age_group_id": cagi,
+                                                    "date_scheduled": ds}  )
+        self.assertTrue(response.status_code != 200)
         
-#         response = c.post('/api/report_schedules', {"run_type": rt,
-#                                                     "timeframe_type": "cat",
-#                                                     "report_scope": rs,
-#                                                     "report_scope_value": rsv,
-#                                                     "control_type": ct,
-#                                                     "reporting_dictionary": rd,
-#                                                     "control_age_group_id": cagi,
-#                                                     "date_scheduled": ds}  )
+        response = c.post('/api/report_schedules', {"run_type": rt,
+                                                    "timeframe_type": "cat",
+                                                    "report_scope": rs,
+                                                    "report_scope_value": rsv,
+                                                    "control_type": ct,
+                                                    "reporting_dictionary": rd,
+                                                    "control_age_group_id": cagi,
+                                                    "date_scheduled": ds}  )
         
-#         self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
         
-#         response = c.post('/api/report_schedules', {"run_type": rt,
-#                                                     "timeframe_type": tft,
-#                                                     "report_scope": "fish",
-#                                                     "report_scope_value": rsv,
-#                                                     "control_type": ct,
-#                                                     "reporting_dictionary": rd,
-#                                                     "control_age_group_id": cagi,
-#                                                     "date_scheduled": ds}  )
+        response = c.post('/api/report_schedules', {"run_type": rt,
+                                                    "timeframe_type": tft,
+                                                    "report_scope": "fish",
+                                                    "report_scope_value": rsv,
+                                                    "control_type": ct,
+                                                    "reporting_dictionary": rd,
+                                                    "control_age_group_id": cagi,
+                                                    "date_scheduled": ds}  )
         
-#         self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
         
-#         response = c.post('/api/report_schedules', {"run_type": rt,
-#                                                     "timeframe_type": tft,
-#                                                     "report_scope": rs,
-#                                                     "report_scope_value": -1,
-#                                                     "control_type": ct,
-#                                                     "reporting_dictionary": rd,
-#                                                     "control_age_group_id": cagi,
-#                                                     "date_scheduled": ds}  )
+        response = c.post('/api/report_schedules', {"run_type": rt,
+                                                    "timeframe_type": tft,
+                                                    "report_scope": rs,
+                                                    "report_scope_value": -1,
+                                                    "control_type": ct,
+                                                    "reporting_dictionary": rd,
+                                                    "control_age_group_id": cagi,
+                                                    "date_scheduled": ds}  )
         
-#         self.assertEqual(response.status_code, 200)
-        
-        
-#         response = c.post('/api/report_schedules', {"run_type": rt,
-#                                                     "timeframe_type": tft,
-#                                                     "report_scope": rs,
-#                                                     "report_scope_value": rsv,
-#                                                     "control_type": "snake",
-#                                                     "reporting_dictionary": rd,
-#                                                     "control_age_group_id": cagi,
-#                                                     "date_scheduled": ds}  )
-        
-#         self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
         
         
-#         response = c.post('/api/report_schedules', {"run_type": rt,
-#                                                     "timeframe_type": tft,
-#                                                     "report_scope": rs,
-#                                                     "report_scope_value": rsv,
-#                                                     "control_type": ct,
-#                                                     "reporting_dictionary": "bird",
-#                                                     "control_age_group_id": cagi,
-#                                                     "date_scheduled": ds}  )
+        response = c.post('/api/report_schedules', {"run_type": rt,
+                                                    "timeframe_type": tft,
+                                                    "report_scope": rs,
+                                                    "report_scope_value": rsv,
+                                                    "control_type": "snake",
+                                                    "reporting_dictionary": rd,
+                                                    "control_age_group_id": cagi,
+                                                    "date_scheduled": ds}  )
         
-#         self.assertEqual(response.status_code, 200)
-        
-        
-#         response = c.post('/api/report_schedules', {"run_type": rt,
-#                                                     "timeframe_type": tft,
-#                                                     "report_scope": rs,
-#                                                     "report_scope_value": rsv,
-#                                                     "control_type": ct,
-#                                                     "reporting_dictionary": rd,
-#                                                     "control_age_group_id": "hamster",
-#                                                     "date_scheduled": ds}  )
-        
-#         self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
         
         
-#         response = c.post('/api/report_schedules', {"run_type": rt,
-#                                                     "timeframe_type": tft,
-#                                                     "report_scope": rs,
-#                                                     "report_scope_value": rsv,
-#                                                     "control_type": ct,
-#                                                     "reporting_dictionary": rd,
-#                                                     "control_age_group_id": cagi,
-#                                                     "date_scheduled": "Today"}  )
+        response = c.post('/api/report_schedules', {"run_type": rt,
+                                                    "timeframe_type": tft,
+                                                    "report_scope": rs,
+                                                    "report_scope_value": rsv,
+                                                    "control_type": ct,
+                                                    "reporting_dictionary": "bird",
+                                                    "control_age_group_id": cagi,
+                                                    "date_scheduled": ds}  )
         
-#         self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
+        
+        
+        response = c.post('/api/report_schedules', {"run_type": rt,
+                                                    "timeframe_type": tft,
+                                                    "report_scope": rs,
+                                                    "report_scope_value": rsv,
+                                                    "control_type": ct,
+                                                    "reporting_dictionary": rd,
+                                                    "control_age_group_id": "hamster",
+                                                    "date_scheduled": ds}  )
+        
+        self.assertEqual(response.status_code, 200)
+        
+        
+        response = c.post('/api/report_schedules', {"run_type": rt,
+                                                    "timeframe_type": tft,
+                                                    "report_scope": rs,
+                                                    "report_scope_value": rsv,
+                                                    "control_type": ct,
+                                                    "reporting_dictionary": rd,
+                                                    "control_age_group_id": cagi,
+                                                    "date_scheduled": "Today"}  )
+        
+        self.assertEqual(response.status_code, 200)
