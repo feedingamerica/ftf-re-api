@@ -12,11 +12,13 @@ def get_geo_coverage(data: 'list[DataFrame]'):
     families = data[1]
 
     families = families.assign(has_dim_geo_id=np.where(families.dimgeo_id>0, 1, 0))
-    families = families.groupby('has_dim_geo_id').agg(n = ('has_dim_geo_id','size'))
+    families = families.groupby('has_dim_geo_id', as_index=False).agg(n = ('has_dim_geo_id','size'))
 
-    num_has_geo = families.iloc[1]['n']
-    sum = families['n'].sum()
+    has_geo = families[families['has_dim_geo_id']==1]
+    no_geo = families[families['has_dim_geo_id']==0]
 
+    num_has_geo = has_geo['n'].sum()
+    sum = has_geo['n'].sum() + no_geo['n'].sum()
     return np.round(num_has_geo / sum, 3)
 
 #data def 48
