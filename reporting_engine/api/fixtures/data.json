@@ -684,7 +684,7 @@
       "definition_public": "Provides the mean length of time between all families' first service and most recent service.",
       "calculation_notes": "Base families, summarize for mean of max(fact_services.days_since_first_service)",
       "interpretation_notes": "Use this information to gain insight into how long families served in the report scope have been engaged with the feeding network.",
-      "data_definition_type_id": 1
+      "data_definition_type_id": 3
     }
   },
   {
@@ -706,7 +706,7 @@
       "definition_public": "Provides the mean length of time between all individuals' first service and most recent service.",
       "calculation_notes": "Base members, summarize for mean of max(fact_service_members.days_since_first_service)",
       "interpretation_notes": "Use this information to gain insight into how long individuals served in the report scope have been engaged with the feeding network.",
-      "data_definition_type_id": 1
+      "data_definition_type_id": 3
     }
   },
   {
@@ -780,10 +780,10 @@
     "pk": 52,
     "fields": {
       "name": "distance_traveled",
-      "definition_public": "",
-      "calculation_notes": "",
-      "interpretation_notes": "",
-      "data_definition_type_id": null
+      "definition_public": "Summarizes the distances travelled to receive food, from the family's location to the agency's physical location.",
+      "calculation_notes": "Base services, filter for dummy_trip == 1, mutate distance rollup, group by distance rollup, summarise count of services, mean distance, minimum distance, maximum distance.",
+      "interpretation_notes": "Not all families are equally located near points of service. For urban areas, this is distribution typically shows the majority of visits happen within four miles. Many factors go into choosing sites for locations, when comparing geographies ones with a higher mean distance travelled may be good candiates for more local distributions or mobile outreach strategies.",
+      "data_definition_type_id": 2
     }
   },
   {
@@ -791,10 +791,10 @@
     "pk": 53,
     "fields": {
       "name": "direction_traveled",
-      "definition_public": "",
-      "calculation_notes": "",
-      "interpretation_notes": "",
-      "data_definition_type_id": null
+      "definition_public": "Summarizes the direction travelled to receive food, from the family's location to the agency's physical location.",
+      "calculation_notes": "Base services, filter for dummy_trip == 1, group by direction, summarise count of services, mean distance, minimum distance, maximum distance.",
+      "interpretation_notes": "Not all families are equally located near points of service, and the directions they travel may be different too. If all direction categories were equal, it would mean the services provided were perfectly placed at the center of all possible customers. Typically, there will be one or two directions most customers travel to receive services.",
+      "data_definition_type_id": 2
     }
   },
   {
@@ -802,10 +802,10 @@
     "pk": 54,
     "fields": {
       "name": "windrose",
-      "definition_public": "",
-      "calculation_notes": "",
-      "interpretation_notes": "",
-      "data_definition_type_id": null
+      "definition_public": "Combines distance and direction information into a visual to understand how individuals in certain areas travel different distances and directions to receive services.",
+      "calculation_notes": "Base services, filter for dummy_trip == 1, mutate distance rollup, group by distance rollup and direction, summarise count of services, mean distance, minimum distance, maximum distance.",
+      "interpretation_notes": "Not all families are equally located near points of service. Use the windrose to visualize where families travelled to receive services. When viewing this information for a geography report, the windrose centers nicely and shows the directions travelled to receive service (family's location -> agency's phyical location). When viewing this information for a hiearchy report, take care because the interpretation changes slightly. Be careful not to place the agency at the center of the windrose, rather, remember the data visualizes how the families travelled. If placing the agency at the center, the windrose's directions would be inverted to show where families came from.",
+      "data_definition_type_id": 2
     }
   },
   {
@@ -813,10 +813,21 @@
     "pk": 55,
     "fields": {
       "name": "sites_visited_distribution",
-      "definition_public": "",
-      "calculation_notes": "",
-      "interpretation_notes": "",
-      "data_definition_type_id": null
+      "definition_public": "Shows how many sites within the reporting scope families accessed to secure the resources they need. Of most use for geography reporting.",
+      "calculation_notes": "Base services, group by loc_id and research_family_key, summarize count of services per family. Provides a data set of 'family locations'. Group by research family key, summarize count of sites visits by family. Provides a dataset of sits visited per family. Group by sites visited, provides a frequency distribution of number of sites visited.",
+      "interpretation_notes": "This information is only useful if your report scope is large enough to show visits to multiple sites. For Hierarchy reporting at the location, and event level - there will only be one location represented. However, for hierarchy reports at the organization, county, food bank, and state level, as well as all geography reporting, this information will be useful and gives insight into how many or how few different sites a family uses to secure the resources they need.",
+      "data_definition_type_id": 2
+    }
+  },
+  {
+    "model": "api.DataDefinition",
+    "pk": 56,
+    "fields": {
+      "name": "dummy_trip_coverage",
+      "definition_public": "Dummy Trip Coverage provides a proportion of how many fact_services in the report scope have geographic information about the dim_family and dim_hierarchy_event.",
+      "calculation_notes": "Base services, filter for dummy_trip == 1, count number of rows. Divide by total number of rows for base services.",
+      "interpretation_notes": "This proportion tells you how much of the fact_services data is enriched appropriately for distances and direction calculations.",
+      "data_definition_type_id": 3
     }
   },
   {
@@ -1239,7 +1250,97 @@
     "fields": {
       "report_dictionary_id": 1,
       "data_definition_id": 46,
-      "section_id": 4
+      "section_id": 5
+    }
+  },
+  {
+    "model": "api.ReportingDictionaryDefinition",
+    "pk": 48,
+    "fields": {
+      "report_dictionary_id": 1,
+      "data_definition_id": 47,
+      "section_id": 5
+    }
+  },
+  {
+    "model": "api.ReportingDictionaryDefinition",
+    "pk": 49,
+    "fields": {
+      "report_dictionary_id": 1,
+      "data_definition_id": 48,
+      "section_id": 5
+    }
+  },
+  {
+    "model": "api.ReportingDictionaryDefinition",
+    "pk": 50,
+    "fields": {
+      "report_dictionary_id": 1,
+      "data_definition_id": 49,
+      "section_id": 5
+    }
+  },
+  {
+    "model": "api.ReportingDictionaryDefinition",
+    "pk": 51,
+    "fields": {
+      "report_dictionary_id": 1,
+      "data_definition_id": 50,
+      "section_id": 5
+    }
+  },
+  {
+    "model": "api.ReportingDictionaryDefinition",
+    "pk": 52,
+    "fields": {
+      "report_dictionary_id": 1,
+      "data_definition_id": 51,
+      "section_id": 5
+    }
+  },
+  {
+    "model": "api.ReportingDictionaryDefinition",
+    "pk": 53,
+    "fields": {
+      "report_dictionary_id": 1,
+      "data_definition_id": 52,
+      "section_id": 5
+    }
+  },
+  {
+    "model": "api.ReportingDictionaryDefinition",
+    "pk": 54,
+    "fields": {
+      "report_dictionary_id": 1,
+      "data_definition_id": 53,
+      "section_id": 5
+    }
+  },
+  {
+    "model": "api.ReportingDictionaryDefinition",
+    "pk": 55,
+    "fields": {
+      "report_dictionary_id": 1,
+      "data_definition_id": 54,
+      "section_id": 5
+    }
+  },
+  {
+    "model": "api.ReportingDictionaryDefinition",
+    "pk": 56,
+    "fields": {
+      "report_dictionary_id": 1,
+      "data_definition_id": 55,
+      "section_id": 5
+    }
+  },
+  {
+    "model": "api.ReportingDictionaryDefinition",
+    "pk": 57,
+    "fields": {
+      "report_dictionary_id": 1,
+      "data_definition_id": 56,
+      "section_id": 5
     }
   },
   {
