@@ -312,7 +312,7 @@ def get_demo1_mofc(request):
         "distribution_outlets"
     ]
     
-    num_defs = len(Data_Service.data_def_function_switcher)
+    num_defs = len(data_def_names)
     for i in range(1, num_defs + 1):
         data_def = {
             "reportScheduleId":1,
@@ -832,4 +832,5 @@ def test_geos_no_dummy_trip(request):
     context = { 'report_output': format_dict(cd.request) }
     print_dict(sample_dict)
     return render(request, 'transformapi/get-report.html', context)
+
 
