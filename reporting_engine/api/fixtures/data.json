@@ -1363,8 +1363,7 @@
     "fields":{
         "name" : "Last Month",
         "dim_dates_reference" : "NA",
-        "current_start_date" : "2021-01-01",
-        "current_end_date": "2021-01-31"
+        "recurrence_type": "Monthly"
     }
   },
   {
@@ -1373,8 +1372,7 @@
     "fields":{
         "name" : "Rolling 12 Months",
         "dim_dates_reference" : "NA",
-        "current_start_date" : "2020-02-01",
-        "current_end_date": "2021-01-31"
+        "recurrence_type": "Monthly"
     }
   },
   {
@@ -1383,8 +1381,7 @@
     "fields":{
         "name" : "CY To Date",
         "dim_dates_reference" : "CalendarYear",
-        "current_start_date" : "2020-01-01",
-        "current_end_date": "2021-01-31"
+        "recurrence_type": "Monthly"
     }
   },
   {
@@ -1393,8 +1390,7 @@
     "fields":{
         "name" : "Fiscal year to date",
         "dim_dates_reference" : "JulFiscalYear",
-        "current_start_date" : "2020-07-01",
-        "current_end_date": "2021-01-31"
+        "recurrence_type": "Monthly"
     }
   },
   {
@@ -1404,111 +1400,172 @@
         "name" : "Custom Date Range",
         "dim_dates_reference" : "NA"
     }
-},
-{
-  "model": "api.AddinManager",
-  "pk": 1,
-  "fields": {
-    "name": "Ohio Addin",
-    "reporting_dictionary_id": 2,
-    "report_scope_id": 6,
-    "report_scope_value": 39,
-    "control_type_id" : 1
-
-   }
-},
-{
-  "model": "api.AddinManager",
-  "pk": 2,
-  "fields": {
-    "name": "MOFC Addin",
-    "reporting_dictionary_id": 3,
-    "report_scope_id": 5,
-    "report_scope_value": 21,
-    "control_type_id" : 1
+  },
+  {
+    "model": "api.AddinManager",
+    "pk": 1,
+    "fields": {
+      "name": "Ohio Addin",
+      "reporting_dictionary_id": 2,
+      "report_scope_id": 6,
+      "report_scope_value": 39,
+      "control_type_id" : 1
+    }
+  },
+  {
+    "model": "api.AddinManager",
+    "pk": 2,
+    "fields": {
+      "name": "MOFC Addin",
+      "reporting_dictionary_id": 3,
+      "report_scope_id": 5,
+      "report_scope_value": 21,
+      "control_type_id" : 1
+    }
+  },
+  {
+    "model": "api.AddinManager",
+    "pk": 3,
+    "fields": {
+      "name": "Virginia Addin",
+      "reporting_dictionary_id": 4,
+      "report_scope_id": 6,
+      "report_scope_value": 51,
+      "control_type_id" : 5
+    }
+  },
+  {
+    "model": "api.ReportingDictionarySection",
+    "pk": 1,
+    "fields": {
+        "name": "Big Numbers",
+        "reporting_dictionary_id": 1
+    }
+  },
+  {
+    "model": "api.ReportingDictionarySection",
+    "pk": 2,
+    "fields": {
+        "name": "Service",
+        "reporting_dictionary_id": 1
+    }
+  },
+  {
+    "model": "api.ReportingDictionarySection",
+    "pk": 3,
+    "fields": {
+        "name": "Families",
+        "reporting_dictionary_id": 1
+    }
+  },
+  {
+    "model": "api.ReportingDictionarySection",
+    "pk": 4,
+    "fields": {
+        "name": "New Families",
+        "reporting_dictionary_id": 1
+    }
+  },
+  {
+    "model": "api.ReportingDictionarySection",
+    "pk": 5,
+    "fields": {
+        "name": "Geographic Origin",
+        "reporting_dictionary_id": 1
+    }
+  },
+  {
+    "model": "api.ReportingDictionarySection",
+    "pk": 6,
+    "fields": {
+        "name": "Family Members",
+        "reporting_dictionary_id": 1
+    }
+  },
+  {
+    "model": "api.ReportingDictionarySection",
+    "pk": 7,
+    "fields": {
+        "name": "Trends",
+        "reporting_dictionary_id": 1
+    }
+  },
+  {
+    "model": "api.ReportingDictionarySection",
+    "pk": 8,
+    "fields": {
+        "name": "Ohio Add-in",
+        "reporting_dictionary_id": 2
+    }
+  },
+  {
+    "model": "api.ReportingDictionarySection",
+    "pk": 9,
+    "fields": {
+        "name": "MOFC Add-in",
+        "reporting_dictionary_id": 3
+    }
+  },
+  {
+    "model": "django_celery_beat.CrontabSchedule",
+    "pk": 1,
+    "fields": {
+      "minute": 0,
+      "hour": 3,
+      "day_of_month": 5
+    }
+  },
+  {
+    "model": "django_celery_beat.CrontabSchedule",
+    "pk": 2,
+    "fields": {
+      "minute": 0,
+      "hour": 3,
+      "day_of_week": 0
+    }
+  },
+  {
+    "model": "django_celery_beat.CrontabSchedule",
+    "pk": 3,
+    "fields": {
+      "minute": 0,
+      "hour": 3
+    }
+  },
+  {
+    "model": "django_celery_beat.PeriodicTask",
+    "pk": 1,
+    "fields": {
+      "name": "Periodic Generation -- Monthly Recurrences",
+      "task": "api.tasks.periodic_report_generation",
+      "crontab_id": 1,
+      "args": "Monthly",
+      "date_changed": "2021-04-13 15:59:38.835719+00:00",
+      "description": "Runs all report schedules that have a timeframe type whose recurrence is monthly. It runs according to the crontab schedule with pk 1 -- the fifth of every month, at 3 AM (UTC)."
+    }
+  },
+  {
+    "model": "django_celery_beat.PeriodicTask",
+    "pk": 2,
+    "fields": {
+      "name": "Periodic Generation -- Weekly Recurrences",
+      "task": "api.tasks.periodic_report_generation",
+      "crontab_id": 2,
+      "args": "Weekly",
+      "date_changed": "2021-04-13 15:59:38.835719+00:00",
+      "description": "Runs all report schedules that have a timeframe type whose recurrence is weekly. It runs according to the crontab schedule with pk 2 -- every Sunday at 3 AM (UTC)."
+    }
+  },
+  {
+    "model": "django_celery_beat.PeriodicTask",
+    "pk": 3,
+    "fields": {
+      "name": "Periodic Generation -- Daily Recurrences",
+      "task": "api.tasks.periodic_report_generation",
+      "crontab_id": 3,
+      "args": "Daily",
+      "date_changed": "2021-04-13 15:59:38.835719+00:00",
+      "description": "Runs all report schedules that have a timeframe type whose recurrence is daily. It runs according to the crontab schedule with pk 3 -- every day at 3 AM (UTC)."
+    }
   }
-},
-{
-  "model": "api.AddinManager",
-  "pk": 3,
-  "fields": {
-    "name": "Virginia Addin",
-    "reporting_dictionary_id": 4,
-    "report_scope_id": 6,
-    "report_scope_value": 51,
-    "control_type_id" : 5
-  }
-},
-{
-  "model": "api.ReportingDictionarySection",
-  "pk": 1,
-  "fields": {
-      "name": "Big Numbers",
-      "reporting_dictionary_id": 1
-  }
-},
-{
-  "model": "api.ReportingDictionarySection",
-  "pk": 2,
-  "fields": {
-      "name": "Service",
-      "reporting_dictionary_id": 1
-  }
-},
-{
-  "model": "api.ReportingDictionarySection",
-  "pk": 3,
-  "fields": {
-      "name": "Families",
-      "reporting_dictionary_id": 1
-  }
-},
-{
-  "model": "api.ReportingDictionarySection",
-  "pk": 4,
-  "fields": {
-      "name": "New Families",
-      "reporting_dictionary_id": 1
-  }
-},
-{
-  "model": "api.ReportingDictionarySection",
-  "pk": 5,
-  "fields": {
-      "name": "Geographic Origin",
-      "reporting_dictionary_id": 1
-  }
-},
-{
-  "model": "api.ReportingDictionarySection",
-  "pk": 6,
-  "fields": {
-      "name": "Family Members",
-      "reporting_dictionary_id": 1
-  }
-},
-{
-  "model": "api.ReportingDictionarySection",
-  "pk": 7,
-  "fields": {
-      "name": "Trends",
-      "reporting_dictionary_id": 1
-  }
-},
-{
-  "model": "api.ReportingDictionarySection",
-  "pk": 8,
-  "fields": {
-      "name": "Ohio Add-in",
-      "reporting_dictionary_id": 2
-  }
-},
-{
-  "model": "api.ReportingDictionarySection",
-  "pk": 9,
-  "fields": {
-      "name": "MOFC Add-in",
-      "reporting_dictionary_id": 3
-  }
-}
 ]
