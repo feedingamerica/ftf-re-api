@@ -82,16 +82,25 @@ def get_distance_traveled(data: 'list[DataFrame]'):
         '15 - 24.99 miles',
         '25+ miles'
     ]
-
-    services['distance_roll'] = np.select(conditions, values)
-    services = services.groupby('distance_roll').agg(
-        services = ('research_service_key', 'count'),
-        mean_distance = ('distance_miles', 'mean'),
-        median_distance = ('distance_miles', 'median'),
-        min_distance = ('distance_miles', 'min'),
-        max_distance = ('distance_miles', 'max')
-    )
-    services = services.sort_values(by = 'min_distance', ascending = True)
+    if(len(services) == 0):
+        #fill with all zeroes if no services w/ dummy_trip == 1
+        v = len(values)
+        services = pd.DataFrame({'distance_roll': values, 
+                                'services': [0]*v, 
+                                'mean_distance': [0]*v, 
+                                'median_distance': [0] *v ,
+                                'min_distance': [0]*v,
+                                'max_distance': [0]*v})
+    else:
+        services['distance_roll'] = np.select(conditions, values)
+        services = services.groupby('distance_roll').agg(
+            services = ('research_service_key', 'count'),
+            mean_distance = ('distance_miles', 'mean'),
+            median_distance = ('distance_miles', 'median'),
+            min_distance = ('distance_miles', 'min'),
+            max_distance = ('distance_miles', 'max')
+        )
+        services = services.sort_values(by = 'min_distance', ascending = True)
     return services.to_json()
 
 # data def 53
@@ -99,14 +108,25 @@ def get_direction_traveled(data: 'list[DataFrame]'):
     services = data[0]
     services = services[services['dummy_trip'] == 1]
 
-    services = services.groupby('direction').agg(
-        services = ('research_service_key', 'count'),
-        mean_distance = ('distance_miles', 'mean'),
-        median_distance = ('distance_miles', 'median'),
-        min_distance = ('distance_miles', 'min'),
-        max_distance = ('distance_miles', 'max')
-    )
-    services = services.sort_values(by = 'min_distance', ascending = True)
+    if(len(services) == 0):
+        #fill with all zeroes if no services w/ dummy_trip == 1
+        directions = ['N', 'NE','E', 'SE', 'S', 'SW', 'W', 'NW'] 
+        v = len(directions)
+        services = pd.DataFrame({'direction': directions, 
+                                'services': [0]*v, 
+                                'mean_distance': [0]*v, 
+                                'median_distance': [0] *v ,
+                                'min_distance': [0]*v,
+                                'max_distance': [0]*v})
+    else:
+        services = services.groupby('direction').agg(
+            services = ('research_service_key', 'count'),
+            mean_distance = ('distance_miles', 'mean'),
+            median_distance = ('distance_miles', 'median'),
+            min_distance = ('distance_miles', 'min'),
+            max_distance = ('distance_miles', 'max')
+        )
+        services = services.sort_values(by = 'min_distance', ascending = True)
     return services.to_json()
 
 # data def 54
@@ -116,147 +136,59 @@ def get_windrose(data: 'list[DataFrame]'):
     services = services.sort_values(by = ['distance_miles','direction'], ascending = True)
 
     conditions = [
-        (services['distance_miles'] < 1) & (services['direction'] == 'NE'),
-        (services['distance_miles'] < 1) & (services['direction'] == 'N'),
-        (services['distance_miles'] < 1) & (services['direction'] == 'SE'),
-        (services['distance_miles'] < 1) & (services['direction'] == 'E'),
-        (services['distance_miles'] < 1) & (services['direction'] == 'W'),
-        (services['distance_miles'] < 1) & (services['direction'] == 'SW'),
-        (services['distance_miles'] < 1) & (services['direction'] == 'NW'),
-        (services['distance_miles'] < 1) & (services['direction'] == 'S'),
-        (services['distance_miles'] < 2) & (services['direction'] == 'NE'),
-        (services['distance_miles'] < 2) & (services['direction'] == 'N'),
-        (services['distance_miles'] < 2) & (services['direction'] == 'SE'),
-        (services['distance_miles'] < 2) & (services['direction'] == 'E'),
-        (services['distance_miles'] < 2) & (services['direction'] == 'W'),
-        (services['distance_miles'] < 2) & (services['direction'] == 'SW'),
-        (services['distance_miles'] < 2) & (services['direction'] == 'NW'),
-        (services['distance_miles'] < 2) & (services['direction'] == 'S'),
-        (services['distance_miles'] < 3) & (services['direction'] == 'NE'),
-        (services['distance_miles'] < 3) & (services['direction'] == 'N'),
-        (services['distance_miles'] < 3) & (services['direction'] == 'SE'),
-        (services['distance_miles'] < 3) & (services['direction'] == 'E'),
-        (services['distance_miles'] < 3) & (services['direction'] == 'W'),
-        (services['distance_miles'] < 3) & (services['direction'] == 'SW'),
-        (services['distance_miles'] < 3) & (services['direction'] == 'NW'),
-        (services['distance_miles'] < 3) & (services['direction'] == 'S'),
-        (services['distance_miles'] < 6) & (services['direction'] == 'NE'),
-        (services['distance_miles'] < 6) & (services['direction'] == 'N'),
-        (services['distance_miles'] < 6) & (services['direction'] == 'SE'),
-        (services['distance_miles'] < 6) & (services['direction'] == 'E'),
-        (services['distance_miles'] < 6) & (services['direction'] == 'W'),
-        (services['distance_miles'] < 6) & (services['direction'] == 'SW'),
-        (services['distance_miles'] < 6) & (services['direction'] == 'NW'),
-        (services['distance_miles'] < 6) & (services['direction'] == 'S'),
-        (services['distance_miles'] < 10) & (services['direction'] == 'NE'),
-        (services['distance_miles'] < 10) & (services['direction'] == 'N'),
-        (services['distance_miles'] < 10) & (services['direction'] == 'SE'),
-        (services['distance_miles'] < 10) & (services['direction'] == 'E'),
-        (services['distance_miles'] < 10) & (services['direction'] == 'W'),
-        (services['distance_miles'] < 10) & (services['direction'] == 'SW'),
-        (services['distance_miles'] < 10) & (services['direction'] == 'NW'),
-        (services['distance_miles'] < 10) & (services['direction'] == 'S'),
-        (services['distance_miles'] < 15) & (services['direction'] == 'NE'),
-        (services['distance_miles'] < 15) & (services['direction'] == 'N'),
-        (services['distance_miles'] < 15) & (services['direction'] == 'SE'),
-        (services['distance_miles'] < 15) & (services['direction'] == 'E'),
-        (services['distance_miles'] < 15) & (services['direction'] == 'W'),
-        (services['distance_miles'] < 15) & (services['direction'] == 'SW'),
-        (services['distance_miles'] < 15) & (services['direction'] == 'NW'),
-        (services['distance_miles'] < 15) & (services['direction'] == 'S'),
-        (services['distance_miles'] < 25) & (services['direction'] == 'NE'),
-        (services['distance_miles'] < 25) & (services['direction'] == 'N'),
-        (services['distance_miles'] < 25) & (services['direction'] == 'SE'),
-        (services['distance_miles'] < 25) & (services['direction'] == 'E'),
-        (services['distance_miles'] < 25) & (services['direction'] == 'W'),
-        (services['distance_miles'] < 25) & (services['direction'] == 'SW'),
-        (services['distance_miles'] < 25) & (services['direction'] == 'NW'),
-        (services['distance_miles'] < 25) & (services['direction'] == 'S'),
-        (services['distance_miles'] >= 25) & (services['direction'] == 'NE'),
-        (services['distance_miles'] >= 25) & (services['direction'] == 'N'),
-        (services['distance_miles'] >= 25) & (services['direction'] == 'SE'),
-        (services['distance_miles'] >= 25) & (services['direction'] == 'E'),
-        (services['distance_miles'] >= 25) & (services['direction'] == 'W'),
-        (services['distance_miles'] >= 25) & (services['direction'] == 'SW'),
-        (services['distance_miles'] >= 25) & (services['direction'] == 'NW'),
-        (services['distance_miles'] >= 25) & (services['direction'] == 'S')
+        (services['distance_miles'] < 1),
+        (services['distance_miles'] < 2),
+        (services['distance_miles'] < 3),
+        (services['distance_miles'] < 6),
+        (services['distance_miles'] < 10),
+        (services['distance_miles'] < 15),
+        (services['distance_miles'] < 25),
+        (services['distance_miles'] >= 25),
     ]
     values = [
         '< 1 mile',
-        '< 1 mile',
-        '< 1 mile',
-        '< 1 mile',
-        '< 1 mile',
-        '< 1 mile',
-        '< 1 mile',
-        '< 1 mile',
-        '1 - 1.99 miles',
-        '1 - 1.99 miles',
-        '1 - 1.99 miles',
-        '1 - 1.99 miles',
-        '1 - 1.99 miles',
-        '1 - 1.99 miles',
-        '1 - 1.99 miles',
         '1 - 1.99 miles',
         '2 - 2.99 miles',
-        '2 - 2.99 miles',
-        '2 - 2.99 miles',
-        '2 - 2.99 miles',
-        '2 - 2.99 miles',
-        '2 - 2.99 miles',
-        '2 - 2.99 miles',
-        '2 - 2.99 miles',
-        '3 - 5.99 miles',
-        '3 - 5.99 miles',
-        '3 - 5.99 miles',
-        '3 - 5.99 miles',
-        '3 - 5.99 miles',
-        '3 - 5.99 miles',
-        '3 - 5.99 miles',
         '3 - 5.99 miles',
         '6 - 9.99 miles',
-        '6 - 9.99 miles',
-        '6 - 9.99 miles',
-        '6 - 9.99 miles',
-        '6 - 9.99 miles',
-        '6 - 9.99 miles',
-        '6 - 9.99 miles',
-        '6 - 9.99 miles',
-        '10 - 14.99 miles',
-        '10 - 14.99 miles',
-        '10 - 14.99 miles',
-        '10 - 14.99 miles',
-        '10 - 14.99 miles',
-        '10 - 14.99 miles',
-        '10 - 14.99 miles',
         '10 - 14.99 miles',
         '15 - 24.99 miles',
-        '15 - 24.99 miles',
-        '15 - 24.99 miles',
-        '15 - 24.99 miles',
-        '15 - 24.99 miles',
-        '15 - 24.99 miles',
-        '15 - 24.99 miles',
-        '15 - 24.99 miles',
-        '25+ miles',
-        '25+ miles',
-        '25+ miles',
-        '25+ miles',
-        '25+ miles',
-        '25+ miles',
-        '25+ miles',
         '25+ miles'
     ]
 
-    services['distance_roll'] = np.select(conditions, values)
-    services = services.groupby(['distance_roll','direction']).agg(
-        services = ('research_service_key', 'count'),
-        mean_distance = ('distance_miles', 'mean'),
-        median_distance = ('distance_miles', 'median'),
-        min_distance = ('distance_miles', 'min'),
-        max_distance = ('distance_miles', 'max')
-    )
-    services = services.sort_values(by = 'min_distance', ascending = True)
+    if(len(services) == 0):
+        #fill with all zeroes if no services w/ dummy_trip == 1
+        directions = ['N', 'NE','E', 'SE', 'S', 'SW', 'W', 'NW']
+        direction_values = []
+        distance_roll_values = []
+       
+        for val in values:
+            for direction in directions:
+                direction_values += [direction] 
+                distance_roll_values += [val]
+
+        v = len(directions) * len(values)
+        services = pd.DataFrame({'direction': direction_values, 
+                                 'distance_roll': distance_roll_values,
+                                'services': [0]*v, 
+                                'mean_distance': [0]*v, 
+                                'median_distance': [0] *v ,
+                                'min_distance': [0]*v,
+                                'max_distance': [0]*v})
+        #have to sort but shouldn't reset index here b/c have 
+        #already split 'direction' and 'distance_roll' into their own columns
+        #services = services.sort_values(by = ['distance_roll','direction'], ascending = True)
+    else:
+        services['distance_roll'] = np.select(conditions, values)
+        services = services.groupby(['distance_roll','direction']).agg(
+            services = ('research_service_key', 'count'),
+            mean_distance = ('distance_miles', 'mean'),
+            median_distance = ('distance_miles', 'median'),
+            min_distance = ('distance_miles', 'min'),
+            max_distance = ('distance_miles', 'max')
+        )
+        services = services.sort_values(by = ['min_distance', 'direction'], ascending = True)
+        services = services.reset_index()
     return services.to_json()
 
 #data def 55
