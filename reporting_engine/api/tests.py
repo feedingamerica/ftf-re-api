@@ -388,7 +388,7 @@ class GetPostTesting(TestCase):
     """
     @classmethod
     def setUpTestData(cls):
-		c = Client()
+        c = Client()
   		
     def postCleanTest(self):
         rt = 1
