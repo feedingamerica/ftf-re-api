@@ -19,7 +19,9 @@ class DataService:
         self._fact_services = None
         self._service_types = None
         self._family_services = None
-        self._new_familiy_services = None 
+        self._new_familiy_services = None
+        #[monthly, weekly, daily] skeletons 
+        self._date_skeletons = None
 
         self.scope_type = scope["scope_type"]
         self.control_query = get_control_query(scope["control_type_name"])
@@ -47,6 +49,23 @@ class DataService:
             if(self._new_familiy_services) is None:
                 self._new_familiy_services = self.__get_new_family_services()
             return self._new_familiy_services
+        elif id <= 68:
+            
+            if(self._new_familiy_services) is None:
+                self._new_familiy_services = self.__get_new_family_services()
+            if(self._date_skeletons) is None:
+                self._date_skeletons = self.__get_date_skeletons()
+            
+            #list[0] = services
+            #list[1] = families
+            #list[2] = members
+            #list[3] = monthly_date_skeleton
+            #list[4] = weekly_date_skeleton
+            #list[5] = daily_date_skeleton
+            return self._new_familiy_services + self._date_skeletons
+
+           
+
 
 
         ## retrieves fact_services
@@ -344,7 +363,7 @@ class DataService:
 
         return [services, families, members]
 
-    def get_monthly_date_skeleton(self):
+    def __get_monthly_date_skeleton(self):
         conn = connections['source_db']
 
         query_skeleton_month = f""" 
@@ -367,7 +386,7 @@ class DataService:
 
         return skeleton
 
-    def get_weekly_date_skeleton(self):
+    def __get_weekly_date_skeleton(self):
         conn = connections['source_db']
 
         query_skeleton_week = f"""
@@ -391,7 +410,7 @@ class DataService:
 
         return skeleton
 
-    def get_daily_date_skeleton(self):
+    def __get_daily_date_skeleton(self):
         conn = connections['source_db']
 
         query_skeleton_day = f"""
@@ -411,3 +430,10 @@ class DataService:
         print(str(mem_usage), 'bytes for daily date skeleton')
 
         return skeleton
+
+    def __get_date_skeletons(self):
+        monthly = self.__get_monthly_date_skeleton()
+        weekly = self.__get_weekly_date_skeleton()
+        daily = self.__get_daily_date_skeleton()
+
+        return [monthly, weekly, daily]
