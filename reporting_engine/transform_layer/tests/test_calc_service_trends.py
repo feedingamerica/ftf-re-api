@@ -1,5 +1,7 @@
+from unittest.case import expectedFailure
 from django.test import TestCase
 from django.db import connections
+from numpy import int64
 import pandas
 from pandas.testing import assert_frame_equal, assert_series_equal
 from transform_layer.services.data_service import DataService
@@ -48,4 +50,17 @@ class CalculationsTestCase(unittest.TestCase):
         func = calc.data_calc_function_switcher[58]
         result = func(data)
         resultFrame = pandas.read_json(result)
+        assert_frame_equal(resultFrame, expected, rtol = REL_TOL)
+
+    def test_get_service_trend_time_day(self):
+        expected = pandas.read_csv(
+            os.path.join(__location__, './expected_results/test_calc_service_trends/service_trend_time_day.csv'),
+            skipinitialspace= True,
+            dtype={'n':str}
+        ).fillna('0')
+        data = TEST_DATA_SERVICE.get_data_for_definition(59)
+        func = calc.data_calc_function_switcher[59]
+        result = func(data)
+        resultFrame = pandas.read_json(result)
+        self.assertTrue(len(resultFrame) == len(expected))
         assert_frame_equal(resultFrame, expected, rtol = REL_TOL)

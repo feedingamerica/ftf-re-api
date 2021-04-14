@@ -343,13 +343,6 @@ class DataService:
         GROUP BY
             fs_mem.research_member_key
         """
-        
-        print("Services Query:")
-        print(services_query)
-        print("Families Query:")
-        print(families_query)
-        print("Members Query")
-        print(members_query)
 
         start_time = time.time()
         services = pd.read_sql(services_query, conn)
@@ -358,8 +351,6 @@ class DataService:
         print(str(time.time() - start_time), ' seconds to download new family services')
         mem_usage = services.memory_usage(deep=True).sum() + families.memory_usage(deep=True).sum() + members.memory_usage(deep=True).sum()
         print(str(mem_usage), 'bytes for new family services')
-
-        
 
         return [services, families, members]
 

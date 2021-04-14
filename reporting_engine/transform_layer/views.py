@@ -857,6 +857,13 @@ def get_service_trends(request):
                 "dataDefId":58,
                 "name":"service_trends_time_week",
                 "dataDefType":"type1"
+            },
+            {
+                "reportScheduleId":1,
+                "reportDictId":1,
+                "dataDefId":59,
+                "name":"service_trends_time_day",
+                "dataDefType":"type1"
             }
         ]
     }   
