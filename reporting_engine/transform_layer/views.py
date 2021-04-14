@@ -849,21 +849,28 @@ def get_service_trends(request):
                 "reportDictId":1,
                 "dataDefId":57,
                 "name":"service_trends_time_month",
-                "dataDefType":"type1"
+                "dataDefType":"type2"
             },
             {
                 "reportScheduleId":1,
                 "reportDictId":1,
                 "dataDefId":58,
                 "name":"service_trends_time_week",
-                "dataDefType":"type1"
+                "dataDefType":"type2"
             },
             {
                 "reportScheduleId":1,
                 "reportDictId":1,
                 "dataDefId":59,
                 "name":"service_trends_time_day",
-                "dataDefType":"type1"
+                "dataDefType":"type2"
+            },
+            {
+                "reportScheduleId":1,
+                "reportDictId":1,
+                "dataDefId":60,
+                "name":"service_trend_monthly_visits_avg",
+                "dataDefType":"type2"
             }
         ]
     }   

@@ -154,6 +154,7 @@ data_calc_function_switcher = {
         56: calc_geographies.get_dummy_trip_coverage,
         57: calc_service_trends.get_service_trend_time_month,
         58: calc_service_trends.get_service_trend_time_week,
-        59: calc_service_trends.get_service_trend_time_day
+        59: calc_service_trends.get_service_trend_time_day,
+        60: calc_service_trends.get_service_trend_monthy_visits_avg
     }
 

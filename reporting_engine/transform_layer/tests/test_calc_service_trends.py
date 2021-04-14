@@ -33,7 +33,9 @@ class CalculationsTestCase(unittest.TestCase):
         expected = pandas.read_csv(
             os.path.join(__location__, './expected_results/test_calc_service_trends/service_trend_time_month.csv'),
             skipinitialspace= True
-        )
+        ).fillna('0')
+        expected['n'] = expected['n'].astype(int64)
+
         data = TEST_DATA_SERVICE.get_data_for_definition(57)
         func = calc.data_calc_function_switcher[57]
         result = func(data)
@@ -45,21 +47,35 @@ class CalculationsTestCase(unittest.TestCase):
         expected = pandas.read_csv(
             os.path.join(__location__, './expected_results/test_calc_service_trends/service_trend_time_week.csv'),
             skipinitialspace= True
-        )
+        ).fillna('0')
+        expected['n'] = expected['n'].astype(int64)
+
         data = TEST_DATA_SERVICE.get_data_for_definition(58)
         func = calc.data_calc_function_switcher[58]
         result = func(data)
         resultFrame = pandas.read_json(result)
         assert_frame_equal(resultFrame, expected, rtol = REL_TOL)
 
+    #test data def 59
     def test_get_service_trend_time_day(self):
         expected = pandas.read_csv(
-            os.path.join(__location__, './expected_results/test_calc_service_trends/service_trend_time_day.csv'),
-            skipinitialspace= True,
-            dtype={'n':str}
+            os.path.join(__location__, './expected_results/test_calc_service_trends/service_trend_time_day.csv')
         ).fillna('0')
+        expected['n'] = expected['n'].astype(int64)
+
         data = TEST_DATA_SERVICE.get_data_for_definition(59)
         func = calc.data_calc_function_switcher[59]
+        result = func(data)
+        resultFrame = pandas.read_json(result)
+        assert_frame_equal(resultFrame, expected, rtol = REL_TOL)
+
+    #test data def 60
+    def test_get_service_trend_monthly_visits_avg(self):
+        expected = pandas.read_csv(
+            os.path.join(__location__, './expected_results/test_calc_service_trends/service_trend_monthly_visits_avg.csv')
+        ).fillna('0')
+        data = TEST_DATA_SERVICE.get_data_for_definition(60)
+        func = calc.data_calc_function_switcher[60]
         result = func(data)
         resultFrame = pandas.read_json(result)
         self.assertTrue(len(resultFrame) == len(expected))
