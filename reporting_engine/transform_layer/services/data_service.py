@@ -16,11 +16,19 @@ SCOPE_GEOGRAPHY = "geography"
 class DataService:
 
     def __init__(self, scope):
-        self.scope = scope
         self._fact_services = None
         self._service_types = None
         self._family_services = None
-        self._new_familiy_services = None 
+        self._new_familiy_services = None
+        #[monthly, weekly, daily] skeletons 
+        self._date_skeletons = None
+
+        self.scope_type = scope["scope_type"]
+        self.control_query = get_control_query(scope["control_type_name"])
+        self.scope_field = scope["scope_field"]
+        self.scope_value = scope["scope_field_value"]
+        self.start_date = date_str_to_int(scope["startDate"])
+        self.end_date = date_str_to_int(scope["endDate"])
 
     ## returns DataFrame for a specific data definition
     def get_data_for_definition(self, id):
@@ -41,6 +49,23 @@ class DataService:
             if(self._new_familiy_services) is None:
                 self._new_familiy_services = self.__get_new_family_services()
             return self._new_familiy_services
+        elif id <= 68:
+            
+            if(self._new_familiy_services) is None:
+                self._new_familiy_services = self.__get_new_family_services()
+            if(self._date_skeletons) is None:
+                self._date_skeletons = self.__get_date_skeletons()
+            
+            #list[0] = services
+            #list[1] = families
+            #list[2] = members
+            #list[3] = monthly_date_skeleton
+            #list[4] = weekly_date_skeleton
+            #list[5] = daily_date_skeleton
+            return self._new_familiy_services + self._date_skeletons
+
+           
+
 
 
         ## retrieves fact_services
@@ -50,20 +75,13 @@ class DataService:
         table1 = ""
         left1 = right1 = ""
 
-        if self.scope["scope_type"] == "hierarchy":
+        if self.scope_type  == "hierarchy":
             table1 = "dim_hierarchies"
             left1 = right1 = "hierarchy_id"
-        elif self.scope["scope_type"] == "geography":
+        elif self.scope_type  == "geography":
             table1 = "dim_geos"
             left1 = "dimgeo_id"
             right1 = "id"
-
-        control_type_name = self.scope["control_type_name"]
-        control_query = get_control_query(control_type_name)
-        scope_field = self.scope["scope_field"]
-        scope_value = self.scope["scope_field_value"]
-        start_date = date_str_to_int(self.scope["startDate"])
-        end_date = date_str_to_int(self.scope["endDate"])
 
         query = f"""
         SELECT
@@ -85,9 +103,9 @@ class DataService:
             LEFT JOIN fact_service_members AS fsm ON fs.research_service_key = fsm.research_service_key
         WHERE
             fs.service_status = 17
-            {control_query}
-            AND t1.{scope_field} = {scope_value}
-            AND fs.date >= {start_date} AND fs.date <= {end_date}
+            {self.control_query}
+            AND t1.{self.scope_field} = {self.scope_value}
+            AND fs.date >= {self.start_date} AND fs.date <= {self.end_date}
         """
         start_time = time.time()
         result = pd.read_sql(query, conn)
@@ -101,21 +119,15 @@ class DataService:
         conn = connections['source_db']
 
         extra_join = ""
-        if self.scope["scope_type"] == "hierarchy":
+        if self.scope_type == "hierarchy":
             table1 = "dim_hierarchies"
             left1 = right1 = "hierarchy_id"
-        elif self.scope["scope_type"] == "geography":
+        elif self.scope_type == "geography":
             table1 = "dim_geos"
             left1 = "dimgeo_id"
             right1 = "id"
             extra_join = """INNER JOIN dim_hierarchies ON fact_services.hierarchy_id = dim_hierarchies.loc_id"""
 
-        control_type_name = self.scope["control_type_name"]
-        control_query = get_control_query(control_type_name)
-        scope_field = self.scope["scope_field"]
-        scope_value = self.scope["scope_field_value"]
-        start_date = date_str_to_int(self.scope["startDate"])
-        end_date = date_str_to_int(self.scope["endDate"])
 
         query = f"""
         SELECT
@@ -131,12 +143,12 @@ class DataService:
             fact_services
             INNER JOIN dim_service_types ON fact_services.service_id = dim_service_types.id
             INNER JOIN {table1} ON fact_services.{left1} = {table1}.{right1}
-            {extra_join if self.scope["scope_type"] == "geography" else ""}
+            {extra_join if self.scope_type == "geography" else ""}
         WHERE
             fact_services.service_status = 17 
-            {control_query}
-            AND fact_services.date >= {start_date} AND fact_services.date <= {end_date}
-            AND {table1}.{scope_field} = {scope_value}
+            {self.control_query}
+            AND fact_services.date >= {self.start_date} AND fact_services.date <= {self.end_date}
+            AND {table1}.{self.scope_field} = {self.scope_value}
         """
         start_time = time.time()
         result = pd.read_sql(query, conn) 
@@ -152,20 +164,13 @@ class DataService:
         table1 = ""
         left1 = right1 = ""
 
-        if self.scope["scope_type"] == "hierarchy":
+        if self.scope_type == "hierarchy":
             table1 = "dim_hierarchies"
             left1 = right1 = "hierarchy_id"
-        elif self.scope["scope_type"] == "geography":
+        elif self.scope_type == "geography":
             table1 = "dim_geos"
             left1 = "dimgeo_id"
             right1 = "id"
-
-        control_type_name = self.scope["control_type_name"]
-        control_query = get_control_query(control_type_name)
-        scope_field = self.scope["scope_field"]
-        scope_value = self.scope["scope_field_value"]
-        start_date = date_str_to_int(self.scope["startDate"])
-        end_date = date_str_to_int(self.scope["endDate"])
 
         query = f"""
         SELECT
@@ -184,9 +189,9 @@ class DataService:
             INNER JOIN {table1}  ON fact_services.{left1} = {table1}.{right1}
         WHERE
             fact_services.service_status = 17 
-            {control_query}
-            AND fact_services.date >= {start_date} AND fact_services.date <= {end_date}
-            AND {table1}.{scope_field} = {scope_value}
+            {self.control_query}
+            AND fact_services.date >= {self.start_date} AND fact_services.date <= {self.end_date}
+            AND {table1}.{self.scope_field} = {self.scope_value}
         GROUP BY
             fact_services.research_family_key,
             dim_family_compositions.family_composition_type
@@ -201,21 +206,13 @@ class DataService:
     def __get_new_family_services(self):
         conn = connections['source_db']
 
-        extra_join = ""
-        if self.scope["scope_type"] == "hierarchy":
+        if self.scope_type == "hierarchy":
             table1 = "dim_hierarchies"
             left1 = right1 = "hierarchy_id"
-        elif self.scope["scope_type"] == "geography":
+        elif self.scope_type == "geography":
             table1 = "dim_geos"
             left1 = "dimgeo_id"
             right1 = "id"
-
-        control_type_name = self.scope["control_type_name"]
-        control_query = get_control_query(control_type_name)
-        scope_field = self.scope["scope_field"]
-        scope_value = self.scope["scope_field_value"]
-        start_date = date_str_to_int(self.scope["startDate"])
-        end_date = date_str_to_int(self.scope["endDate"])
 
         services_query = f"""
         SELECT
@@ -240,7 +237,12 @@ class DataService:
             dim_geos.fips_cnty AS fips_cnty_fs,
             fs.dummy_trip,
             fs.distance_miles,
-            fs.direction
+            fs.direction,
+            fs.date,
+            dim_dates.calendaryearmonth AS calendaryearmonth,
+            dim_dates.sunyearweek       AS sunyearweek,
+            dim_dates.dayofweek         AS dayofweek,
+            dim_hierarchy_events.name  AS event_name
         FROM
             fact_services AS fs
             INNER JOIN dim_service_types ON fs.service_id = dim_service_types.id
@@ -251,9 +253,9 @@ class DataService:
             LEFT JOIN dim_geos AS dim_geos_event ON dim_hierarchy_events.dimgeo_id = dim_geos_event.id
         WHERE
             fs.service_status = 17 
-            {control_query}
-            AND fs.date >= {start_date} AND fs.date <= {end_date}
-            AND {table1}.{scope_field} = {scope_value}
+            {self.control_query}
+            AND fs.date >= {self.start_date} AND fs.date <= {self.end_date}
+            AND {table1}.{self.scope_field} = {self.scope_value}
         """
 
         families_query = f"""
@@ -283,9 +285,9 @@ class DataService:
                 LEFT JOIN dim_geos ON dim_families.dimgeo_id = dim_geos.id
             WHERE
                 fs.service_status = 17
-                {control_query}
-                AND fs.date >= {start_date} AND fs.date <= {end_date}
-                AND t1.{scope_field} = {scope_value}
+                {self.control_query}
+                AND fs.date >= {self.start_date} AND fs.date <= {self.end_date}
+                AND t1.{self.scope_field} = {self.scope_value}
             GROUP BY
                 fs.research_family_key,
                 dim_family_compositions.family_composition_type,
@@ -335,9 +337,9 @@ class DataService:
             LEFT JOIN dim_geos ON dim_families.dimgeo_id = dim_geos.id
         WHERE
             fs.service_status = 17
-            {control_query}
-            AND t1.{scope_field} = {scope_value}
-            AND fs.date >= {start_date} AND fs.date <= {end_date}
+            {self.control_query}
+            AND t1.{self.scope_field} = {self.scope_value}
+            AND fs.date >= {self.start_date} AND fs.date <= {self.end_date}
         GROUP BY
             fs_mem.research_member_key
         """
@@ -360,3 +362,78 @@ class DataService:
         
 
         return [services, families, members]
+
+    def __get_monthly_date_skeleton(self):
+        conn = connections['source_db']
+
+        query_skeleton_month = f""" 
+        SELECT
+            dim_dates.CalendarYearMonth as calendaryearmonth,
+            MIN(dim_dates.FullDate) as calendaryearmonth_start,
+            CONCAT(dim_dates.MonthName, ' - ', dim_dates.CalendarYear) as calendaryearmonth_name
+        FROM 
+            dim_dates
+        WHERE
+            dim_dates.date_key >= {self.start_date} AND dim_dates.date_key <= {self.end_date}
+        GROUP BY dim_dates.CalendarYearMonth
+        """
+        
+        start_time = time.time()
+        skeleton = pd.read_sql(query_skeleton_month, conn)
+        print(str(time.time() - start_time), ' seconds to download monthly date skeleton')
+        mem_usage = skeleton.memory_usage(deep=True).sum() 
+        print(str(mem_usage), 'bytes for monthly date skeleton')
+
+        return skeleton
+
+    def __get_weekly_date_skeleton(self):
+        conn = connections['source_db']
+
+        query_skeleton_week = f"""
+        SELECT 
+            dim_dates.SunYearWeek AS sunyearweek, 
+            MIN(dim_dates.date_key) as sunyearweek_start 
+        FROM 
+            dim_dates 
+        WHERE
+            dim_dates.date_key >= {self.start_date} 
+            AND dim_dates.date_key <= {self.end_date}
+        GROUP BY 
+            dim_dates.SunYearWeek
+        """
+
+        start_time = time.time()
+        skeleton = pd.read_sql(query_skeleton_week, conn)
+        print(str(time.time() - start_time), ' seconds to download weekly date skeleton')
+        mem_usage = skeleton.memory_usage(deep=True).sum() 
+        print(str(mem_usage), 'bytes for weekly date skeleton')
+
+        return skeleton
+
+    def __get_daily_date_skeleton(self):
+        conn = connections['source_db']
+
+        query_skeleton_day = f"""
+        SELECT 
+            dim_dates.date_key as date,
+            dim_dates.FullDate as date_label 
+        FROM dim_dates
+        WHERE
+            dim_dates.date_key >= {self.start_date} 
+            AND dim_dates.date_key <= {self.end_date}
+        """
+
+        start_time = time.time()
+        skeleton = pd.read_sql(query_skeleton_day, conn)
+        print(str(time.time() - start_time), ' seconds to download daily date skeleton')
+        mem_usage = skeleton.memory_usage(deep=True).sum() 
+        print(str(mem_usage), 'bytes for daily date skeleton')
+
+        return skeleton
+
+    def __get_date_skeletons(self):
+        monthly = self.__get_monthly_date_skeleton()
+        weekly = self.__get_weekly_date_skeleton()
+        daily = self.__get_daily_date_skeleton()
+
+        return [monthly, weekly, daily]

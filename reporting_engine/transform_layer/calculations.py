@@ -4,6 +4,9 @@ import transform_layer.calc_families as calc_families
 import transform_layer.calc_fact_services as calc_fact_services
 import transform_layer.calc_new_families as calc_new_families
 import transform_layer.calc_geographies as calc_geographies
+import transform_layer.calc_service_trends as calc_service_trends
+
+import pandas as pd
 
 BIG_NUM_NAMES = ["services_total", "undup_hh_total", "undup_indv_total", "services_per_uhh_avg"]
 DEFAULT_CTRL = "Is Grocery Service"
@@ -86,7 +89,7 @@ class CalculationDispatcher:
             # Check if services dataframe is empty
             if data[0].empty:
                 return False
-        else:
+        elif isinstance(data, pd.DataFrame):
             if data.empty:
                 return False
 
@@ -148,6 +151,8 @@ data_calc_function_switcher = {
         53: calc_geographies.get_direction_traveled,
         54: calc_geographies.get_windrose,
         55: calc_geographies.get_sites_visited_distribution,
-        56: calc_geographies.get_dummy_trip_coverage
+        56: calc_geographies.get_dummy_trip_coverage,
+        57: calc_service_trends.get_service_trend_time_month,
+        58: calc_service_trends.get_service_trend_time_week
     }
 
