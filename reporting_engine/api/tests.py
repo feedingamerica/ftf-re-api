@@ -6,11 +6,11 @@ from api.tasks import generate_report_and_save
 from api.tasks import calculate_dates
 
 """
-The tests in this file can be run using: python manage.py test api
+The tests in this file can be run using: python manage.py test api.tests
 This will run all of the tests, and Django will automatically create a test database, so nothing is added to the actual reports database
 
-The tests that test the calculate_dates function are tagged with 'calculate_dates'. To run just these tests, use: python manage.py test api --tag=calculate_dates
-Similarly, to run only the ones that test the generate_report_and_save function, use: python manage.py test api --tag=generate_report_and_save
+The tests that test the calculate_dates function are tagged with 'calculate_dates'. To run just these tests, use: python manage.py test api.tests --tag=calculate_dates
+Similarly, to run only the ones that test the generate_report_and_save function, use: python manage.py test api.tests --tag=generate_report_and_save
 """
 
 """
@@ -147,6 +147,7 @@ class TasksCalcTesting(TestCase):
 Testing the generate_report_and_save(schedule) function in api/tasks.py
 Note that for efficiency, these tests do not query the source database; no data/values are assigned to the report
 These tests only test that a report is in fact created and then saved to the test reports database
+The testing of calculating the correct values should be handled in the transform_layer folder
 """
 @tag('generate_report_and_save')
 class TasksGenTesting(TestCase):
@@ -387,7 +388,7 @@ class GetPostTesting(TestCase):
     """
     @classmethod
     def setUpTestData(cls):
-		c = Client()
+        c = Client()
   		
     def postCleanTest(self):
         rt = 1

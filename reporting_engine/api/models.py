@@ -49,7 +49,7 @@ class DataDefinition(models.Model):
 	"""Defines DataDefinition table (data_definitions in mysql database)"""
 	name = models.CharField(max_length = 255, blank = True)
 	definition_public = models.CharField(max_length = 255, blank = True)
-	calculation_notes = models.CharField(max_length = 255, blank = True)
+	calculation_notes = models.TextField(blank = True)
 	interpretation_notes = models.TextField(blank = True)
 	data_definition_type = models.ForeignKey(DataDefinitionType, on_delete = models.CASCADE, null = True, blank = True)
 	class Meta:

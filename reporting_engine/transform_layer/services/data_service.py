@@ -85,7 +85,7 @@ class DataService:
             LEFT JOIN fact_service_members AS fsm ON fs.research_service_key = fsm.research_service_key
         WHERE
             fs.service_status = 17
-            AND {control_query}
+            {control_query}
             AND t1.{scope_field} = {scope_value}
             AND fs.date >= {start_date} AND fs.date <= {end_date}
         """
@@ -134,7 +134,7 @@ class DataService:
             {extra_join if self.scope["scope_type"] == "geography" else ""}
         WHERE
             fact_services.service_status = 17 
-            AND {control_query}
+            {control_query}
             AND fact_services.date >= {start_date} AND fact_services.date <= {end_date}
             AND {table1}.{scope_field} = {scope_value}
         """
@@ -184,7 +184,7 @@ class DataService:
             INNER JOIN {table1}  ON fact_services.{left1} = {table1}.{right1}
         WHERE
             fact_services.service_status = 17 
-            AND {control_query}
+            {control_query}
             AND fact_services.date >= {start_date} AND fact_services.date <= {end_date}
             AND {table1}.{scope_field} = {scope_value}
         GROUP BY
@@ -251,7 +251,7 @@ class DataService:
             LEFT JOIN dim_geos AS dim_geos_event ON dim_hierarchy_events.dimgeo_id = dim_geos_event.id
         WHERE
             fs.service_status = 17 
-            AND {control_query}
+            {control_query}
             AND fs.date >= {start_date} AND fs.date <= {end_date}
             AND {table1}.{scope_field} = {scope_value}
         """
@@ -283,7 +283,7 @@ class DataService:
                 LEFT JOIN dim_geos ON dim_families.dimgeo_id = dim_geos.id
             WHERE
                 fs.service_status = 17
-                AND {control_query}
+                {control_query}
                 AND fs.date >= {start_date} AND fs.date <= {end_date}
                 AND t1.{scope_field} = {scope_value}
             GROUP BY
@@ -335,7 +335,7 @@ class DataService:
             LEFT JOIN dim_geos ON dim_families.dimgeo_id = dim_geos.id
         WHERE
             fs.service_status = 17
-            AND {control_query}
+            {control_query}
             AND t1.{scope_field} = {scope_value}
             AND fs.date >= {start_date} AND fs.date <= {end_date}
         GROUP BY

@@ -791,3 +791,44 @@ def get_geography(request):
    
     return render(request, 'transformapi/get-report.html', context)
 
+def test_geos_no_dummy_trip(request):
+    sample_dict = {
+        "Meta": {
+            "startDate":"4/01/2020",
+            "endDate":"4/12/2021",
+            "scope_field":"fips_zcta",
+            "scope_field_value":40359,
+            "control_type_name":"Is Grocery Service",
+            "control_type_value":1
+        },
+        "ReportInfo": [
+            {
+                "reportScheduleId":1,
+                "reportDictId":1,
+                "dataDefId":52,
+                "name":"name_one",
+                "dataDefType":"type1"
+            },
+            {
+                "reportScheduleId":1,
+                "reportDictId":1,
+                "dataDefId":53,
+                "name":"name_one",
+                "dataDefType":"type1"
+            },
+                        {
+                "reportScheduleId":1,
+                "reportDictId":1,
+                "dataDefId":54,
+                "name":"name_one",
+                "dataDefType":"type1"
+            }
+        ]
+    }
+    cd = CalculationDispatcher(sample_dict)
+    cd.run_calculations()
+
+    context = { 'report_output': format_dict(cd.request) }
+    print_dict(sample_dict)
+    return render(request, 'transformapi/get-report.html', context)
+
