@@ -534,6 +534,8 @@ class DataService:
             dayofweek,
             hour_of_day
         """
+        skeleton = pd.read_sql(query_skeleton, conn)
+        return skeleton
 
         
     def __get_date_skeletons(self):
