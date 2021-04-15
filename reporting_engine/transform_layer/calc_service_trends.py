@@ -82,6 +82,17 @@ def get_service_summary_dow(data: 'list[DataFrame]'):
     services = services.sort_values(by = 'daynameofweek', key = lambda x: x.map(sort_days_dict)).reset_index()
 
     return services.to_json()
+
+#data def 66
+def get_service_summary_hod(data: 'list[DataFrame]'):
+    services = data[0]
+    hod_skeleton = data[8]
+    hourly_services = hod_skeleton.merge(services, how = 'left', on = 'hour_of_day')
+    hourly_services = hourly_services.groupby('hour_of_day', as_index = False).agg(n_services = ('research_service_key', 'count'))
+    hourly_services = hod_skeleton.merge(hourly_services, how = 'left', on = 'hour_of_day')
+
+    return hourly_services.to_json()
+
 # data def 68
 def get_service_trend_event(data:'list[DataFrame]'):
     services = data[0]

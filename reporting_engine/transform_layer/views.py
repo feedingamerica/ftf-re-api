@@ -889,6 +889,13 @@ def get_service_trends(request):
             {
                 "reportScheduleId":1,
                 "reportDictId":1,
+                "dataDefId":66,
+                "name":"service_summary_hod",
+                "dataDefType":"type2"
+            },
+            {
+                "reportScheduleId":1,
+                "reportDictId":1,
                 "dataDefId":68,
                 "name":"service_trend_event",
                 "dataDefType":"type2"
