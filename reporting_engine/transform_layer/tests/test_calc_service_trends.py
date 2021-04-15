@@ -125,6 +125,7 @@ class CalculationsTestCase(unittest.TestCase):
         resultFrame = pandas.read_json(result)
         expected.n_services = expected.n_services.astype(int)
         self.assertTrue(len(resultFrame) == len(expected))
+        
     #test data def 68
     def test_get_service_trend_event(self):
         expected = pandas.read_csv(
