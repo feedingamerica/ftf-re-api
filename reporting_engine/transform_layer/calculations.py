@@ -10,6 +10,7 @@ import pandas as pd
 
 BIG_NUM_NAMES = ["services_total", "undup_hh_total", "undup_indv_total", "services_per_uhh_avg"]
 DEFAULT_CTRL = "Is Grocery Service"
+DEFAULT_AGE_GROUP_ID = 8
 
 class CalculationDispatcher:
     def __init__(self, request):
@@ -80,6 +81,9 @@ class CalculationDispatcher:
         # Setting the control type
         if "control_type_name" not in input_dict["Meta"]:
             input_dict["Meta"]["control_type_name"] = DEFAULT_CTRL
+
+        if "control_age_group_id" not in input_dict["Meta"]:
+            input_dict["Meta"]["control_age_group_id"] = DEFAULT_AGE_GROUP_ID
 
         return input_dict
 

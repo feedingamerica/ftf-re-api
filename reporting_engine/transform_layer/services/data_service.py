@@ -29,6 +29,7 @@ class DataService:
         self.scope_value = scope["scope_field_value"]
         self.start_date = date_str_to_int(scope["startDate"])
         self.end_date = date_str_to_int(scope["endDate"])
+        self.age_group_id = scope["control_age_group_id"]
 
     ## returns DataFrame for a specific data definition
     def get_data_for_definition(self, id):
@@ -63,10 +64,13 @@ class DataService:
             #list[4] = weekly_date_skeleton
             #list[5] = daily_date_skeleton
             #list[6] = daynameofweek_skeleton
+            #list[7] = ageband
+            #list[8] = hourofday
+            #list[9] = hourofday_dayofweek
             return self._new_familiy_services + self._date_skeletons
 
            
-
+        #return [monthly, weekly, daily, daynameofweek, ageband, hourofday, hourofday_dayofweek]
 
 
         ## retrieves fact_services
@@ -245,7 +249,10 @@ class DataService:
             dim_dates.dayofweek         AS dayofweek,
             dim_dates.CalendarYear as calendaryear,
             dim_dates.MonthOfYear as monthofyear,
-            dim_hierarchy_events.name  AS event_name
+            dim_hierarchy_events.name  AS event_name,
+            fs.dummy_time,
+            fs.time,
+            dim_times.hour_of_day
         FROM
             fact_services AS fs
             INNER JOIN dim_service_types ON fs.service_id = dim_service_types.id
@@ -254,6 +261,7 @@ class DataService:
             INNER JOIN dim_hierarchy_events ON dim_hierarchies.event_id = dim_hierarchy_events.id
             LEFT JOIN dim_geos ON fs.dimgeo_id = dim_geos.id
             LEFT JOIN dim_geos AS dim_geos_event ON dim_hierarchy_events.dimgeo_id = dim_geos_event.id
+            LEFT JOIN dim_times ON fs.time = dim_times.time_key
         WHERE
             fs.service_status = 17 
             {self.control_query}
@@ -328,7 +336,8 @@ class DataService:
             SUM( fs.is_first_service_date ) AS dim_families_timeframe_has_first_service_date,
             dim_geos.fips_state,
             dim_geos.fips_cnty,
-            dim_geos.fips_zcta
+            dim_geos.fips_zcta,
+            subselect_dim_ages.age_band_name_dash
         FROM
             fact_services AS fs
             INNER JOIN dim_service_types ON fs.service_id = dim_service_types.id
@@ -338,6 +347,12 @@ class DataService:
             INNER JOIN dim_members ON fs_mem.research_member_key = dim_members.research_member_key
             INNER JOIN dim_families ON dim_members.research_family_key = dim_families.research_family_key
             LEFT JOIN dim_geos ON dim_families.dimgeo_id = dim_geos.id
+            LEFT JOIN (SELECT 
+                        age,
+                        age_band_name_dash
+                        FROM dim_ages
+                        WHERE dim_ages.age_grouping_id = {self.age_group_id}) AS subselect_dim_ages
+                    ON dim_members.current_age = subselect_dim_ages.age
         WHERE
             fs.service_status = 17
             {self.control_query}
@@ -346,7 +361,12 @@ class DataService:
         GROUP BY
             fs_mem.research_member_key
         """
-
+        print("Services Query:")
+        print(services_query)
+        print("Families Query")
+        print(families_query)
+        print("Members Query")
+        print(members_query)
         start_time = time.time()
         services = pd.read_sql(services_query, conn)
         families = pd.read_sql(families_query, conn)
@@ -444,10 +464,85 @@ class DataService:
 
         return skeleton
 
+    #this skeleton will be different based on different input scopes
+    def __get_age_band_skeleton(self):
+        conn = connections['source_db']
+        query_skeleton_age = f"""
+        SELECT 
+            MIN(age) as min_age,
+            age_band_name_dash
+        FROM
+            dim_ages
+        WHERE
+            dim_ages.age_grouping_id = {self.age_group_id}
+        GROUP BY age_band_name_dash
+        """
+        skeleton = pd.read_sql(query_skeleton_age, conn)
+        return skeleton
+
+    def __get_hourofday_skeleton(self):
+        conn = connections['source_db']
+        query_skeleton_hod = f"""
+        SELECT
+            dim_times.hour_of_day, 
+            dim_times.hour_of_day_common, 
+            dim_times.short_time, 
+        MIN(dim_times.time_key) AS time_key_start, 
+            dim_times.is_typical_business_hour
+        FROM
+            dim_times
+        GROUP BY
+            dim_times.hour_of_day
+        """
+        skeleton = pd.read_sql(query_skeleton_hod, conn)
+        return skeleton
+
+    def __get_hourofday_dayofweek_skeleton(self):
+        conn = connections['source_db']
+        query_skeleton = f"""
+        SELECT
+            dayofweek,
+            daynameofweek,
+            hour_of_day,
+            hour_of_day_common, 
+            short_time, 
+            time_key_start, 
+            is_typical_business_hour
+        FROM
+            (SELECT
+                dim_times.hour_of_day, 
+                dim_times.hour_of_day_common, 
+                dim_times.short_time, 
+                MIN(dim_times.time_key) AS time_key_start, 
+                dim_times.is_typical_business_hour
+            FROM
+                dim_times 
+            GROUP BY
+                dim_times.hour_of_day) 
+            AS hod,
+            (SELECT
+                dim_dates.DayNameOfWeek AS daynameofweek,
+                DayOfWeek AS dayofweek
+            FROM
+                dim_dates 
+            GROUP BY
+                dim_dates.DayNameOfWeek 
+            ORDER BY
+                dim_dates.DayOfWeek ) 
+            AS daynameofweek
+        ORDER BY
+            dayofweek,
+            hour_of_day
+        """
+
+        
     def __get_date_skeletons(self):
         monthly = self.__get_monthly_date_skeleton()
         weekly = self.__get_weekly_date_skeleton()
         daily = self.__get_daily_date_skeleton()
         daynameofweek = self.__get_daynameofweek_skeleton()
+        ageband = self.__get_age_band_skeleton()
+        hourofday = self.__get_hourofday_skeleton()
+        hourofday_dayofweek = self.__get_hourofday_dayofweek_skeleton()
 
-        return [monthly, weekly, daily, daynameofweek]
+        return [monthly, weekly, daily, daynameofweek, ageband, hourofday, hourofday_dayofweek]
