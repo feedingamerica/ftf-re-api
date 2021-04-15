@@ -155,6 +155,7 @@ data_calc_function_switcher = {
         57: calc_service_trends.get_service_trend_time_month,
         58: calc_service_trends.get_service_trend_time_week,
         59: calc_service_trends.get_service_trend_time_day,
-        60: calc_service_trends.get_service_trend_monthy_visits_avg
+        60: calc_service_trends.get_service_trend_monthy_visits_avg,
+        68: calc_service_trends.get_service_trend_event
     }
 

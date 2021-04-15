@@ -80,3 +80,15 @@ class CalculationsTestCase(unittest.TestCase):
         resultFrame = pandas.read_json(result)
         self.assertTrue(len(resultFrame) == len(expected))
         assert_frame_equal(resultFrame, expected, rtol = REL_TOL)
+
+    #test data def 68
+    def test_get_service_trend_event(self):
+        expected = pandas.read_csv(
+            os.path.join(__location__, './expected_results/test_calc_service_trends/service_trend_event.csv')
+        ).fillna('0')
+        data = TEST_DATA_SERVICE.get_data_for_definition(68)
+        func = calc.data_calc_function_switcher[68]
+        result = func(data)
+        resultFrame = pandas.read_json(result)
+        self.assertTrue(len(resultFrame) == len(expected))
+        assert_frame_equal(resultFrame, expected, rtol = REL_TOL)

@@ -871,6 +871,13 @@ def get_service_trends(request):
                 "dataDefId":60,
                 "name":"service_trend_monthly_visits_avg",
                 "dataDefType":"type2"
+            },
+            {
+                "reportScheduleId":1,
+                "reportDictId":1,
+                "dataDefId":68,
+                "name":"service_trend_event",
+                "dataDefType":"type2"
             }
         ]
     }   
