@@ -23,48 +23,48 @@ class ReportViewSet(viewsets.ModelViewSet):
     """
     queryset = Report.objects.all()
     serializer_class = ReportSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [HasAPIKey | permissions.IsAuthenticated ]
     http_method_names=['get']
 
 
 class RunTypeViewSet(viewsets.ModelViewSet):
     queryset = RunType.objects.all()
     serializer_class = RunTypeSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [HasAPIKey | permissions.IsAuthenticated]
     http_method_names=['get']
 
 class TimeframeTypeViewSet(viewsets.ModelViewSet):
     queryset = TimeframeType.objects.all()
     serializer_class = TimeframeTypeSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [HasAPIKey | permissions.IsAuthenticated]
     http_method_names=['get']
 
 
 class ReportScopeViewSet(viewsets.ModelViewSet):
     queryset = ReportScope.objects.all()
     serializer_class = ReportScopeSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [HasAPIKey | permissions.IsAuthenticated]
     http_method_names=['get']
 
 
 class ControlTypeViewSet(viewsets.ModelViewSet):
     queryset = ControlType.objects.all()
     serializer_class = ControlTypeSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [HasAPIKey | permissions.IsAuthenticated]
     http_method_names=['get']
 
 
 class ReportingDictionaryViewSet(viewsets.ModelViewSet):
     queryset = ReportingDictionary.objects.all()
     serializer_class = ReportingDictionarySerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [HasAPIKey | permissions.IsAuthenticated]
     http_method_names=['get']
 
 class ReportScheduleViewSet(viewsets.ModelViewSet):
     queryset = ReportSchedule.objects.all()
     serializer_class = ReportScheduleSerializer
     http_method_names=['get', 'post']
-    # permission_classes = [permissions.IsAuthenticated]
+    # permission_classes = [HasAPIKey | permissions.IsAuthenticated]
 
     def create(self, request):
         schedule_serializer = self.serializer_class(data=request.data)
@@ -89,6 +89,7 @@ class ReportScheduleViewSet(viewsets.ModelViewSet):
         return Response(schedule_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 # this gets a list of reports
+@permission_classes([HasAPIKey])
 @api_view(['GET'])
 def get_reports(request, report_scope_id, report_scope_value):
     # getting the report's fields (note that all of these are optional report schedule parameters)

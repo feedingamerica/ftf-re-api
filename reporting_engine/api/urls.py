@@ -1,7 +1,7 @@
 from django.urls import include, path, re_path
 from . import views
 from rest_framework import routers, permissions
-
+from rest_framework_api_key.permissions import HasAPIKey
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 
@@ -12,7 +12,7 @@ schema_view = get_schema_view(
 		description='Welcome to Swagger',
 		),
 	public=True,
-	permission_classes=(permissions.IsAuthenticated, ),
+	permission_classes=(permissions.IsAuthenticated,  ),
 	)
 
 router = routers.DefaultRouter()
