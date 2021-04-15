@@ -70,6 +70,10 @@
   
 **After these steps are finished, all you have to do when coming back to work on the project is to activate the python environment: `source ./venv/bin/activate` (Mac) or `.\venv\scripts\activate` (Windows) and then you can start the django server: `python manage.py runserver`**
 
+## Swagger Documentation
+Swager docs may be accessed by going to the url */api/doc*  
+
+If you would like to add a model to Swagger, you must create a serializer as seen in api/serializers.py
 
 
 
@@ -82,3 +86,4 @@
   3. Expand the extensions pane and select python
   4. For Env File put the path as `${workspaceFolder}/reporting_engine/.env`
   5. Explanation: This will have VSCode load the .env file into its own environment variables. Since we specified the PYTHONPATH in the .env file, VSCode will know where to look for our packages. Otherwise you will get warnings in the IDE when referencing custom packages, like the services package in transform_layer.
+
