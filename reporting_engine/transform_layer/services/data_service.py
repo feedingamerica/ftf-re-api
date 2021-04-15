@@ -20,7 +20,7 @@ class DataService:
         self._service_types = None
         self._family_services = None
         self._new_familiy_services = None
-        #[monthly, weekly, daily] skeletons 
+        #[monthly, weekly, daily, daynameofweek] skeletons 
         self._date_skeletons = None
 
         self.scope_type = scope["scope_type"]
@@ -62,6 +62,7 @@ class DataService:
             #list[3] = monthly_date_skeleton
             #list[4] = weekly_date_skeleton
             #list[5] = daily_date_skeleton
+            #list[6] = daynameofweek_skeleton
             return self._new_familiy_services + self._date_skeletons
 
            
@@ -242,6 +243,8 @@ class DataService:
             dim_dates.calendaryearmonth AS calendaryearmonth,
             dim_dates.sunyearweek       AS sunyearweek,
             dim_dates.dayofweek         AS dayofweek,
+            dim_dates.CalendarYear as calendaryear,
+            dim_dates.MonthOfYear as monthofyear,
             dim_hierarchy_events.name  AS event_name
         FROM
             fact_services AS fs
@@ -422,9 +425,29 @@ class DataService:
 
         return skeleton
 
+    def __get_daynameofweek_skeleton(self):
+        conn = connections['source_db']
+
+        query_skeleton_daynameofweek = f"""
+        SELECT
+            dim_dates.DayNameOfWeek as daynameofweek
+        FROM dim_dates
+        GROUP BY dim_dates.DayNameOfWeek
+        ORDER BY dim_dates.DayOfWeek
+        """
+
+        start_time = time.time()
+        skeleton = pd.read_sql(query_skeleton_daynameofweek, conn)
+        print(str(time.time() - start_time), ' seconds to download daily date skeleton')
+        mem_usage = skeleton.memory_usage(deep=True).sum() 
+        print(str(mem_usage), 'bytes for day name of week skeleton')
+
+        return skeleton
+
     def __get_date_skeletons(self):
         monthly = self.__get_monthly_date_skeleton()
         weekly = self.__get_weekly_date_skeleton()
         daily = self.__get_daily_date_skeleton()
+        daynameofweek = self.__get_daynameofweek_skeleton()
 
-        return [monthly, weekly, daily]
+        return [monthly, weekly, daily, daynameofweek]
