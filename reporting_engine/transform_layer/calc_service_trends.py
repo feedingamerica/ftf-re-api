@@ -62,3 +62,24 @@ def get_service_trend_comparison(data: 'list[DataFrame]'):
 
     return services.to_json()
 
+# data def 65
+def get_service_summary_dow(data: 'list[DataFrame]'):
+    services = data[0]
+    skeleton_daynameofweek = data[6]
+    skeleton_daynameofweek.index = skeleton_daynameofweek.index + 1
+    sort_days_dict = {
+        'Sunday': 0,
+        'Monday': 1,
+        'Tuesday': 2,
+        'Wednesday': 3,
+        'Thursday': 4,
+        'Friday': 5,
+        'Saturday': 6
+    }
+
+    services = pd.merge(skeleton_daynameofweek, services, how = 'left', left_index = True, right_on = 'dayofweek')
+    services = services.groupby('daynameofweek').agg(n_services = ('research_service_key', 'count'))
+    services = services.sort_values(by = 'daynameofweek', key = lambda x: x.map(sort_days_dict)).reset_index()
+
+    return services.to_json()
+

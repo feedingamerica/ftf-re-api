@@ -101,4 +101,27 @@ class CalculationsTestCase(unittest.TestCase):
         func = calc.data_calc_function_switcher[64]
         result = func(data)
         resultFrame = pandas.read_json(result)
+        self.assertTrue(len(resultFrame) == len(expected))
+        assert_frame_equal(resultFrame, expected, rtol = REL_TOL)
+
+    def test_get_service_summary_dow(self):
+        expected = pandas.read_csv(
+            os.path.join(__location__, './expected_results/test_calc_service_trends/results_service_summary_dow.csv'),
+            index_col = 0
+        ).fillna(0)
+        scope = {
+            "startDate":"01/01/2020",
+            "endDate":"03/31/2021",
+            "scope_type": "hierarchy",
+            "scope_field":"loc_id",
+            "scope_field_value":6,
+            "control_type_name":"Is Grocery Service"
+        }
+        DS = DataService(scope)
+        data = DS.get_data_for_definition(65)
+        func = calc.data_calc_function_switcher[65]
+        result = func(data)
+        resultFrame = pandas.read_json(result)
+        expected.n_services = expected.n_services.astype(int)
+        self.assertTrue(len(resultFrame) == len(expected))
         assert_frame_equal(resultFrame, expected, rtol = REL_TOL)

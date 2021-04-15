@@ -837,41 +837,41 @@ def get_service_trends(request):
     sample_dict = {
         "Meta": {
             "startDate":"1/01/2020",
-            "endDate":"03/31/2021",
+            "endDate":"12/31/2020",
             "scope_field":"loc_id",
             "scope_field_value":6,
             "control_type_name":"Is Grocery Service",
             "control_type_value":1
         },
         "ReportInfo": [
-            # {
-            #     "reportScheduleId":1,
-            #     "reportDictId":1,
-            #     "dataDefId":57,
-            #     "name":"service_trends_time_month",
-            #     "dataDefType":"type2"
-            # },
-            # {
-            #     "reportScheduleId":1,
-            #     "reportDictId":1,
-            #     "dataDefId":58,
-            #     "name":"service_trends_time_week",
-            #     "dataDefType":"type2"
-            # },
-            # {
-            #     "reportScheduleId":1,
-            #     "reportDictId":1,
-            #     "dataDefId":59,
-            #     "name":"service_trends_time_day",
-            #     "dataDefType":"type2"
-            # },
-            # {
-            #     "reportScheduleId":1,
-            #     "reportDictId":1,
-            #     "dataDefId":60,
-            #     "name":"service_trend_monthly_visits_avg",
-            #     "dataDefType":"type2"
-            # },
+            {
+                "reportScheduleId":1,
+                "reportDictId":1,
+                "dataDefId":57,
+                "name":"service_trends_time_month",
+                "dataDefType":"type2"
+            },
+            {
+                "reportScheduleId":1,
+                "reportDictId":1,
+                "dataDefId":58,
+                "name":"service_trends_time_week",
+                "dataDefType":"type2"
+            },
+            {
+                "reportScheduleId":1,
+                "reportDictId":1,
+                "dataDefId":59,
+                "name":"service_trends_time_day",
+                "dataDefType":"type2"
+            },
+            {
+                "reportScheduleId":1,
+                "reportDictId":1,
+                "dataDefId":60,
+                "name":"service_trend_monthly_visits_avg",
+                "dataDefType":"type2"
+            },
             {
                 "reportScheduleId":1,
                 "reportDictId":1,
