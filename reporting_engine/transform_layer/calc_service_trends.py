@@ -82,4 +82,13 @@ def get_service_summary_dow(data: 'list[DataFrame]'):
     services = services.sort_values(by = 'daynameofweek', key = lambda x: x.map(sort_days_dict)).reset_index()
 
     return services.to_json()
+# data def 68
+def get_service_trend_event(data:'list[DataFrame]'):
+    services = data[0]
+    skeleton_month = data[3]
+
+    trend:DataFrame = skeleton_month.merge(services, how='left', on = 'calendaryearmonth')
+    trend = trend.groupby(['calendaryearmonth','event_name'], as_index = False, dropna = False).size()
+    trend = trend.rename(columns={"size": "n_services"})
+    return trend.to_json()
 

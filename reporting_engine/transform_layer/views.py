@@ -885,6 +885,13 @@ def get_service_trends(request):
                 "dataDefId":65,
                 "name":"service_summary_dow",
                 "dataDefType":"type2"
+            },
+            {
+                "reportScheduleId":1,
+                "reportDictId":1,
+                "dataDefId":68,
+                "name":"service_trend_event",
+                "dataDefType":"type2"
             }
         ]
     }   

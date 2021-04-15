@@ -158,5 +158,6 @@ data_calc_function_switcher = {
         60: calc_service_trends.get_service_trend_monthy_visits_avg,
         64: calc_service_trends.get_service_trend_comparison,
         65: calc_service_trends.get_service_summary_dow,
+        68: calc_service_trends.get_service_trend_event,
     }
 
