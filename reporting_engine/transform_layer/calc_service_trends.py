@@ -67,6 +67,16 @@ def get_service_trend_monthly_group_dup(data: 'list[DataFrame]'):
         sum_seniors = ('served_seniors',sum))
     return trend.to_json()
 
+#data def 63
+def get_service_trend_service_category(data: 'list[DataFrame]'):
+    services = data[0]
+    skeleton_month = data[3]
+    trend:DataFrame = skeleton_month.merge(services, how='left', on = 'calendaryearmonth')
+    trend = trend.groupby(['calendaryearmonth','calendaryearmonth_start','calendaryearmonth_name', 'service_category_name'], as_index=False, dropna=False).agg(
+        n_services=('research_service_key','count'))
+
+    return trend.to_json()
+
 
 # data def 64
 def get_service_trend_comparison(data: 'list[DataFrame]'):
