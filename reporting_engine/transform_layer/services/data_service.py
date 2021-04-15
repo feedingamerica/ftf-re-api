@@ -11,6 +11,7 @@ import time
 
 SCOPE_HIERARCHY = "hierarchy"
 SCOPE_GEOGRAPHY = "geography"
+DEFAULT_AGE_GROUP_ID = 8
 
 #1 instance of DataService for 1 scope
 class DataService:
@@ -29,7 +30,7 @@ class DataService:
         self.scope_value = scope["scope_field_value"]
         self.start_date = date_str_to_int(scope["startDate"])
         self.end_date = date_str_to_int(scope["endDate"])
-        self.age_group_id = scope["control_age_group_id"]
+        self.age_group_id = scope.get("control_age_group_id", 8)
 
     ## returns DataFrame for a specific data definition
     def get_data_for_definition(self, id):
@@ -64,13 +65,12 @@ class DataService:
             #list[4] = weekly_date_skeleton
             #list[5] = daily_date_skeleton
             #list[6] = daynameofweek_skeleton
-            #list[7] = ageband
-            #list[8] = hourofday
-            #list[9] = hourofday_dayofweek
+            #list[7] = ageband_skeleton
+            #list[8] = hourofday_skeleton
+            #list[9] = hourofday_dayofweek_skeleton
             return self._new_familiy_services + self._date_skeletons
 
            
-        #return [monthly, weekly, daily, daynameofweek, ageband, hourofday, hourofday_dayofweek]
 
 
         ## retrieves fact_services

@@ -165,6 +165,7 @@ data_calc_function_switcher = {
         63: calc_service_trends.get_service_trend_service_category,
         64: calc_service_trends.get_service_trend_comparison,
         65: calc_service_trends.get_service_summary_dow,
+        66: calc_service_trends.get_service_summary_hod,
         67: calc_service_trends.get_service_summary_dowhod,
         68: calc_service_trends.get_service_trend_event
     }
