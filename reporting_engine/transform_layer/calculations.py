@@ -160,9 +160,13 @@ data_calc_function_switcher = {
         58: calc_service_trends.get_service_trend_time_week,
         59: calc_service_trends.get_service_trend_time_day,
         60: calc_service_trends.get_service_trend_monthy_visits_avg,
+        61: calc_service_trends.get_service_trend_monthly_people_dup,
+        62: calc_service_trends.get_service_trend_monthly_group_dup,
+        63: calc_service_trends.get_service_trend_service_category,
         64: calc_service_trends.get_service_trend_comparison,
         65: calc_service_trends.get_service_summary_dow,
         66: calc_service_trends.get_service_summary_hod,
-        68: calc_service_trends.get_service_trend_event,
+        67: calc_service_trends.get_service_summary_dowhod,
+        68: calc_service_trends.get_service_trend_event
     }
 

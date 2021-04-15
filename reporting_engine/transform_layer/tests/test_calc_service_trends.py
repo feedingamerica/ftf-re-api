@@ -143,6 +143,7 @@ class CalculationsTestCase(unittest.TestCase):
         resultFrame = pandas.read_json(result)
         assert_frame_equal(resultFrame, expected, rtol = REL_TOL)
 
+        
     #test data def 68
     def test_get_service_trend_event(self):
         expected = pandas.read_csv(
