@@ -242,6 +242,8 @@ class DataService:
             dim_dates.calendaryearmonth AS calendaryearmonth,
             dim_dates.sunyearweek       AS sunyearweek,
             dim_dates.dayofweek         AS dayofweek,
+            dim_dates.CalendarYear as calendaryear,
+            dim_dates.MonthOfYear as monthofyear,
             dim_hierarchy_events.name  AS event_name
         FROM
             fact_services AS fs

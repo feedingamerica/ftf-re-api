@@ -47,3 +47,18 @@ def get_service_trend_monthy_visits_avg(data:'list[DataFrame]'):
     trend['services_per_family'] = round(trend['n_services']/trend['n_families'], 2)
     return trend.to_json()
 
+# data def 64
+def get_service_trend_comparison(data: 'list[DataFrame]'):
+    services = data[0]
+    skeleton_day = data[5]
+
+    max_calendaryearmonth = services['calendaryearmonth'].max()
+    monthofyear = services[services['calendaryearmonth'] == max_calendaryearmonth]
+    unique_month = monthofyear['monthofyear'].unique()[0]
+
+    services = services[services['monthofyear'] == unique_month].groupby(['calendaryear', 'calendaryearmonth', 'date'], as_index = False).agg(n = ('date', 'count'))
+    services = pd.merge(services, skeleton_day, how = 'inner', on = 'date')
+    services['order'] = services.index + 1
+
+    return services.to_json()
+
