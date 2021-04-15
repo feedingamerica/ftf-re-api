@@ -5,7 +5,7 @@ import json
 import numpy as np
 
 #data def 57
-def get_service_trend_time_month(data: 'dict[DataFrame]'):
+def get_service_trend_time_month(data: 'list[DataFrame]'):
     services = data[0]
     skeleton_month = data[3]
 
@@ -14,7 +14,7 @@ def get_service_trend_time_month(data: 'dict[DataFrame]'):
     return trend.to_json()
 
 #data def 58
-def get_service_trend_time_week(data: 'dict[DataFrame]'):
+def get_service_trend_time_week(data: 'list[DataFrame]'):
     services = data[0]
     skeleton_week = data[4]
 
