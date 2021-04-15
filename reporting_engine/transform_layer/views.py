@@ -882,6 +882,13 @@ def get_service_trends(request):
             {
                 "reportScheduleId":1,
                 "reportDictId":1,
+                "dataDefId":62,
+                "name":"service_trend_group_people",
+                "dataDefType":"type2"
+            },
+            {
+                "reportScheduleId":1,
+                "reportDictId":1,
                 "dataDefId":64,
                 "name":"service_trend_comparison",
                 "dataDefType":"type2"
