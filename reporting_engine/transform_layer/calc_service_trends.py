@@ -119,11 +119,12 @@ def get_service_summary_dowhod(data:'list[DataFrame]'):
     services = data[0]
     skeleton_dowhod = data[9]
 
-    print(skeleton_dowhod.iloc[0])
+    print(str(skeleton_dowhod.iloc[0]))
 
     trend:DataFrame = skeleton_dowhod.merge(services, how='left', on = 'dayofweek')
-    trend = trend.groupby(['dayofweek','hour_of_day'], as_index = False, dropna = False).size()
-    trend = trend.rename(columns={"size": "n_services"})
+    trend = trend.groupby(['dayofweek','daynameofweek','hour_of_day','hour_of_day_common','short_time','time_key_start',
+    'is_typical_business_hour'], as_index = False, dropna = False).size()
+    trend = trend.rename(columns={"size": "n_services"}) 
     return trend.to_json()
 
 # data def 68
