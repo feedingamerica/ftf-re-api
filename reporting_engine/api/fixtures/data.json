@@ -1540,7 +1540,8 @@
       "task": "api.tasks.periodic_report_generation",
       "crontab_id": 1,
       "args": "[\"Monthly\"]",
-      "date_changed": "2021-04-14 23:08:14.375539+00:00",
+      "enabled": 0,
+      "date_changed": "2021-04-16 14:21:33.729307+00:00",
       "description": "Runs all report schedules that have a timeframe type whose recurrence is monthly. It runs according to the crontab schedule with pk 1 -- the fifth of every month, at 3 AM (UTC)."
     }
   },
@@ -1552,7 +1553,8 @@
       "task": "api.tasks.periodic_report_generation",
       "crontab_id": 2,
       "args": "[\"Weekly\"]",
-      "date_changed": "2021-04-14 23:08:14.375539+00:00",
+      "enabled": 0,
+      "date_changed": "2021-04-16 14:21:33.729307+00:00",
       "description": "Runs all report schedules that have a timeframe type whose recurrence is weekly. It runs according to the crontab schedule with pk 2 -- every Sunday at 3 AM (UTC)."
     }
   },
@@ -1564,7 +1566,8 @@
       "task": "api.tasks.periodic_report_generation",
       "crontab_id": 3,
       "args": "[\"Daily\"]",
-      "date_changed": "2021-04-14 23:08:14.375539+00:00",
+      "enabled": 0,
+      "date_changed": "2021-04-16 14:21:33.729307+00:00",
       "description": "Runs all report schedules that have a timeframe type whose recurrence is daily. It runs according to the crontab schedule with pk 3 -- every day at 3 AM (UTC)."
     }
   }
