@@ -10,6 +10,7 @@ urlpatterns = [
     path('get-family-breakdown', views.get_family_breakdown, name = 'get-family-breakdown'),
     path('get-new-families', views.get_new_families, name="get-new-families"),
     path('get-geography', views.get_geography, name="get-geography"),
+    path('get-service-trends', views.get_service_trends, name = 'get-service-trends'),
     path('get-report-big-numbers/', views.get_report_big_numbers, name='get-report-big-numbers'),
     path('get-report-ohio/', views.get_report_ohio, name='get-report-ohio'),
     path('get-report-mofc/', views.get_report_mofc, name='get-report-mofc'),

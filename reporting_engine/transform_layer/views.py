@@ -311,7 +311,7 @@ def get_demo1_mofc(request):
         "distribution_outlets"
     ]
     
-    num_defs = len(Data_Service.data_def_function_switcher)
+    num_defs = len(data_def_names)
     for i in range(1, num_defs + 1):
         data_def = {
             "reportScheduleId":1,
@@ -831,4 +831,75 @@ def test_geos_no_dummy_trip(request):
     context = { 'report_output': format_dict(cd.request) }
     print_dict(sample_dict)
     return render(request, 'transformapi/get-report.html', context)
+
+def get_service_trends(request):
+    sample_dict = {
+        "Meta": {
+            "startDate":"1/01/2020",
+            "endDate":"12/31/2020",
+            "scope_field":"loc_id",
+            "scope_field_value":6,
+            "control_type_name":"Is Grocery Service",
+            "control_type_value":1
+        },
+        "ReportInfo": [
+            {
+                "reportScheduleId":1,
+                "reportDictId":1,
+                "dataDefId":57,
+                "name":"service_trends_time_month",
+                "dataDefType":"type2"
+            },
+            {
+                "reportScheduleId":1,
+                "reportDictId":1,
+                "dataDefId":58,
+                "name":"service_trends_time_week",
+                "dataDefType":"type2"
+            },
+            {
+                "reportScheduleId":1,
+                "reportDictId":1,
+                "dataDefId":59,
+                "name":"service_trends_time_day",
+                "dataDefType":"type2"
+            },
+            {
+                "reportScheduleId":1,
+                "reportDictId":1,
+                "dataDefId":60,
+                "name":"service_trend_monthly_visits_avg",
+                "dataDefType":"type2"
+            },
+            {
+                "reportScheduleId":1,
+                "reportDictId":1,
+                "dataDefId":64,
+                "name":"service_trend_comparison",
+                "dataDefType":"type2"
+            },
+            {
+                "reportScheduleId":1,
+                "reportDictId":1,
+                "dataDefId":65,
+                "name":"service_summary_dow",
+                "dataDefType":"type2"
+            },
+            {
+                "reportScheduleId":1,
+                "reportDictId":1,
+                "dataDefId":68,
+                "name":"service_trend_event",
+                "dataDefType":"type2"
+            }
+        ]
+    }   
+
+    cd = CalculationDispatcher(sample_dict)
+    cd.run_calculations()
+
+    context = { 'report_output': format_dict(cd.request) }
+    print_dict(sample_dict)
+    return render(request, 'transformapi/get-report.html', context)
+
 
