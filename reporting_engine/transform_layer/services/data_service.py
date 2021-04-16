@@ -30,7 +30,7 @@ class DataService:
         self.scope_value = scope["scope_field_value"]
         self.start_date = date_str_to_int(scope["startDate"])
         self.end_date = date_str_to_int(scope["endDate"])
-        self.age_group_id = scope.get("control_age_group_id", 8)
+        self.age_group_id = scope.get("control_age_group_id", DEFAULT_AGE_GROUP_ID)
 
     ## returns DataFrame for a specific data definition
     def get_data_for_definition(self, id):
@@ -56,7 +56,7 @@ class DataService:
             if(self._new_familiy_services) is None:
                 self._new_familiy_services = self.__get_new_family_services()
             if(self._date_skeletons) is None:
-                self._date_skeletons = self.__get_date_skeletons()
+                self._date_skeletons = self._get_date_skeletons()
             
             #list[0] = services
             #list[1] = families
@@ -377,7 +377,7 @@ class DataService:
 
         return [services, families, members]
 
-    def __get_monthly_date_skeleton(self):
+    def _get_monthly_date_skeleton(self):
         conn = connections['source_db']
 
         query_skeleton_month = f""" 
@@ -400,7 +400,7 @@ class DataService:
 
         return skeleton
 
-    def __get_weekly_date_skeleton(self):
+    def _get_weekly_date_skeleton(self):
         conn = connections['source_db']
 
         query_skeleton_week = f"""
@@ -424,7 +424,7 @@ class DataService:
 
         return skeleton
 
-    def __get_daily_date_skeleton(self):
+    def _get_daily_date_skeleton(self):
         conn = connections['source_db']
 
         query_skeleton_day = f"""
@@ -445,7 +445,7 @@ class DataService:
 
         return skeleton
 
-    def __get_daynameofweek_skeleton(self):
+    def _get_daynameofweek_skeleton(self):
         conn = connections['source_db']
 
         query_skeleton_daynameofweek = f"""
@@ -465,7 +465,7 @@ class DataService:
         return skeleton
 
     #this skeleton will be different based on different input scopes
-    def __get_age_band_skeleton(self):
+    def _get_age_band_skeleton(self):
         conn = connections['source_db']
         query_skeleton_age = f"""
         SELECT 
@@ -480,7 +480,7 @@ class DataService:
         skeleton = pd.read_sql(query_skeleton_age, conn)
         return skeleton
 
-    def __get_hourofday_skeleton(self):
+    def _get_hourofday_skeleton(self):
         conn = connections['source_db']
         query_skeleton_hod = f"""
         SELECT
@@ -497,7 +497,7 @@ class DataService:
         skeleton = pd.read_sql(query_skeleton_hod, conn)
         return skeleton
 
-    def __get_hourofday_dayofweek_skeleton(self):
+    def _get_hourofday_dayofweek_skeleton(self):
         conn = connections['source_db']
         query_skeleton = f"""
         SELECT
@@ -538,13 +538,13 @@ class DataService:
         return skeleton
 
         
-    def __get_date_skeletons(self):
-        monthly = self.__get_monthly_date_skeleton()
-        weekly = self.__get_weekly_date_skeleton()
-        daily = self.__get_daily_date_skeleton()
-        daynameofweek = self.__get_daynameofweek_skeleton()
-        ageband = self.__get_age_band_skeleton()
-        hourofday = self.__get_hourofday_skeleton()
-        hourofday_dayofweek = self.__get_hourofday_dayofweek_skeleton()
+    def _get_date_skeletons(self):
+        monthly = self._get_monthly_date_skeleton()
+        weekly = self._get_weekly_date_skeleton()
+        daily = self._get_daily_date_skeleton()
+        daynameofweek = self._get_daynameofweek_skeleton()
+        ageband = self._get_age_band_skeleton()
+        hourofday = self._get_hourofday_skeleton()
+        hourofday_dayofweek = self._get_hourofday_dayofweek_skeleton()
 
         return [monthly, weekly, daily, daynameofweek, ageband, hourofday, hourofday_dayofweek]
