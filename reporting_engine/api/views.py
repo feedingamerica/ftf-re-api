@@ -8,6 +8,12 @@ from .serializers import *
 from .tasks import one_time_report_generation
 from datetime import datetime
 from addins import addin_helper
+import pandas as pd
+from django.db import connections
+from pandas.core.frame import DataFrame
+import json
+from django.http import JsonResponse
+from api.endpointreport import report_total
 
 class ReportViewSet(viewsets.ModelViewSet):
     """
@@ -121,3 +127,27 @@ def get_reports(request, report_scope_id, report_scope_value):
     serializer = ReportSerializer(reports, many=True)
 
     return Response(serializer.data)
+
+#this gets all the options for a report
+@api_view(['GET'])
+def report_options(request):
+    #get all distinct dim_ages and use pandas to format it into json
+    query= "select distinct age_grouping_id, age_grouping_name, start_age, end_age, age_band_name_to from source_beta.dim_ages" 
+    conn=connections['source_db']
+    dim_ages=pd.read_sql(query, conn).reset_index().to_json(orient='records')
+    dim_ages = json.loads(dim_ages)
+    #get name and id for run_types, timeframe_types, report_scopes, control_types and reporting_dictionary
+    run_types = RunType.objects.values("id", "name")
+    timeframe_type = TimeframeType.objects.values("id", "name")
+    report_scopes = ReportScope.objects.values("id", "name")
+    control_type = ControlType.objects.values("id", "name")
+    reporting_dict  = ReportingDictionary.objects.values("id", "name")
+    #convert result to json
+    qs_json = JsonResponse({'reporting_dict': list(reporting_dict), 'control_type': list(control_type), "report_scopes":list(report_scopes), "timeframe_type":list(timeframe_type), "run_types": list(run_types), "dim_ages": dim_ages}, safe = False)
+    return qs_json
+
+#this gets a specific report given a report_id
+@api_view(['GET'])	
+def get_report_total(request, report_id):
+    report_json = report_total(report_id)
+    return report_json
