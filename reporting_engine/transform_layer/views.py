@@ -872,6 +872,27 @@ def get_service_trends(request):
                 "name":"service_trend_monthly_visits_avg",
                 "dataDefType":"type2"
             },
+             {
+                "reportScheduleId":1,
+                "reportDictId":1,
+                "dataDefId":61,
+                "name":"service_trend_monthly_people",
+                "dataDefType":"type2"
+            },
+            {
+                "reportScheduleId":1,
+                "reportDictId":1,
+                "dataDefId":62,
+                "name":"service_trend_group_people",
+                "dataDefType":"type2"
+            },
+             {
+                "reportScheduleId":1,
+                "reportDictId":1,
+                "dataDefId":63,
+                "name":"service_trend_service_category",
+                "dataDefType":"type2"
+            },
             {
                 "reportScheduleId":1,
                 "reportDictId":1,
@@ -884,6 +905,20 @@ def get_service_trends(request):
                 "reportDictId":1,
                 "dataDefId":65,
                 "name":"service_summary_dow",
+                "dataDefType":"type2"
+            },
+            {
+                "reportScheduleId":1,
+                "reportDictId":1,
+                "dataDefId":66,
+                "name":"service_summary_hod",
+                "dataDefType":"type2"
+            },
+            {
+                "reportScheduleId":1,
+                "reportDictId":1,
+                "dataDefId":67,
+                "name":"service_summary_dowhod",
                 "dataDefType":"type2"
             },
             {

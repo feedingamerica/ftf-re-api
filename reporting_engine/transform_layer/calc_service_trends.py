@@ -47,6 +47,37 @@ def get_service_trend_monthy_visits_avg(data:'list[DataFrame]'):
     trend['services_per_family'] = round(trend['n_services']/trend['n_families'], 2)
     return trend.to_json()
 
+#data def 61
+def get_service_trend_monthly_people_dup(data: 'list[DataFrame]'):
+    services = data[0]
+    skeleton_month = data[3]
+    trend:DataFrame = skeleton_month.merge(services, how='left', on = 'calendaryearmonth')
+    trend = trend.groupby(['calendaryearmonth','calendaryearmonth_start','calendaryearmonth_name'], as_index=False, dropna=False).agg(
+        served_total=('served_total','sum'))
+    return trend.to_json()
+
+#data def 62
+def get_service_trend_monthly_group_dup(data: 'list[DataFrame]'):
+    services = data[0]
+    skeleton_month = data[3]
+    trend:DataFrame = skeleton_month.merge(services, how='left', on = 'calendaryearmonth')
+    trend = trend.groupby(['calendaryearmonth','calendaryearmonth_start','calendaryearmonth_name'], as_index=False, dropna=False).agg(
+        sum_children=('served_children','sum'),
+        sum_adults = ('served_adults','sum'),
+        sum_seniors = ('served_seniors',sum))
+    return trend.to_json()
+
+#data def 63
+def get_service_trend_service_category(data: 'list[DataFrame]'):
+    services = data[0]
+    skeleton_month = data[3]
+    trend:DataFrame = skeleton_month.merge(services, how='left', on = 'calendaryearmonth')
+    trend = trend.groupby(['calendaryearmonth','calendaryearmonth_start','calendaryearmonth_name', 'service_category_name'], as_index=False, dropna=False).agg(
+        n_services=('research_service_key','count'))
+
+    return trend.to_json()
+
+
 # data def 64
 def get_service_trend_comparison(data: 'list[DataFrame]'):
     services = data[0]
@@ -82,12 +113,38 @@ def get_service_summary_dow(data: 'list[DataFrame]'):
     services = services.sort_values(by = 'daynameofweek', key = lambda x: x.map(sort_days_dict)).reset_index()
 
     return services.to_json()
+
+#data def 66
+def get_service_summary_hod(data: 'list[DataFrame]'):
+    services = data[0]
+    hod_skeleton = data[8]
+    hourly_services = hod_skeleton.merge(services, how = 'left', on = 'hour_of_day')
+    hourly_services = hourly_services.groupby('hour_of_day', as_index = False).agg(n_services = ('research_service_key', 'count'))
+    hourly_services = hod_skeleton.merge(hourly_services, how = 'left', on = 'hour_of_day')
+
+    return hourly_services.to_json()
+
+# data def 67
+def get_service_summary_dowhod(data:'list[DataFrame]'):
+    services = data[0]
+    skeleton_dowhod = data[9]
+    skeleton_dowhod.astype({'hour_of_day':'int64'}).dtypes
+
+    trend:DataFrame = skeleton_dowhod.merge(services, how='left', on = 'dayofweek')
+    trend = trend[trend['dummy_time'] == 1]
+    trend = trend.groupby(['dayofweek','daynameofweek','hour_of_day_x','hour_of_day_common','short_time','time_key_start',
+    'is_typical_business_hour'], as_index = False, dropna = False).size()
+    trend = trend.rename(columns={"size": "n_services","hour_of_day_x": "hour_of_day"})
+
+    return trend.to_json()
+
 # data def 68
 def get_service_trend_event(data:'list[DataFrame]'):
     services = data[0]
     skeleton_month = data[3]
+    temp:DataFrame = skeleton_month.merge(pd.DataFrame(services['event_name'].unique()), how='cross')
 
-    trend:DataFrame = skeleton_month.merge(services, how='left', on = 'calendaryearmonth')
+    trend:DataFrame = temp.merge(services, how='left', on = 'calendaryearmonth')
     trend = trend.groupby(['calendaryearmonth','event_name'], as_index = False, dropna = False).size()
     trend = trend.rename(columns={"size": "n_services"})
     return trend.to_json()

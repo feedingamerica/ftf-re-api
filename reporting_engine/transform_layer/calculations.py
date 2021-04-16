@@ -10,6 +10,7 @@ import pandas as pd
 
 BIG_NUM_NAMES = ["services_total", "undup_hh_total", "undup_indv_total", "services_per_uhh_avg"]
 DEFAULT_CTRL = "Is Grocery Service"
+DEFAULT_AGE_GROUP_ID = 8
 
 class CalculationDispatcher:
     def __init__(self, request):
@@ -80,6 +81,9 @@ class CalculationDispatcher:
         # Setting the control type
         if "control_type_name" not in input_dict["Meta"]:
             input_dict["Meta"]["control_type_name"] = DEFAULT_CTRL
+
+        if "control_age_group_id" not in input_dict["Meta"]:
+            input_dict["Meta"]["control_age_group_id"] = DEFAULT_AGE_GROUP_ID
 
         return input_dict
 
@@ -156,8 +160,13 @@ data_calc_function_switcher = {
         58: calc_service_trends.get_service_trend_time_week,
         59: calc_service_trends.get_service_trend_time_day,
         60: calc_service_trends.get_service_trend_monthy_visits_avg,
+        61: calc_service_trends.get_service_trend_monthly_people_dup,
+        62: calc_service_trends.get_service_trend_monthly_group_dup,
+        63: calc_service_trends.get_service_trend_service_category,
         64: calc_service_trends.get_service_trend_comparison,
         65: calc_service_trends.get_service_summary_dow,
-        68: calc_service_trends.get_service_trend_event,
+        66: calc_service_trends.get_service_summary_hod,
+        67: calc_service_trends.get_service_summary_dowhod,
+        68: calc_service_trends.get_service_trend_event
     }
 
