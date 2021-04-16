@@ -1,4 +1,4 @@
-from django.test import TestCase, Client, tag
+from django.test import TestCase, tag
 from api.models import ReportSchedule, ControlType, TimeframeType, RunType, ReportScope, ReportingDictionary, Report, ReportScheduleAddinReport, ReportScheduleAddin
 import datetime
 from datetime import date
