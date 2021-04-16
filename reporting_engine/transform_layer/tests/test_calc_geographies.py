@@ -2,6 +2,7 @@ from time import daylight
 from django.test import TestCase
 from django.db import connections
 import pandas
+import numpy
 from pandas.testing import assert_frame_equal, assert_series_equal
 from transform_layer.services.data_service import DataService
 import transform_layer.calculations as calc
@@ -125,11 +126,13 @@ class CalculationsTestCase(unittest.TestCase):
             os.path.join(__location__, './expected_results/results_data_def_54.csv'),
             index_col = 'distance_roll'
         )
+        expected = expected.reset_index()
         data = BASE_DATA 
         func = calc.data_calc_function_switcher[54]
         result = func(data)
         resultFrame = pandas.read_json(result)
         assert_frame_equal(resultFrame, expected, check_like = True)
+
 
     #test data def 55
     def test_sites_visited_distribution(self):

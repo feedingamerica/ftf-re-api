@@ -116,8 +116,13 @@ def get_new_fam_composition_key_insight(data: 'list[DataFrame]'):
         "no_child_senior":0
     }
     families = families.groupby(["family_composition_type"]).count()
-    result_dict["no_child_senior"] = int(families.at['adults_only','research_family_key'])
-    result_dict["has_child_senior"] = int(families['research_family_key'].sum()-families.at['adults_only','research_family_key'])
+    if 'adults_only' in families.index:
+        num_no_child_senior = int(families.at['adults_only','research_family_key'])
+    else:
+        num_no_child_senior = 0
+    result_dict["no_child_senior"] = num_no_child_senior
+    result_dict["has_child_senior"] = int(families['research_family_key'].sum()) - num_no_child_senior
+    
     return json.dumps(result_dict)
 
 #data def 41
