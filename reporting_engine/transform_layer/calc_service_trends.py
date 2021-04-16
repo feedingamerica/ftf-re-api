@@ -123,17 +123,30 @@ def get_service_summary_hod(data: 'list[DataFrame]'):
     hourly_services = hod_skeleton.merge(hourly_services, how = 'left', on = 'hour_of_day')
 
     return hourly_services.to_json()
+
 # data def 67
 def get_service_summary_dowhod(data:'list[DataFrame]'):
     services = data[0]
     skeleton_dowhod = data[9]
 
-    print(str(skeleton_dowhod.iloc[0]))
-
     trend:DataFrame = skeleton_dowhod.merge(services, how='left', on = 'dayofweek')
-    trend = trend.groupby(['dayofweek','daynameofweek','hour_of_day','hour_of_day_common','short_time','time_key_start',
+    trend = trend.groupby(['dayofweek','daynameofweek','hour_of_day_common','short_time','time_key_start',
     'is_typical_business_hour'], as_index = False, dropna = False).size()
     trend = trend.rename(columns={"size": "n_services"}) 
+
+    """ hour_of_day_dict = dict()
+    row_number = len(trend.index)
+    current_hour = 0
+    for x in range(0,row_number):
+        hour_of_day_dict[str(x)] = int(current_hour)
+        if current_hour == 23:
+            current_hour = 0
+        else:
+            current_hour+=1
+
+    returning_dict = trend.to_json()
+    returning_dict['hour_of_day'] = hour_of_day_dict """
+
     return trend.to_json()
 
 # data def 68
