@@ -831,6 +831,281 @@
     }
   },
   {
+    "model": "api.DataDefinition",
+    "pk": 57,
+    "fields": {
+      "name": "service_trend_time_month",
+      "definition_public": "Provides a high-level trend analysis of how many services were provided per month. ",
+      "calculation_notes": "Left join skeleton_month onto product - Base services, group by calendaryearmonth, summarise n = number of observations.",
+      "interpretation_notes": "Look for changing operating procedures and external forces affecting service volumes. Be sure to compare against past years so that you can identify changes differently from seasonality.",
+      "data_definition_type_id": 2
+    }
+  },
+  {
+    "model": "api.DataDefinition",
+    "pk": 58,
+    "fields": {
+      "name": "service_trend_time_week",
+      "definition_public": "Provides a high-level trend analysis of how many services were provided per week (Sunday Start).",
+      "calculation_notes": "Left join skeleton_week onto product - Base services, group by sunyearweek, summarise n = number of observations.",
+      "interpretation_notes": "Many agencies operate on certain weeks of the month, when aggregated this information is useful to identify when there are designed highs and lows of service in the network. Also, look for peaks in service around Thanksgiving and Christmas corresponding to special distributions.",
+      "data_definition_type_id": 2
+    }
+  },
+  {
+    "model": "api.DataDefinition",
+    "pk": 59,
+    "fields": {
+      "name": "service_trend_time_day",
+      "definition_public": "Provides a high-level trend analysis of how many services were provided per day.",
+      "calculation_notes": "Left join skeleton_day onto product - Base services, group by date, summarise n = number of observations.",
+      "interpretation_notes": "Daily service volumes can be useful in a number of ways. Look at the entire chart to identify trends in service. Where a monthly trend may not tell the whole story, a daily chart can provide additional information about fluctuating trends in service. You can also use the chart to identify record days of service, special holiday distributions, and periods of closure. ",
+      "data_definition_type_id": 2
+    }
+  },
+  {
+    "model": "api.DataDefinition",
+    "pk": 60,
+    "fields": {
+      "name": "service_trend_monthly_visits_avg",
+      "definition_public": "Provides an understanding of the frequency of service over time.",
+      "calculation_notes": "left join skeleton_month onto product - Base services, group by research_family_key and calendaryearmonth, summarise n_services as a count of rows producing a family x month observation, group by calendar year month and summarise n_families = count(family x month) observations and n_services = sum(n_services), calculate services_per_family = n_services / n_families, round to 2 digit precision.",
+      "interpretation_notes": "Agencies that have very strict one visit per month rules will see that reflected in data. Other agencies with more permisive rules will see how changes in operating policy can increase or decrese the frequency of visits per month over time.",
+      "data_definition_type_id": 2
+    }
+  },
+  {
+    "model": "api.DataDefinition",
+    "pk": 61,
+    "fields": {
+      "name": "service_trend_monthly_people_dup",
+      "definition_public": "Shows the volume of duplicated individuals served over time. ",
+      "calculation_notes": "Left join skeleton_month onto product - Base services, group by calendaryearmonth, summarise served_total = sum(served_total)",
+      "interpretation_notes": "This number is useful to talk about how many times people benefited from your services. Where unduplicated counts describe your population, this data provides an estimate of how often you interact with your population.",
+      "data_definition_type_id": 2
+    }
+  },
+  {
+    "model": "api.DataDefinition",
+    "pk": 62,
+    "fields": {
+      "name": "service_trend_monthly_served_group_dup",
+      "definition_public": "Shows the volume of duplicated individuals served by month, broken up by child, adult, and senior age groups.",
+      "calculation_notes": "Left join skeleton_month onto product - Base services, group by calendaryearmonth, summarise; sum_children = sum(served_children), sum_adults = sum(served_adults), sum_seniors = sum(served_seniors).",
+      "interpretation_notes": "Use this information to understand the large breakdown of your customer population by month.  Support or debunk hypotehesis about shifting family composition (e.g. more children served in the summer).",
+      "data_definition_type_id": 2
+    }
+  },
+  {
+    "model": "api.DataDefinition",
+    "pk": 63,
+    "fields": {
+      "name": "service_trend_service_category",
+      "definition_public": "Shows the volume of services over time, broken up by what kind of service was provided.",
+      "calculation_notes": "Left join skeleton_month onto product - Base services, group by calendaryearmonth and service_category_name, summarise; n_services = count(observations)",
+      "interpretation_notes": "Service category is a high-level service classifier used for service types. E.g. Choice pantry 1 day, choice pantry 2 day, choice pantry 3 day etc... all are included in the choice pantry group. This information is most useful for detecting changes in operating models, and seeing how shifting policy affects what types of service is provided. These summaries are also useful at the county-level and higher because they can communicate what types of service are available in a community, foodbank, or state.",
+      "data_definition_type_id": 2
+    }
+  },
+  {
+    "model": "api.DataDefinition",
+    "pk": 64,
+    "fields": {
+      "name": "service_trend_comparison",
+      "definition_public": "Comparision tool, shows daily service volumes for the same month, year to year.",
+      "calculation_notes": "Evaluate, at least 13 months of data? If yes, Identify monthofyear to build comparision. Base services, filter monthyear == identified monthyear, group by calendaryear and date, summarise n_services = (count of observations), sort by date, add in order to aid in visualization.",
+      "interpretation_notes": "Please note, this information is only available for timeframes covering 13 months or more. The tool takes great pains to show comparable months of service. The key stat to observe is the daily service volume, this provides a measure of 'intensity'. The second stat to observe is how many days of service were in each month, this provides a measure of 'consistency'.",
+      "data_definition_type_id": 2
+    }
+  },
+  {
+    "model": "api.DataDefinition",
+    "pk": 65,
+    "fields": {
+      "name": "service_summary_dow",
+      "definition_public": "Provides a summary of how many services occurred on any given day of the week.",
+      "calculation_notes": "Left join skeleton_daynameofweek onto product - Base services, group by daynameofweek, summarise n_services = count(observations)",
+      "interpretation_notes": "One of the oldest questions in food banking is 'why do customers come when they do'. The simplest answer is 'that is when we are open!' Use this information to understand how network operating hours shapes client preference for services. Please keep in mind service totals usually correlate well with the number of hours a site is open and operating. A uniform schedule (e.g. M,W,F 10 - 7) would theoretically produce even numbers of services on those days. Differences, absent additional operating rules or limitations, would suggest a customer preference for the days with larger amounts of service. Low volume would suggest days that could benefit from additional operating hours.",
+      "data_definition_type_id": 2
+    }
+  },
+  {
+    "model": "api.DataDefinition",
+    "pk": 66,
+    "fields": {
+      "name": "service_summary_hod",
+      "definition_public": "Provides a summary of how many services occurred at a given time of day.",
+      "calculation_notes": "left join skeleton_hod onto product - base services, group by hour_of_day, summarise n_services = count(observations)",
+      "interpretation_notes": "Please note, this information is only available for services that have a corresponding e-signature. The e-signature serves as a reliable indicator of when a customer was physically present at the registration area and completed an action to receive service.",
+      "data_definition_type_id": 2
+    }
+  },
+  {
+    "model": "api.DataDefinition",
+    "pk": 67,
+    "fields": {
+      "name": "service_summary_dowhod",
+      "definition_public": "Provides a cross tab of Day of Week, and Hour of day services.",
+      "calculation_notes": "left join skeleton_hod onto product with dayofweek and hour_of_day- base services, group by dayofweek and hour_of_day, summarize n_services = count(observations).",
+      "interpretation_notes": "Please note, this information is only available for services that have a corresponding e-signature. The e-signature serves as a reliable indicator of when a customer was physically present at the registration area and completed an action to receive service. The information is cross-tabbed with the Day of Week the service occurred. Use this information to better understand operating flows. Most sites typically begin service a little before, and end a little after their posted hours of operation. Most sites typically have peak levels of service ~1 or 2 hours after they open. This information can help provide even more granular insight into how agency operations and client preference intersect and produce service volumes.",
+      "data_definition_type_id": 2
+    }
+  },
+  {
+    "model": "api.DataDefinition",
+    "pk": 68,
+    "fields": {
+      "name": "service_trend_event",
+      "definition_public": "Provides a breakdown of services distributed through different events.",
+      "calculation_notes": "Generate an event_month_skeleton. Left join event_month_skeleton onto product with calendaryearmonth and event_name - base services group by calendaryearmonth and event_name, summarise n_services = count(observations).",
+      "interpretation_notes": "Please note, this information is only shown on multi-event, location, and organization reports. Use this to understand which operating events contribute most to service volumes.",
+      "data_definition_type_id": 2
+    }
+  },
+  {
+    "model": "api.DataDefinition",
+    "pk": 69,
+    "fields": {
+      "name": "hoh_gender_summary",
+      "definition_public": "Summary of genders of all head of households.",
+      "calculation_notes": "Base members, filter head_of_house == \"Yes\", group by gender, summarize n_indv = count(observations)",
+      "interpretation_notes": "Use this information to understand how disparities in need manifest even more strongly in the head of household. Whereas most parts of our network will show a slight over-representation of females to males in the customer population (e.g. 52% to 48%) the head of household information will typically show a more extreme trend females to males in the head of household subset of our customer population (e.g. 33% to 67%). Please note, the head of household information is for current HOH only, not anyone who was every the head of household.",
+      "data_definition_type_id": 2
+    }
+  },
+  {
+    "model": "api.DataDefinition",
+    "pk": 70,
+    "fields": {
+      "name": "hoh_single_adult_w_children",
+      "definition_public": "Summary of how many families are composed of a single adult or senior and one or more children.",
+      "calculation_notes": "Make a temp1 data set with base members, filter for head_of_house == Yes, keep research_family_key, gender, and current age. Make a temp2 data set with base members, add is_child (current_age < 18) and is_adult (current_age >= 18), group_by research_family_key, summarize n_children = sum(is_child), n_adult = sum(is_adult), filter n_adult == 1 and n_children > 0, add column for is_single_adult_w_children = 1. LEFT JOIN from temp1 to temp2 together on research_family_key, group_by is_single_adult_w_children and gender, summarize n_families = (count of observations).",
+      "interpretation_notes": "Use this information to tell the story about a single adult or senior supporting children. This information is particularly useful for advocacy and fund raising efforts and elicits sympathy from many constituencies. If this information is interesting to you, please reference the skipped-generation statistic for a drill down further into this topic.",
+      "data_definition_type_id": 2
+    }
+  },
+  {
+    "model": "api.DataDefinition",
+    "pk": 71,
+    "fields": {
+      "name": "skipped_generation",
+      "definition_public": "Summary of how many families are composed of a single senior and one or more children.",
+      "calculation_notes": "temp71_1 data set with base members, filter for head_of_house == Yes, keep research_family_key, gender, and current age. Make a temp71_2 data set with base members, add is_child (current_age < 18) and is_adult (current_age >= 18), group_by research_family_key, summarize n_children = sum(is_child), n_adult = sum(is_adult), filter n_adult == 1 and n_children > 0, add column for is_single_adult_w_children = 1. LEFT JOIN from temp71_1 to temp71_2 together on research_family_key, group_by is_single_senior_w_children and gender, summarize n_families = (count of observations).",
+      "interpretation_notes": "Use this information to understand how the gender of the head of household is different in skipped generation households compared to all other households. In general, Skipped generation households have a 6:1 ratio of female to male HOH, where as the general customer population has a 2:1 ratio of female to male HOH. Please note, this statistic under counts the true number of skipped generation households. e.g. Person A is a 24 year old female who has a son. Something happens to Person A and the son has to go live with Person B, a 55 year old female, mother of Person A. Person B + Son would not be included in this statistic because Person B is technically not a senior.",
+      "data_definition_type_id": 2
+    }
+  },
+  {
+    "model": "api.DataDefinition",
+    "pk": 72,
+    "fields": {
+      "name": "demo_indv_gender",
+      "definition_public": "Summary of genders of all un-duplicated individuals.",
+      "calculation_notes": "base members, group by gender, summarize n_indv = count(observations)",
+      "interpretation_notes": "Use this information for a high-level understanding of the demographics of your customer population. Many grants and reports will request this information. Also, most parts of our network will notice a slight over-representation of females to males (e.g. 55% to 45% compared to us average of 51% to 49%). This disparity is even more apparent when you look at the head of household information.",
+      "data_definition_type_id": 2
+    }
+  },
+  {
+    "model": "api.DataDefinition",
+    "pk": 73,
+    "fields": {
+      "name": "demo_indv_age_groups",
+      "definition_public": "Summary of unduplicated individuals by age groups.",
+      "calculation_notes": "base members, group by age_band_name_dash, summarize n_indv = count(observations)",
+      "interpretation_notes": "Use this information to understand how many individuals are in each age group. The information is particularly useful for grants, and advocacy purposes. Please note, agencies that do not have a high completion rate of date of birth information will have abnormal age data. At a minimum, a placeholder age is required, so if peaks are seen at 10, 35, and 60 it could indicate poor completion of date of birth information.",
+      "data_definition_type_id": 2
+    }
+  },
+  {
+    "model": "api.DataDefinition",
+    "pk": 74,
+    "fields": {
+      "name": "hh_has_age_groups",
+      "definition_public": "Summary of how many households have 1 or more individuals in an age group.",
+      "calculation_notes": "Base members, group by research_family_key and age_band_name_dash, summarize n_indv = count(observations), group by age_band_name_dash, summarize research_family_key, age_band_name_dash = count(observations) and sum_indv = sum(n_indv).",
+      "interpretation_notes": "Where a summary of unduplicated individuals by age group can tell you how many individuals are in each age group, this information provides a count of how many families contain individuals in the age group. Use this to answer questions like �how many families have school aged children�, or �how many families have seniors�, etc�",
+      "data_definition_type_id": 2
+    }
+  },
+  {
+    "model": "api.DataDefinition",
+    "pk": 75,
+    "fields": {
+      "name": "population_pyramid",
+      "definition_public": "Summary of how many individuals are in each age group, broken down by gender.",
+      "calculation_notes": "left_join skeleton_age_bands onto project - base members, filter for just M & F, group by age_band_name_dash and gender, summarize n_indv = count(observations)",
+      "interpretation_notes": "Population pyramids are useful for comparing how hunger affects different age groups and genders. Most parts of our network will notice a slight over-representation of females to males (e.g. 52% to 48%) and age pyramids can help explain which age groups are driving that trend (typically women of child-bearing age). How population pyramids agree or differ with the population pyramid for the wider population tells you how hunger disproportionately affects different age groups. We know you aren�t supposed to trust Wikipedia, but honestly they have a great article about population pyramids and how to read them. Also, the same caveat about all age data extends to the population pyramid. If a date of birth has not been documented for an individual, they will be included at one of the placeholder thresholds.",
+      "data_definition_type_id": 2
+    }
+  },
+  {
+    "model": "api.DataDefinition",
+    "pk": 76,
+    "fields": {
+      "name": "demo_indv_race",
+      "definition_public": "Summary of unduplicated individuals by race.",
+      "calculation_notes": "Make temp76 by Left join skeleton_dm_race onto product - base_members, group by race_id, summarize n_indv = count(observations). temp76 group by fa_rollup_race, summarize n_indv = sum(n_indv)",
+      "interpretation_notes": "This information is likely useful for grants, and understanding your customer population. The options for this field original came from the US Census Bureau�s American Community Survey.",
+      "data_definition_type_id": 2
+    }
+  },
+  {
+    "model": "api.DataDefinition",
+    "pk": 77,
+    "fields": {
+      "name": "demo_indv_ethnic",
+      "definition_public": "Summary of unduplicated individuals by ethnicity.",
+      "calculation_notes": "Make temp77 by Left join skeleton_dm_ethnic onto product - base_members, group by ethnic_id, summarize n_indv = count(observations). temp77 group by fa_rollup_ethnic, summarize n_indv = sum(n_indv)",
+      "interpretation_notes": "This information is defined as hispanic identity. Use it for grants, and understanding your customer population. The options for this field original came from the US Census Bureau�s American Community Survey.",
+      "data_definition_type_id": 2
+    }
+  },
+  {
+    "model": "api.DataDefinition",
+    "pk": 78,
+    "fields": {
+      "name": "demo_indv_military",
+      "definition_public": "Summary of unduplicated individuals by military service.",
+      "calculation_notes": "Make temp78 by Left join skeleton_dm_military onto product - base_members, group by military_id, summarize n_indv = count(observations). temp78 group by fa_rollup_military, summarize n_indv = sum(n_indv)",
+      "interpretation_notes": "The options for this field original came from the US Census Bureau�s American Community Survey.",
+      "data_definition_type_id": 2
+    }
+  },
+  {
+    "model": "api.DataDefinition",
+    "pk": 79,
+    "fields": {
+      "name": "demo_indv_education",
+      "definition_public": "Summary of unduplicated individuals by education status.",
+      "calculation_notes": "# Make temp79 by Left join skeleton_dm_education onto product - base_members, group by military_id, summarize n_indv = count(observations). # temp79 group by fa_rollup_education, summarize n_indv = sum(n_indv)",
+      "interpretation_notes": "The options for this field original came from the US Census Bureau�s American Community Survey.",
+      "data_definition_type_id": 2
+    }
+  },
+  {
+    "model": "api.DataDefinition",
+    "pk": 80,
+    "fields": {
+      "name": "demo_indv_employment",
+      "definition_public": "Summary of unduplicated individuals by employment status.",
+      "calculation_notes": "Make temp80 by Left join skeleton_dm_employment onto product - base_members, group by military_id, summarize n_indv = count(observations). temp80 group by fa_follup_employment, summarize n_indv = sum(n_indv)",
+      "interpretation_notes": "The options for this field original came from the US Census Bureau�s American Community Survey.",
+      "data_definition_type_id": 2
+    }
+  },
+  {
+    "model": "api.DataDefinition",
+    "pk": 81,
+    "fields": {
+      "name": "demo_indv_health_insurance",
+      "definition_public": "Summary of unduplicated individuals by health insurance status.",
+      "calculation_notes": "Make temp81 by Left join skeleton_dm_healthins onto product - base_members, group by military_id, summarize n_indv = count(observations). temp81 group by fa_rollup_healthcare, summarize n_indv = sum(n_indv)",
+      "interpretation_notes": "The options for this field original came from the US Census Bureau�s American Community Survey, which were somewhat broken out due to changes from the ACA in 2014.",
+      "data_definition_type_id": 2
+    }
+  },
+  {
     "model": "api.ReportingDictionaryDefinition",
     "pk": 1,
     "fields": {
@@ -1341,6 +1616,231 @@
       "report_dictionary_id": 1,
       "data_definition_id": 56,
       "section_id": 5
+    }
+  },
+  {
+    "model": "api.ReportingDictionaryDefinition",
+    "pk": 58,
+    "fields": {
+      "report_dictionary_id": 1,
+      "data_definition_id": 57,
+      "section_id": 7
+    }
+  },
+  {
+    "model": "api.ReportingDictionaryDefinition",
+    "pk": 59,
+    "fields": {
+      "report_dictionary_id": 1,
+      "data_definition_id": 58,
+      "section_id": 7
+    }
+  },
+  {
+    "model": "api.ReportingDictionaryDefinition",
+    "pk": 60,
+    "fields": {
+      "report_dictionary_id": 1,
+      "data_definition_id": 59,
+      "section_id": 7
+    }
+  },
+  {
+    "model": "api.ReportingDictionaryDefinition",
+    "pk": 61,
+    "fields": {
+      "report_dictionary_id": 1,
+      "data_definition_id": 60,
+      "section_id": 7
+    }
+  },
+  {
+    "model": "api.ReportingDictionaryDefinition",
+    "pk": 62,
+    "fields": {
+      "report_dictionary_id": 1,
+      "data_definition_id": 61,
+      "section_id": 7
+    }
+  },
+  {
+    "model": "api.ReportingDictionaryDefinition",
+    "pk": 63,
+    "fields": {
+      "report_dictionary_id": 1,
+      "data_definition_id": 62,
+      "section_id": 7
+    }
+  },
+  {
+    "model": "api.ReportingDictionaryDefinition",
+    "pk": 64,
+    "fields": {
+      "report_dictionary_id": 1,
+      "data_definition_id": 63,
+      "section_id": 7
+    }
+  },
+  {
+    "model": "api.ReportingDictionaryDefinition",
+    "pk": 65,
+    "fields": {
+      "report_dictionary_id": 1,
+      "data_definition_id": 64,
+      "section_id": 7
+    }
+  },
+  {
+    "model": "api.ReportingDictionaryDefinition",
+    "pk": 66,
+    "fields": {
+      "report_dictionary_id": 1,
+      "data_definition_id": 65,
+      "section_id": 7
+    }
+  },
+  {
+    "model": "api.ReportingDictionaryDefinition",
+    "pk": 67,
+    "fields": {
+      "report_dictionary_id": 1,
+      "data_definition_id": 66,
+      "section_id": 7
+    }
+  },
+  {
+    "model": "api.ReportingDictionaryDefinition",
+    "pk": 68,
+    "fields": {
+      "report_dictionary_id": 1,
+      "data_definition_id": 67,
+      "section_id": 7
+    }
+  },
+  {
+    "model": "api.ReportingDictionaryDefinition",
+    "pk": 69,
+    "fields": {
+      "report_dictionary_id": 1,
+      "data_definition_id": 68,
+      "section_id": 7
+    }
+  },
+  {
+    "model": "api.ReportingDictionaryDefinition",
+    "pk": 70,
+    "fields": {
+      "report_dictionary_id": 1,
+      "data_definition_id": 69,
+      "section_id": 8
+    }
+  },
+  {
+    "model": "api.ReportingDictionaryDefinition",
+    "pk": 71,
+    "fields": {
+      "report_dictionary_id": 1,
+      "data_definition_id": 70,
+      "section_id": 8
+    }
+  },
+  {
+    "model": "api.ReportingDictionaryDefinition",
+    "pk": 72,
+    "fields": {
+      "report_dictionary_id": 1,
+      "data_definition_id": 71,
+      "section_id": 8
+    }
+  },
+  {
+    "model": "api.ReportingDictionaryDefinition",
+    "pk": 73,
+    "fields": {
+      "report_dictionary_id": 1,
+      "data_definition_id": 72,
+      "section_id": 8
+    }
+  },
+  {
+    "model": "api.ReportingDictionaryDefinition",
+    "pk": 74,
+    "fields": {
+      "report_dictionary_id": 1,
+      "data_definition_id": 73,
+      "section_id": 8
+    }
+  },
+  {
+    "model": "api.ReportingDictionaryDefinition",
+    "pk": 75,
+    "fields": {
+      "report_dictionary_id": 1,
+      "data_definition_id": 74,
+      "section_id": 8
+    }
+  },
+  {
+    "model": "api.ReportingDictionaryDefinition",
+    "pk": 76,
+    "fields": {
+      "report_dictionary_id": 1,
+      "data_definition_id": 75,
+      "section_id": 8
+    }
+  },
+  {
+    "model": "api.ReportingDictionaryDefinition",
+    "pk": 77,
+    "fields": {
+      "report_dictionary_id": 1,
+      "data_definition_id": 76,
+      "section_id": 8
+    }
+  },
+  {
+    "model": "api.ReportingDictionaryDefinition",
+    "pk": 78,
+    "fields": {
+      "report_dictionary_id": 1,
+      "data_definition_id": 77,
+      "section_id": 8
+    }
+  },
+  {
+    "model": "api.ReportingDictionaryDefinition",
+    "pk": 79,
+    "fields": {
+      "report_dictionary_id": 1,
+      "data_definition_id": 78,
+      "section_id": 8
+    }
+  },
+  {
+    "model": "api.ReportingDictionaryDefinition",
+    "pk": 80,
+    "fields": {
+      "report_dictionary_id": 1,
+      "data_definition_id": 79,
+      "section_id": 8
+    }
+  },
+  {
+    "model": "api.ReportingDictionaryDefinition",
+    "pk": 81,
+    "fields": {
+      "report_dictionary_id": 1,
+      "data_definition_id": 80,
+      "section_id": 8
+    }
+  },
+  {
+    "model": "api.ReportingDictionaryDefinition",
+    "pk": 82,
+    "fields": {
+      "report_dictionary_id": 1,
+      "data_definition_id": 81,
+      "section_id": 8
     }
   },
   {
