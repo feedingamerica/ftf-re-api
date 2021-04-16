@@ -209,11 +209,21 @@ def get_new_fam_dist_of_length_of_relationship(data: 'list[DataFrame]'):
         values[9]: 9
     }
 
+    def applyMin(row):
+        min_values = [0, width, width*2, width*3, width*4, width*5, width*6, width*7, width*8, width*9]
+        return min_values[row]
+
+    def applyMax(row):
+        min_values = [width, width*2, width*3, width*4, width*5, width*6, width*7, width*8, width*9, set_max]
+        return min_values[row]
+        
     families['buckets'] = np.select(conditions, values)
     families = families.groupby('buckets').size().to_frame('count')
-    families = families.sort_values(by = 'buckets', key = lambda x: x.map(sort_buckets_dict))
+    families = families.sort_values(by = 'buckets', key = lambda x: x.map(sort_buckets_dict)).reset_index()
+    families['min'] = pd.Series(families.index).apply(lambda row: applyMin(row))
+    families['max'] = pd.Series(families.index).apply(lambda row: applyMax(row))
 
-    return families['count'].to_json()
+    return families.to_json()
 
 #data def 45
 def get_relationship_length_indv_mean(data):
@@ -263,10 +273,20 @@ def get_new_fam_dist_of_length_of_relationships_for_individuals(data: 'list[Data
         values[9]: 9
     }
 
+    def applyMin(row):
+        min_values = [0, width, width*2, width*3, width*4, width*5, width*6, width*7, width*8, width*9]
+        return min_values[row]
+
+    def applyMax(row):
+        min_values = [width, width*2, width*3, width*4, width*5, width*6, width*7, width*8, width*9, set_max]
+        return min_values[row]
+
     members['buckets'] = np.select(conditions, values)
     members = members.groupby('buckets').size().to_frame('count')
-    members = members.sort_values(by = 'buckets', key = lambda x: x.map(sort_buckets_dict))
+    members = members.sort_values(by = 'buckets', key = lambda x: x.map(sort_buckets_dict)).reset_index()
+    members['min'] = pd.Series(members.index).apply(lambda row: applyMin(row))
+    members['max'] = pd.Series(members.index).apply(lambda row: applyMax(row))
 
-    return members['count'].to_json()
+    return members.to_json()
 
 
