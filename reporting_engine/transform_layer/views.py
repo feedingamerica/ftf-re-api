@@ -392,8 +392,31 @@ def get_all_defs_typical(request):
         "relationship_length_families_mean",
         "relationship_length_families_distribution",
         "relationship_length_indv_mean",
-        "relationship_length_indv_distribution"
+        "relationship_length_indv_distribution",
+        "dimgeo_coverage",
+        "geographic_breakdown_fam_state",
+        "geographic_breakdown_fam_county",
+        "geographic_breakdown_fam_zcta",
+        "services_flow_event_fips",
+        "distance_traveled",
+        "direction_traveled",
+        "windrose",
+        "sites_visited_distribution",
+        "dummy_trip_coverage",
+        "service_trend_time_month",
+        "service_trend_time_week",
+        "service_trend_time_day",
+        "service_trend_monthly_visits_avg",
+        "service_trend_monthly_people_dup",
+        "service_trend_monthly_served_group_dup",
+        "service_trend_service_category",
+        "service_trend_comparison",
+        "service_summary_dow",
+        "service_summary_hod",
+        "service_summary_dowhod",
+        "service_trend_event"
     ]
+
     num_defs = len(data_def_names)
     for i in range(1, num_defs + 1):
         data_def = {
@@ -411,7 +434,6 @@ def get_all_defs_typical(request):
     cd.run_calculations()
     print(str(time.time() - start_time), ' seconds to run all queries')
     context = { 'report_output': format_dict(cd.request)}
-    print_dict(input_dict)
     return render(request, 'transformapi/get-report.html', context)
 
 def get_fact_services(request):

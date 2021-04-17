@@ -6,10 +6,11 @@ import numpy as np
 import json
 import statistics
 import numpy as np
+from transform_layer.services.data_service import KEY_FAMILY, KEY_MEMBER, KEY_SERVICE
 
 #data def 47
-def get_geo_coverage(data: 'list[DataFrame]'):
-    families = data[1]
+def get_geo_coverage(data: 'dict[DataFrame]'):
+    families = data[KEY_FAMILY]
 
     families = families.assign(has_dim_geo_id=np.where(families.dimgeo_id>0, 1, 0))
     families = families.groupby('has_dim_geo_id', as_index=False).agg(n = ('has_dim_geo_id','size'))
@@ -22,8 +23,8 @@ def get_geo_coverage(data: 'list[DataFrame]'):
     return np.round(num_has_geo / sum, 3)
 
 #data def 48
-def get_geo_breakdown_fam_state(data: 'list[DataFrame]'):
-    members = data[2]
+def get_geo_breakdown_fam_state(data: 'dict[DataFrame]'):
+    members = data[KEY_MEMBER]
 
     members = members.groupby('fips_state', dropna=False).agg(
         n_families = ('research_family_key','nunique'),
@@ -35,30 +36,30 @@ def get_geo_breakdown_fam_state(data: 'list[DataFrame]'):
     return members.to_json()
 
 #data def 49
-def get_geographic_breakdown_fam_county(data: 'list[DataFrame]'):
-    members = data[2]
+def get_geographic_breakdown_fam_county(data: 'dict[DataFrame]'):
+    members = data[KEY_MEMBER]
     members =members.groupby('fips_cnty',dropna=False)
     members = members.agg(n_families = ("research_family_key", "nunique"), n_indv = ("research_member_key","count"))
     members.index = members.index.astype("Int64").astype(str)
     return members.to_json()
 
 #data def 50
-def get_geographic_breakdown_fam_zcta(data: 'list[DataFrame]'):
-     members = data[2]
+def get_geographic_breakdown_fam_zcta(data: 'dict[DataFrame]'):
+     members = data[KEY_MEMBER]
      members =members.groupby('fips_zcta',dropna=False)
      members = members.agg(n_families = ("research_family_key", "nunique"), n_indv = ("research_member_key","count"))
      members.index = members.index.astype("Int64").astype(str)
      return members.to_json()
 
 # data def 51
-def get_services_flow_event_fips(data: 'list[DataFrame]'):
-    services = data[0]
+def get_services_flow_event_fips(data: 'dict[DataFrame]'):
+    services = data[KEY_SERVICE]
     services = services.groupby(['fips_cnty_event', 'fips_cnty_fs'], dropna=False).size().to_frame('n').reset_index()
     return services.to_json()
 
 # data def 52
-def get_distance_traveled(data: 'list[DataFrame]'):
-    services = data[0]
+def get_distance_traveled(data: 'dict[DataFrame]'):
+    services = data[KEY_SERVICE]
     services = services[services['dummy_trip'] == 1]
     services = services.sort_values(by = 'distance_miles', ascending = True)
 
@@ -104,8 +105,8 @@ def get_distance_traveled(data: 'list[DataFrame]'):
     return services.to_json()
 
 # data def 53
-def get_direction_traveled(data: 'list[DataFrame]'):
-    services = data[0]
+def get_direction_traveled(data: 'dict[DataFrame]'):
+    services = data[KEY_SERVICE]
     services = services[services['dummy_trip'] == 1]
 
     if(len(services) == 0):
@@ -130,8 +131,8 @@ def get_direction_traveled(data: 'list[DataFrame]'):
     return services.to_json()
 
 # data def 54
-def get_windrose(data: 'list[DataFrame]'):
-    services = data[0]
+def get_windrose(data: 'dict[DataFrame]'):
+    services = data[KEY_SERVICE]
     services = services[services['dummy_trip'] == 1]
     services = services.sort_values(by = ['distance_miles','direction'], ascending = True)
 
@@ -193,7 +194,7 @@ def get_windrose(data: 'list[DataFrame]'):
 
 #data def 55
 def get_sites_visited_distribution(data):
-    services = data[0]
+    services = data[KEY_SERVICE]
     services = services.groupby(['loc_id', 'research_family_key']).agg(services = ('research_service_key','count')).reset_index()
     services = services.groupby(['research_family_key']).agg(sites_visited = ('loc_id', 'count'))
     services = services.groupby(['sites_visited']).agg(num_families = ('sites_visited', 'count'))
@@ -201,7 +202,7 @@ def get_sites_visited_distribution(data):
 
 #data def 56
 def get_dummy_trip_coverage(data):
-    services = data[0]
+    services = data[KEY_SERVICE]
     num_services = len(services)
     services = services[services['dummy_trip'] == 1]
     return round( len(services)/num_services, 4)
