@@ -60,6 +60,13 @@ def get_skipped_generation(data:'list[DataFrame]'):
 
     return end_result.to_json()
 
+# data def 72
+def get_demo_indv_gender(data:'list[DataFrame]'):
+    members = data[data_service.KEY_MEMBER]
+
+    members = members.groupby(['gender']).agg(n_indv=('gender','count')).reset_index()
+    return members.to_json()
+
 # data def 77
 def get_demo_indv_ethnic(data:'list[DataFrame]'):
 

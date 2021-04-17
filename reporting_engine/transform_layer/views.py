@@ -942,7 +942,7 @@ def get_family_members(request):
     sample_dict = {
         "Meta": {
             "startDate":"1/01/2020",
-            "endDate":"12/31/2020",
+            "endDate":"3/31/2021",
             "scope_field":"loc_id",
             "scope_field_value":6,
             "control_type_name":"Is Grocery Service",
@@ -954,6 +954,13 @@ def get_family_members(request):
                 "reportDictId":1,
                 "dataDefId":71,
                 "name":"skipped_generation",
+                "dataDefType":"type2"
+            },
+            {
+                "reportScheduleId":1,
+                "reportDictId":1,
+                "dataDefId":72,
+                "name":"demo_indv_gender",
                 "dataDefType":"type2"
             },
             {

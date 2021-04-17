@@ -43,6 +43,18 @@ class CalculationsTestCase(unittest.TestCase):
         self.assertTrue(len(resultFrame) == len(expected))
         assert_frame_equal(resultFrame, expected, rtol = REL_TOL)
 
+    #test data def 72
+    def test_get_demo_indv_gender(self):
+        expected = pandas.read_csv(
+            os.path.join(__location__, './expected_results/test_family_members/family_members_demo_indv_gender.csv')
+        ).fillna("")
+
+        data = TEST_DATA_SERVICE.get_data_for_definition(72)
+        func = calc.data_calc_function_switcher[72]
+        result = func(data)
+        resultFrame = pandas.read_json(result)
+        assert_frame_equal(resultFrame, expected, rtol = REL_TOL)
+
     #test data def 77
     def test_get_skipped_generation(self):
         expected = pandas.read_csv(
