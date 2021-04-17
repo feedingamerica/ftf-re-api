@@ -80,16 +80,7 @@ class DataService:
             if(self._date_skeletons) is None:
                 self._date_skeletons = self._get_date_skeletons()
             
-            #list[0] = services
-            #list[1] = families
-            #list[2] = members
-            #list[3] = monthly_date_skeleton
-            #list[4] = weekly_date_skeleton
-            #list[5] = daily_date_skeleton
-            #list[6] = daynameofweek_skeleton
-            #list[7] = ageband_skeleton
-            #list[8] = hourofday_skeleton
-            #list[9] = hourofday_dayofweek_skeleton
+            #merge the dictionaries
             new_dict = {**self._new_familiy_services, **self._date_skeletons}
             return  new_dict
 
