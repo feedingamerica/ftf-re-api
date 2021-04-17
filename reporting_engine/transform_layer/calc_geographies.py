@@ -53,7 +53,7 @@ def get_geographic_breakdown_fam_zcta(data: 'dict[DataFrame]'):
 
 # data def 51
 def get_services_flow_event_fips(data: 'dict[DataFrame]'):
-    members = data[KEY_SERVICE]
+    services = data[KEY_SERVICE]
     services = services.groupby(['fips_cnty_event', 'fips_cnty_fs'], dropna=False).size().to_frame('n').reset_index()
     return services.to_json()
 

@@ -45,6 +45,18 @@ class CalculationsTestCase(unittest.TestCase):
         assert_frame_equal(resultFrame.sort_values(by=['n_families'], ignore_index=True)[['is_single_senior_w_children','n_families']]
         , expected.sort_values(by=['n_families'], ignore_index=True)[['is_single_senior_w_children','n_families']], rtol = REL_TOL)
 
+    #test data def 72
+    def test_get_demo_indv_gender(self):
+        expected = pandas.read_csv(
+            os.path.join(__location__, './expected_results/test_family_members/family_members_demo_indv_gender.csv')
+        ).fillna("")
+
+        data = TEST_DATA_SERVICE.get_data_for_definition(72)
+        func = calc.data_calc_function_switcher[72]
+        result = func(data)
+        resultFrame = pandas.read_json(result)
+        assert_frame_equal(resultFrame, expected, rtol = REL_TOL)
+
     #test data def 77
     def test_get_demo_indv_ethnic(self):
         expected = pandas.read_csv(

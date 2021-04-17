@@ -393,7 +393,7 @@ def get_all_defs_typical(request):
         "relationship_length_families_distribution",
         "relationship_length_indv_mean",
         "relationship_length_indv_distribution",
-        "dimgeo_coverage"
+        "dimgeo_coverage",
         "geographic_breakdown_fam_state",
         "geographic_breakdown_fam_county",
         "geographic_breakdown_fam_zcta",
@@ -416,7 +416,7 @@ def get_all_defs_typical(request):
         "service_summary_dowhod",
         "service_trend_event"
     ]
-    
+
     num_defs = len(data_def_names)
     for i in range(1, num_defs + 1):
         data_def = {
@@ -434,7 +434,6 @@ def get_all_defs_typical(request):
     cd.run_calculations()
     print(str(time.time() - start_time), ' seconds to run all queries')
     context = { 'report_output': format_dict(cd.request)}
-    print_dict(input_dict)
     return render(request, 'transformapi/get-report.html', context)
 
 def get_fact_services(request):
@@ -965,7 +964,7 @@ def get_family_members(request):
     sample_dict = {
         "Meta": {
             "startDate":"1/01/2020",
-            "endDate":"12/31/2020",
+            "endDate":"3/31/2021",
             "scope_field":"loc_id",
             "scope_field_value":6,
             "control_type_name":"Is Grocery Service",
@@ -977,6 +976,13 @@ def get_family_members(request):
                 "reportDictId":1,
                 "dataDefId":71,
                 "name":"skipped_generation",
+                "dataDefType":"type2"
+            },
+            {
+                "reportScheduleId":1,
+                "reportDictId":1,
+                "dataDefId":72,
+                "name":"demo_indv_gender",
                 "dataDefType":"type2"
             },
             {
