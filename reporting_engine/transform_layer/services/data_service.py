@@ -90,7 +90,8 @@ class DataService:
             #list[7] = ageband_skeleton
             #list[8] = hourofday_skeleton
             #list[9] = hourofday_dayofweek_skeleton
-            return self._new_familiy_services + self._date_skeletons
+            new_dict = {**self._new_familiy_services, **self._date_skeletons}
+            return  new_dict
 
            
 
@@ -346,7 +347,7 @@ class DataService:
             dim_members.datekey_first_served,
             dim_members.gender,
             dim_members.current_age,
-            dim_members.head_of_house
+            dim_members.head_of_house,
             dim_members.race_id,
             dim_members.ethnic_id,
             dim_members.immigrant_id,
