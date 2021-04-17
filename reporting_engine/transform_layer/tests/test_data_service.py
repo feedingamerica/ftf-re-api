@@ -28,7 +28,7 @@ class CalculationsTestCase(unittest.TestCase):
             }
 
         ds = DataService(test_scope)
-        m_skeleton = ds.get_monthly_date_skeleton()
+        m_skeleton = ds._get_monthly_date_skeleton()
         self.assertTrue(len(m_skeleton) == 12)
 
 
@@ -42,7 +42,7 @@ class CalculationsTestCase(unittest.TestCase):
             "control_type_name":"Is Grocery Service",
         }
         ds = DataService(test_scope)
-        w_skeleton = ds.get_weekly_date_skeleton()
+        w_skeleton = ds._get_weekly_date_skeleton()
         #52 * 7 = 364; +1  day means +1 extra row in the dataframe
         self.assertTrue(len(w_skeleton) == 53)
         
@@ -56,5 +56,5 @@ class CalculationsTestCase(unittest.TestCase):
             "control_type_name":"Is Grocery Service",
         }
         ds = DataService(test_scope)
-        d_skeleton = ds.get_daily_date_skeleton()
+        d_skeleton = ds._get_daily_date_skeleton()
         self.assertTrue(len(d_skeleton) == 365)

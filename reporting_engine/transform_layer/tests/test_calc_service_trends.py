@@ -84,7 +84,7 @@ class CalculationsTestCase(unittest.TestCase):
     def test_get_service_trend_monthly_visits_avg(self):
         expected = pandas.read_csv(
             os.path.join(__location__, './expected_results/test_calc_service_trends/service_trend_monthly_visits_avg.csv')
-        ).fillna('0')
+        ).fillna(0)
         data = TEST_DATA_SERVICE.get_data_for_definition(60)
         func = calc.data_calc_function_switcher[60]
         result = func(data)
@@ -146,23 +146,28 @@ class CalculationsTestCase(unittest.TestCase):
     #test data def 67
     def test_get_service_summary_dowhod(self):
         expected = pandas.read_csv(
-            os.path.join(__location__, './expected_results/test_calc_service_trends/service_trend_summary_dowhod.csv')
-        ).fillna('0')
+            os.path.join(__location__, './expected_results/test_calc_service_trends/service_trend_summary_dowhod.csv'),
+            index_col = 0
+        ).fillna(0).reset_index().drop(columns = 'index')
+        expected = expected.astype({'n_services':'int64'})
 
-        data = TEST_DATA_SERVICE.get_data_for_definition(67)
+        data = TEST_DATA_SERVICE_2.get_data_for_definition(67)
         func = calc.data_calc_function_switcher[67]
         result = func(data)
         resultFrame = pandas.read_json(result)
-        self.assertTrue(len(resultFrame) == len(expected))
         assert_frame_equal(resultFrame, expected, rtol = REL_TOL)
     
     #test data def 68
     def test_get_service_trend_event(self):
         expected = pandas.read_csv(
-            os.path.join(__location__, './expected_results/test_calc_service_trends/service_trend_event.csv')
-        ).fillna('0')
+            os.path.join(__location__, './expected_results/test_calc_service_trends/service_trend_event.csv'),
+            index_col = 0
+        ).fillna(0).reset_index().drop(columns = 'index')
+        #pandas seems to cast quoted numbers into floats
+        #need to cast back to int 
 
-        data = TEST_DATA_SERVICE.get_data_for_definition(68)
+        expected = expected.astype({'n_services':'int64'})
+        data = TEST_DATA_SERVICE_2.get_data_for_definition(68)
         func = calc.data_calc_function_switcher[68]
         result = func(data)
         resultFrame = pandas.read_json(result)
