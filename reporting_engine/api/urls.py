@@ -34,5 +34,7 @@ urlpatterns = [
 		name='schema-redoc'),
     path('', include(router.urls)),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
-    path('reports/<int:report_scope_id>/<int:report_scope_value>/', views.get_reports)
+    path('reports/<int:report_scope_id>/<int:report_scope_value>/', views.get_reports),
+	path('report_options/', views.report_options, name='report-options'),
+	path('report_total/<int:report_id>/', views.get_report_total, name='report')
 ]
