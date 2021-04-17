@@ -14,7 +14,7 @@ def get_skipped_generation(data:'list[DataFrame]'):
 
     members1 = data[data_service.KEY_MEMBER]
     members1 = members1[members1['head_of_house'] == 'Yes']
-    members1 = members1['research_family_key','gender','current_age']
+    members1 = members1[['research_family_key','gender','current_age']]
 
     """ temp71_2 = base_members %>% 
     mutate(
@@ -34,8 +34,8 @@ def get_skipped_generation(data:'list[DataFrame]'):
 
     members2 = data[data_service.KEY_MEMBER]
 
-    families['is_child'] = np.where(members2['current_age'] < 18, 1, 0)
-    families['is_senior'] = np.where(members2['current_age'] >= 60, 1, 0)
+    members2['is_child'] = np.where(members2['current_age'] < 18, 1, 0)
+    members2['is_senior'] = np.where(members2['current_age'] >= 60, 1, 0)
 
     members2 = members2.groupby('research_family_key', as_index=False).agg(
         n_children=('is_child','sum'),
@@ -53,7 +53,7 @@ def get_skipped_generation(data:'list[DataFrame]'):
     n_families = n(), .groups = "drop"
     ) """
 
-    end_result = members1.merge(members2, how='left', on='research_family_key')
+    end_result = members1.merge(members2, how='left', on='research_family_key').fillna(0)
     end_result = end_result.groupby(['is_single_senior_w_children','gender'], as_index=False).agg(
         n_families=('research_family_key','count')
     )
@@ -78,11 +78,13 @@ def get_demo_indv_ethnic(data:'list[DataFrame]'):
 
     ethnic = data[data_service.SKEY_ETH]
     members = data[data_service.KEY_MEMBER]
-    ethnic = ethnic.merge(members, how='left', on='ethnic_id')
+    ethnic2 = ethnic.merge(members, how='left', on='ethnic_id')
 
-    ethnic = ethnic.groupby('ethnic_id', as_index=False).agg(
+    ethnic2 = ethnic2.groupby('ethnic_id', as_index=False).agg(
         n_indv=('ethnic_id','count')
     )
+
+    ethnic = ethnic2.merge(ethnic, how='left', on='ethnic_id')
 
     """ seventy_seven = temp77 %>% 
     group_by(fa_rollup_ethnic) %>% summarize(n_indv = sum(n_indv), .groups = "drop") """
