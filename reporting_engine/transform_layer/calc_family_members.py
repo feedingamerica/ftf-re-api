@@ -67,6 +67,15 @@ def get_demo_indv_gender(data:'list[DataFrame]'):
     members = members.groupby(['gender']).agg(n_indv=('gender','count')).reset_index()
     return members.to_json()
 
+# data def 73
+def get_demo_indv_age_groups(data:'list[DataFrame]'):
+    members = data[data_service.KEY_MEMBER]
+    age_bands = data[data_service.SKEY_AGE]
+
+    age_groups:DataFrame = age_bands.merge(members, how='left', on='age_band_name_dash')
+    age_groups = age_groups.groupby(['min_age', 'age_band_name_dash']).agg(n_indv=('research_member_key','count')).reset_index()
+    return age_groups.to_json()
+
 # data def 77
 def get_demo_indv_ethnic(data:'list[DataFrame]'):
 

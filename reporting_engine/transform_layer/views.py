@@ -966,6 +966,13 @@ def get_family_members(request):
             {
                 "reportScheduleId":1,
                 "reportDictId":1,
+                "dataDefId":73,
+                "name":"demo_indv_age_groups",
+                "dataDefType":"type2"
+            },
+            {
+                "reportScheduleId":1,
+                "reportDictId":1,
                 "dataDefId":77,
                 "name":"demo_indv_ethnic",
                 "dataDefType":"type2"
