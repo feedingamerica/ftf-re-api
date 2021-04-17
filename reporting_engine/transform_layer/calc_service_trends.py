@@ -2,6 +2,7 @@ from pandas.core.frame import DataFrame
 import dateutil.parser as parser
 import pandas as pd
 import json
+import transform_layer.services.data_service as data_service
 import numpy as np
 
 #data def 57
@@ -114,23 +115,39 @@ def get_service_summary_dow(data: 'list[DataFrame]'):
 
     return services.to_json()
 
+#data def 66
+def get_service_summary_hod(data: 'list[DataFrame]'):
+    services = data[0]
+    hod_skeleton = data[8]
+    hourly_services = hod_skeleton.merge(services, how = 'left', on = 'hour_of_day')
+    hourly_services = hourly_services.groupby('hour_of_day', as_index = False).agg(n_services = ('research_service_key', 'count'))
+    hourly_services = hod_skeleton.merge(hourly_services, how = 'left', on = 'hour_of_day')
+
+    return hourly_services.to_json()
+
 # data def 67
 def get_service_summary_dowhod(data:'list[DataFrame]'):
     services = data[0]
-    skeleton_month = data[3]
-
-    trend:DataFrame = skeleton_month.merge(services, how='left', on = 'skeleton_dowhod')
-    trend = trend.groupby(['dayofweek','hour_of_day'], as_index = False, dropna = False).size()
-    trend = trend.rename(columns={"size": "n_services"})
+    skeleton_dowhod = data[9]
+    skeleton_dowhod = skeleton_dowhod.astype({'hour_of_day':'int64'})
+    
+    services = services[['research_service_key','dummy_time', 'dayofweek', 'hour_of_day']]
+    services = services[services['dummy_time'] == 1]
+    services = services.astype({'hour_of_day':'int64'})
+    services = services.groupby(['dayofweek','hour_of_day'], as_index=False, dropna = False).size()
+    services = services.rename(columns={"size": "n_services"})
+    trend = skeleton_dowhod.merge(services, how='left', left_on = ['dayofweek','hour_of_day'], right_on = ['dayofweek','hour_of_day'] )
+    trend = trend.fillna(0)
     return trend.to_json()
 
 # data def 68
 def get_service_trend_event(data:'list[DataFrame]'):
-    services = data[0]
-    skeleton_month = data[3]
+    services = data[data_service.KEY_SERVICE]
+    skeleton_month = data[data_service.SKEY_MONTH]
+    skeleton_month = skeleton_month.merge(pd.DataFrame(services['event_name'].unique()), how='cross')
 
-    trend:DataFrame = skeleton_month.merge(services, how='left', on = 'calendaryearmonth')
-    trend = trend.groupby(['calendaryearmonth','event_name'], as_index = False, dropna = False).size()
-    trend = trend.rename(columns={"size": "n_services"})
-    return trend.to_json()
+    services = services.groupby(['calendaryearmonth','event_name'], as_index = False, dropna = False).size()
+    services = services.rename(columns={"size": "n_services"})
+    services = skeleton_month.merge(services, how='left', on = 'calendaryearmonth')
+    return services.to_json()
 

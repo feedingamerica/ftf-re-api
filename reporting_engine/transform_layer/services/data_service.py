@@ -11,6 +11,29 @@ import time
 
 SCOPE_HIERARCHY = "hierarchy"
 SCOPE_GEOGRAPHY = "geography"
+DEFAULT_AGE_GROUP_ID = 8
+
+#key for getting base data
+KEY_SERVICE = "services"
+KEY_MEMBER = "members"
+KEY_FAMILY = "families"
+
+#key for getting skeletons from data
+SKEY_MONTH = "month"
+SKEY_WEEK = "week"
+SKEY_DAY = "day"
+SKEY_DNOW = "daynameofweek"
+SKEY_AGE = "ageband"
+SKEY_HOD = "hourofday"
+SKEY_HOD_DOW = "hourofday_dayofweek"
+SKEY_RACE ="race"
+SKEY_ETH = "ethnicity"
+SKEY_MIL = "military"
+SKEY_EDU = "education"
+SKEY_EMP = "employment"
+SKEY_HEALTH = "health_insurance"
+
+
 
 #1 instance of DataService for 1 scope
 class DataService:
@@ -29,7 +52,7 @@ class DataService:
         self.scope_value = scope["scope_field_value"]
         self.start_date = date_str_to_int(scope["startDate"])
         self.end_date = date_str_to_int(scope["endDate"])
-        self.age_group_id = scope["control_age_group_id"]
+        self.age_group_id = scope.get("control_age_group_id", DEFAULT_AGE_GROUP_ID)
 
     ## returns DataFrame for a specific data definition
     def get_data_for_definition(self, id):
@@ -50,12 +73,12 @@ class DataService:
             if(self._new_familiy_services) is None:
                 self._new_familiy_services = self.__get_new_family_services()
             return self._new_familiy_services
-        elif id <= 68:
+        elif id <= 81:
             
             if(self._new_familiy_services) is None:
                 self._new_familiy_services = self.__get_new_family_services()
             if(self._date_skeletons) is None:
-                self._date_skeletons = self.__get_date_skeletons()
+                self._date_skeletons = self._get_date_skeletons()
             
             #list[0] = services
             #list[1] = families
@@ -64,13 +87,13 @@ class DataService:
             #list[4] = weekly_date_skeleton
             #list[5] = daily_date_skeleton
             #list[6] = daynameofweek_skeleton
-            #list[7] = ageband
-            #list[8] = hourofday
-            #list[9] = hourofday_dayofweek
-            return self._new_familiy_services + self._date_skeletons
+            #list[7] = ageband_skeleton
+            #list[8] = hourofday_skeleton
+            #list[9] = hourofday_dayofweek_skeleton
+            new_dict = {**self._new_familiy_services, **self._date_skeletons}
+            return  new_dict
 
            
-        #return [monthly, weekly, daily, daynameofweek, ageband, hourofday, hourofday_dayofweek]
 
 
         ## retrieves fact_services
@@ -274,6 +297,7 @@ class DataService:
                 fs.research_family_key,
                 COUNT( fs.research_service_key ) AS num_services,
                 AVG( fs.served_total ) AS avg_fam_size,
+                MAX(fs.served_total) AS max_fam_size,
                 SUM( fs.is_first_service_date ) AS timeframe_has_first_service_date,
                 AVG( fs.days_since_first_service ) AS avg_days_since_first_service,
                 MAX( fs.days_since_first_service ) AS max_days_since_first_service,
@@ -323,6 +347,7 @@ class DataService:
             dim_members.datekey_first_served,
             dim_members.gender,
             dim_members.current_age,
+            dim_members.head_of_house,
             dim_members.race_id,
             dim_members.ethnic_id,
             dim_members.immigrant_id,
@@ -375,9 +400,13 @@ class DataService:
         mem_usage = services.memory_usage(deep=True).sum() + families.memory_usage(deep=True).sum() + members.memory_usage(deep=True).sum()
         print(str(mem_usage), 'bytes for new family services')
 
-        return [services, families, members]
+        return {
+                KEY_SERVICE: services,
+                KEY_MEMBER: members,
+                KEY_FAMILY: families
+            }
 
-    def __get_monthly_date_skeleton(self):
+    def _get_monthly_date_skeleton(self):
         conn = connections['source_db']
 
         query_skeleton_month = f""" 
@@ -394,13 +423,9 @@ class DataService:
         
         start_time = time.time()
         skeleton = pd.read_sql(query_skeleton_month, conn)
-        print(str(time.time() - start_time), ' seconds to download monthly date skeleton')
-        mem_usage = skeleton.memory_usage(deep=True).sum() 
-        print(str(mem_usage), 'bytes for monthly date skeleton')
-
         return skeleton
 
-    def __get_weekly_date_skeleton(self):
+    def _get_weekly_date_skeleton(self):
         conn = connections['source_db']
 
         query_skeleton_week = f"""
@@ -418,13 +443,9 @@ class DataService:
 
         start_time = time.time()
         skeleton = pd.read_sql(query_skeleton_week, conn)
-        print(str(time.time() - start_time), ' seconds to download weekly date skeleton')
-        mem_usage = skeleton.memory_usage(deep=True).sum() 
-        print(str(mem_usage), 'bytes for weekly date skeleton')
-
         return skeleton
 
-    def __get_daily_date_skeleton(self):
+    def _get_daily_date_skeleton(self):
         conn = connections['source_db']
 
         query_skeleton_day = f"""
@@ -439,13 +460,9 @@ class DataService:
 
         start_time = time.time()
         skeleton = pd.read_sql(query_skeleton_day, conn)
-        print(str(time.time() - start_time), ' seconds to download daily date skeleton')
-        mem_usage = skeleton.memory_usage(deep=True).sum() 
-        print(str(mem_usage), 'bytes for daily date skeleton')
-
         return skeleton
 
-    def __get_daynameofweek_skeleton(self):
+    def _get_daynameofweek_skeleton(self):
         conn = connections['source_db']
 
         query_skeleton_daynameofweek = f"""
@@ -458,14 +475,10 @@ class DataService:
 
         start_time = time.time()
         skeleton = pd.read_sql(query_skeleton_daynameofweek, conn)
-        print(str(time.time() - start_time), ' seconds to download daily date skeleton')
-        mem_usage = skeleton.memory_usage(deep=True).sum() 
-        print(str(mem_usage), 'bytes for day name of week skeleton')
-
         return skeleton
 
     #this skeleton will be different based on different input scopes
-    def __get_age_band_skeleton(self):
+    def _get_age_band_skeleton(self):
         conn = connections['source_db']
         query_skeleton_age = f"""
         SELECT 
@@ -480,7 +493,7 @@ class DataService:
         skeleton = pd.read_sql(query_skeleton_age, conn)
         return skeleton
 
-    def __get_hourofday_skeleton(self):
+    def _get_hourofday_skeleton(self):
         conn = connections['source_db']
         query_skeleton_hod = f"""
         SELECT
@@ -497,7 +510,7 @@ class DataService:
         skeleton = pd.read_sql(query_skeleton_hod, conn)
         return skeleton
 
-    def __get_hourofday_dayofweek_skeleton(self):
+    def _get_hourofday_dayofweek_skeleton(self):
         conn = connections['source_db']
         query_skeleton = f"""
         SELECT
@@ -534,15 +547,112 @@ class DataService:
             dayofweek,
             hour_of_day
         """
+        skeleton = pd.read_sql(query_skeleton, conn)
+        return skeleton
+
+
+    def _get_mem_race_skeleton(self):
+        conn = connections['source_db']
+        query_skeleton = """
+        SELECT
+            dim_mem_races.race_id, 
+            dim_mem_races.fa_rollup_race
+        FROM
+            dim_mem_races
+        """
+        skeleton = pd.read_sql(query_skeleton, conn)
+        return skeleton
+        
+    def _get_mem_eth_skeleton(self):
+        conn = connections['source_db']
+        query_skeleton = """
+        SELECT
+            dim_mem_ethnicities.ethnic_id,
+            dim_mem_ethnicities.fa_rollup_ethnic
+        FROM
+            dim_mem_ethnicities
+        """
+        skeleton = pd.read_sql(query_skeleton, conn)
+        return skeleton
+        
+    def _get_mem_military_skeleton(self):
+        conn = connections['source_db']
+        query_skeleton = """
+        SELECT
+            dim_mem_military.military_id, 
+            dim_mem_military.fa_rollup_military
+        FROM
+            dim_mem_military
+        """
+        skeleton = pd.read_sql(query_skeleton, conn)
+        return skeleton
+        
+    def _get_mem_education_skeleton(self):
+        conn = connections['source_db']
+        query_skeleton = """
+        SELECT
+            dim_mem_education.education_id, 
+            dim_mem_education.fa_rollup_education
+        FROM
+            dim_mem_education
+        """
+        skeleton = pd.read_sql(query_skeleton, conn)
+        return skeleton
+
+    def _get_mem_employment_skeleton(self):
+        conn = connections['source_db']
+        query_skeleton = """
+        SELECT
+            dim_mem_employment.employment_id, 
+            dim_mem_employment.fa_follup_employment
+        FROM
+            dim_mem_employment
+        """
+        skeleton = pd.read_sql(query_skeleton, conn)
+        return skeleton
+
+    def _get_mem_healthins_skeleton(self):
+        conn = connections['source_db']
+        query_skeleton = """
+        SELECT
+            dim_mem_healthins.healthcare_id, 
+            dim_mem_healthins.fa_rollup_healthcare
+        FROM
+            dim_mem_healthins
+        """
+        skeleton = pd.read_sql(query_skeleton, conn)
+        return skeleton
+        
 
         
-    def __get_date_skeletons(self):
-        monthly = self.__get_monthly_date_skeleton()
-        weekly = self.__get_weekly_date_skeleton()
-        daily = self.__get_daily_date_skeleton()
-        daynameofweek = self.__get_daynameofweek_skeleton()
-        ageband = self.__get_age_band_skeleton()
-        hourofday = self.__get_hourofday_skeleton()
-        hourofday_dayofweek = self.__get_hourofday_dayofweek_skeleton()
+    def _get_date_skeletons(self):
+        monthly = self._get_monthly_date_skeleton()
+        weekly = self._get_weekly_date_skeleton()
+        daily = self._get_daily_date_skeleton()
+        daynameofweek = self._get_daynameofweek_skeleton()
+        ageband = self._get_age_band_skeleton()
+        hourofday = self._get_hourofday_skeleton()
+        hourofday_dayofweek = self._get_hourofday_dayofweek_skeleton()
+        race = self._get_mem_race_skeleton()
+        ethnicity = self._get_mem_eth_skeleton()
+        military = self._get_mem_military_skeleton()
+        education = self._get_mem_education_skeleton()
+        employment = self._get_mem_employment_skeleton()
+        healthins = self._get_mem_healthins_skeleton()
 
-        return [monthly, weekly, daily, daynameofweek, ageband, hourofday, hourofday_dayofweek]
+        return { SKEY_MONTH: monthly,
+                 SKEY_WEEK: weekly,
+                 SKEY_DAY : daily,
+                 SKEY_DNOW : daynameofweek,
+                 SKEY_AGE: ageband,
+                 SKEY_HOD: hourofday,
+                 SKEY_HOD_DOW: hourofday_dayofweek,
+                 SKEY_RACE: race,
+                 SKEY_MIL: military,
+                 SKEY_ETH: ethnicity,
+                 SKEY_EDU: education,
+                 SKEY_EMP: employment,
+                 SKEY_HEALTH: healthins
+                }
+
+
