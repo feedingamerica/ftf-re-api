@@ -2,6 +2,7 @@ from pandas.core.frame import DataFrame
 import dateutil.parser as parser
 import pandas as pd
 import json
+import transform_layer.services.data_service as data_service
 import numpy as np
 
 #data def 57
@@ -141,12 +142,12 @@ def get_service_summary_dowhod(data:'list[DataFrame]'):
 
 # data def 68
 def get_service_trend_event(data:'list[DataFrame]'):
-    services = data[0]
-    skeleton_month = data[3]
-    temp:DataFrame = skeleton_month.merge(pd.DataFrame(services['event_name'].unique()), how='cross')
+    services = data[data_service.KEY_SERVICE]
+    skeleton_month = data[data_service.SKEY_MONTH]
+    skeleton_month = skeleton_month.merge(pd.DataFrame(services['event_name'].unique()), how='cross')
 
-    trend:DataFrame = temp.merge(services, how='left', on = 'calendaryearmonth')
-    trend = trend.groupby(['calendaryearmonth','event_name'], as_index = False, dropna = False).size()
-    trend = trend.rename(columns={"size": "n_services"})
-    return trend.to_json()
+    services = services.groupby(['calendaryearmonth','event_name'], as_index = False, dropna = False).size()
+    services = services.rename(columns={"size": "n_services"})
+    services = skeleton_month.merge(services, how='left', on = 'calendaryearmonth')
+    return services.to_json()
 

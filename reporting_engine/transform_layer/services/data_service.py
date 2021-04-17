@@ -296,7 +296,7 @@ class DataService:
                 fs.research_family_key,
                 COUNT( fs.research_service_key ) AS num_services,
                 AVG( fs.served_total ) AS avg_fam_size,
-                MAX(fact_services.served_total) AS max_fam_size,
+                MAX(fs.served_total) AS max_fam_size,
                 SUM( fs.is_first_service_date ) AS timeframe_has_first_service_date,
                 AVG( fs.days_since_first_service ) AS avg_days_since_first_service,
                 MAX( fs.days_since_first_service ) AS max_days_since_first_service,
