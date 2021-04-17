@@ -346,7 +346,7 @@ class DataService:
             dim_members.datekey_first_served,
             dim_members.gender,
             dim_members.current_age,
-            dim_members.head_of_house
+            dim_members.head_of_house,
             dim_members.race_id,
             dim_members.ethnic_id,
             dim_members.immigrant_id,

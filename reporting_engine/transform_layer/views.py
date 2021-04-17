@@ -938,4 +938,40 @@ def get_service_trends(request):
     print_dict(sample_dict)
     return render(request, 'transformapi/get-report.html', context)
 
+def get_family_members(request):
+    sample_dict = {
+        "Meta": {
+            "startDate":"1/01/2020",
+            "endDate":"12/31/2020",
+            "scope_field":"loc_id",
+            "scope_field_value":6,
+            "control_type_name":"Is Grocery Service",
+            "control_type_value":1
+        },
+        "ReportInfo": [
+            {
+                "reportScheduleId":1,
+                "reportDictId":1,
+                "dataDefId":71,
+                "name":"skipped_generation",
+                "dataDefType":"type2"
+            },
+            {
+                "reportScheduleId":1,
+                "reportDictId":1,
+                "dataDefId":77,
+                "name":"demo_indv_ethnic",
+                "dataDefType":"type2"
+            }
+            
+        ]
+    }   
+
+    cd = CalculationDispatcher(sample_dict)
+    cd.run_calculations()
+
+    context = { 'report_output': format_dict(cd.request) }
+    print_dict(sample_dict)
+    return render(request, 'transformapi/get-report.html', context)
+
 

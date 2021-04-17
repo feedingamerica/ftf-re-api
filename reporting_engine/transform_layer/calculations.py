@@ -5,6 +5,7 @@ import transform_layer.calc_fact_services as calc_fact_services
 import transform_layer.calc_new_families as calc_new_families
 import transform_layer.calc_geographies as calc_geographies
 import transform_layer.calc_service_trends as calc_service_trends
+import transform_layer.calc_family_members as calc_family_members
 
 import pandas as pd
 
@@ -167,6 +168,8 @@ data_calc_function_switcher = {
         65: calc_service_trends.get_service_summary_dow,
         66: calc_service_trends.get_service_summary_hod,
         67: calc_service_trends.get_service_summary_dowhod,
-        68: calc_service_trends.get_service_trend_event
+        68: calc_service_trends.get_service_trend_event,
+        71: calc_family_members.get_skipped_generation,
+        77: calc_family_members.get_demo_indv_ethnic
     }
 
