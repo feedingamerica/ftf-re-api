@@ -171,6 +171,7 @@ data_calc_function_switcher = {
         68: calc_service_trends.get_service_trend_event,
         71: calc_family_members.get_skipped_generation,
         72: calc_family_members.get_demo_indv_gender,
+        73: calc_family_members.get_demo_indv_age_groups,
         77: calc_family_members.get_demo_indv_ethnic
     }
 
