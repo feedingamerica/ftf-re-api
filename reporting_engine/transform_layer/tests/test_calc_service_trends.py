@@ -160,11 +160,14 @@ class CalculationsTestCase(unittest.TestCase):
     #test data def 68
     def test_get_service_trend_event(self):
         expected = pandas.read_csv(
-            os.path.join(__location__, './expected_results/test_calc_service_trends/service_trend_event.csv')
+            os.path.join(__location__, './expected_results/test_calc_service_trends/service_trend_event.csv'),
+            index_col = 0
         ).fillna(0).reset_index().drop(columns = 'index')
-        expected = expected.astype({'n_services':'int64'})
+        #pandas seems to cast quoted numbers into floats
+        #need to cast back to int 
 
-        data = TEST_DATA_SERVICE.get_data_for_definition(68)
+        expected = expected.astype({'n_services':'int64'})
+        data = TEST_DATA_SERVICE_2.get_data_for_definition(68)
         func = calc.data_calc_function_switcher[68]
         result = func(data)
         resultFrame = pandas.read_json(result)

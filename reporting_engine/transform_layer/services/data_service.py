@@ -14,9 +14,9 @@ SCOPE_GEOGRAPHY = "geography"
 DEFAULT_AGE_GROUP_ID = 8
 
 #key for getting base data
-KEY_SERVICE = "services"
-KEY_MEMBER = "members"
-KEY_FAMILY = "families"
+KEY_SERVICE = "services" #base services
+KEY_MEMBER = "members" #base members
+KEY_FAMILY = "families" #base families
 
 #key for getting skeletons from data
 SKEY_MONTH = "month"
