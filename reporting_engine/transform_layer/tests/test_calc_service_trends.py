@@ -162,6 +162,7 @@ class CalculationsTestCase(unittest.TestCase):
         expected = pandas.read_csv(
             os.path.join(__location__, './expected_results/test_calc_service_trends/service_trend_event.csv')
         ).fillna(0).reset_index().drop(columns = 'index')
+        expected = expected.astype({'n_services':'int64'})
 
         data = TEST_DATA_SERVICE.get_data_for_definition(68)
         func = calc.data_calc_function_switcher[68]
