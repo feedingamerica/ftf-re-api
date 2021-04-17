@@ -32,21 +32,24 @@ class CalculationsTestCase(unittest.TestCase):
     #test data def 71
     def test_get_skipped_generation(self):
         expected = pandas.read_csv(
-            os.path.join(__location__, './expected_results/test_family_members/family_members_skipped_generation.csv')
+            os.path.join(__location__, './expected_results/test_family_members/family_members_skipped_generation.csv'),
+            index_col = 0
         ).fillna(0).reset_index().drop(columns = 'index')
-        expected = expected.astype({'n_families':'int64'})
+        expected = expected.astype({'n_families':'int64', 'is_single_senior_w_children' : 'int64'})
 
         data = TEST_DATA_SERVICE.get_data_for_definition(71)
         func = calc.data_calc_function_switcher[71]
         result = func(data)
         resultFrame = pandas.read_json(result)
         self.assertTrue(len(resultFrame) == len(expected))
-        assert_frame_equal(resultFrame, expected, rtol = REL_TOL)
+        assert_frame_equal(resultFrame.sort_values(by=['n_families'], ignore_index=True)[['is_single_senior_w_children','n_families']]
+        , expected.sort_values(by=['n_families'], ignore_index=True)[['is_single_senior_w_children','n_families']], rtol = REL_TOL)
 
     #test data def 77
-    def test_get_skipped_generation(self):
+    def test_get_demo_indv_ethnic(self):
         expected = pandas.read_csv(
-            os.path.join(__location__, './expected_results/test_family_members/family_members_demo_indv_ethnic.csv')
+            os.path.join(__location__, './expected_results/test_family_members/family_members_demo_indv_ethnic.csv'),
+            index_col = 0
         ).fillna(0).reset_index().drop(columns = 'index')
         expected = expected.astype({'n_indv':'int64'})
 
