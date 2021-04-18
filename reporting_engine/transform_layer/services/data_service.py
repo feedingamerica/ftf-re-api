@@ -14,9 +14,9 @@ SCOPE_GEOGRAPHY = "geography"
 DEFAULT_AGE_GROUP_ID = 8
 
 #key for getting base data
-KEY_SERVICE = "services"
-KEY_MEMBER = "members"
-KEY_FAMILY = "families"
+KEY_SERVICE = "services" #base services
+KEY_MEMBER = "members" #base members
+KEY_FAMILY = "families" #base families
 
 #key for getting skeletons from data
 SKEY_MONTH = "month"
@@ -80,16 +80,7 @@ class DataService:
             if(self._date_skeletons) is None:
                 self._date_skeletons = self._get_date_skeletons()
             
-            #list[0] = services
-            #list[1] = families
-            #list[2] = members
-            #list[3] = monthly_date_skeleton
-            #list[4] = weekly_date_skeleton
-            #list[5] = daily_date_skeleton
-            #list[6] = daynameofweek_skeleton
-            #list[7] = ageband_skeleton
-            #list[8] = hourofday_skeleton
-            #list[9] = hourofday_dayofweek_skeleton
+            #merge the dictionaries
             new_dict = {**self._new_familiy_services, **self._date_skeletons}
             return  new_dict
 
