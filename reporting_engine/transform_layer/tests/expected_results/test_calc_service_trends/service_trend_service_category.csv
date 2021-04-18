@@ -1,40 +1,40 @@
-"","calendaryearmonth","calendaryearmonth_start","calendaryearmonth_name","service_category_name","n_services"
-"1","202001","1/1/2020","January - 2020","Choice Pantry","3431"
-"2","202001","1/1/2020","January - 2020","CSFP","1"
-"3","202001","1/1/2020","January - 2020","Prepack Pantry","797"
-"4","202001","1/1/2020","January - 2020","Produce","722"
-"5","202002","2/1/2020","February - 2020","Choice Pantry","3044"
-"6","202002","2/1/2020","February - 2020","Prepack Pantry","857"
-"7","202002","2/1/2020","February - 2020","Produce","664"
-"8","202003","3/1/2020","March - 2020","Choice Pantry","1082"
-"9","202003","3/1/2020","March - 2020","Prepack Pantry","6086"
-"10","202003","3/1/2020","March - 2020","Produce","281"
-"11","202004","4/1/2020","April - 2020","Prepack Pantry","8261"
-"12","202004","4/1/2020","April - 2020","Produce","2437"
-"13","202005","5/1/2020","May - 2020","CSFP","11"
-"14","202005","5/1/2020","May - 2020","Prepack Pantry","6377"
-"15","202005","5/1/2020","May - 2020","Produce","2569"
-"16","202006","6/1/2020","June - 2020","CSFP","12"
-"17","202006","6/1/2020","June - 2020","Prepack Pantry","9447"
-"18","202006","6/1/2020","June - 2020","Produce","3"
-"19","202007","7/1/2020","July - 2020","Choice Pantry","10"
-"20","202007","7/1/2020","July - 2020","CSFP","11"
-"21","202007","7/1/2020","July - 2020","Prepack Pantry","10402"
-"22","202008","8/1/2020","August - 2020","Choice Pantry","8"
-"23","202008","8/1/2020","August - 2020","CSFP","7"
-"24","202008","8/1/2020","August - 2020","Prepack Pantry","11383"
-"25","202008","8/1/2020","August - 2020","Produce","1"
-"26","202009","9/1/2020","September - 2020","CSFP","13"
-"27","202009","9/1/2020","September - 2020","Prepack Pantry","11780"
-"28","202009","9/1/2020","September - 2020","Produce","3"
-"29","202010","10/1/2020","October - 2020","CSFP","22"
-"30","202010","10/1/2020","October - 2020","Prepack Pantry","12098"
-"31","202011","11/1/2020","November - 2020","Prepack Pantry","11720"
-"32","202012","12/1/2020","December - 2020","CSFP","8"
-"33","202012","12/1/2020","December - 2020","Prepack Pantry","12018"
-"34","202101","1/1/2021","January - 2021","Prepack Pantry","11125"
-"35","202102","2/1/2021","February - 2021","CSFP","18"
-"36","202102","2/1/2021","February - 2021","Prepack Pantry","11137"
-"37","202102","2/1/2021","February - 2021","Produce","2"
-"38","202103","3/1/2021","March - 2021","CSFP","5"
-"39","202103","3/1/2021","March - 2021","Prepack Pantry","11316"
+calendaryearmonth,calendaryearmonth_start,calendaryearmonth_name,service_category_name,n_services
+202001,1/1/2020,January - 2020,CSFP,1
+202001,1/1/2020,January - 2020,Choice Pantry,3431
+202001,1/1/2020,January - 2020,Prepack Pantry,797
+202001,1/1/2020,January - 2020,Produce,722
+202002,2/1/2020,February - 2020,Choice Pantry,3044
+202002,2/1/2020,February - 2020,Prepack Pantry,857
+202002,2/1/2020,February - 2020,Produce,664
+202003,3/1/2020,March - 2020,Choice Pantry,1082
+202003,3/1/2020,March - 2020,Prepack Pantry,6086
+202003,3/1/2020,March - 2020,Produce,281
+202004,4/1/2020,April - 2020,Prepack Pantry,8261
+202004,4/1/2020,April - 2020,Produce,2437
+202005,5/1/2020,May - 2020,CSFP,11
+202005,5/1/2020,May - 2020,Prepack Pantry,6377
+202005,5/1/2020,May - 2020,Produce,2569
+202006,6/1/2020,June - 2020,CSFP,12
+202006,6/1/2020,June - 2020,Prepack Pantry,9447
+202006,6/1/2020,June - 2020,Produce,3
+202007,7/1/2020,July - 2020,CSFP,11
+202007,7/1/2020,July - 2020,Choice Pantry,10
+202007,7/1/2020,July - 2020,Prepack Pantry,10402
+202008,8/1/2020,August - 2020,CSFP,7
+202008,8/1/2020,August - 2020,Choice Pantry,8
+202008,8/1/2020,August - 2020,Prepack Pantry,11383
+202008,8/1/2020,August - 2020,Produce,1
+202009,9/1/2020,September - 2020,CSFP,13
+202009,9/1/2020,September - 2020,Prepack Pantry,11780
+202009,9/1/2020,September - 2020,Produce,3
+202010,10/1/2020,October - 2020,CSFP,22
+202010,10/1/2020,October - 2020,Prepack Pantry,12098
+202011,11/1/2020,November - 2020,Prepack Pantry,11720
+202012,12/1/2020,December - 2020,CSFP,8
+202012,12/1/2020,December - 2020,Prepack Pantry,12018
+202101,1/1/2021,January - 2021,Prepack Pantry,11125
+202102,2/1/2021,February - 2021,CSFP,18
+202102,2/1/2021,February - 2021,Prepack Pantry,11137
+202102,2/1/2021,February - 2021,Produce,2
+202103,3/1/2021,March - 2021,CSFP,5
+202103,3/1/2021,March - 2021,Prepack Pantry,11316
