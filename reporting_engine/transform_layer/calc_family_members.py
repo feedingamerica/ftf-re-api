@@ -6,7 +6,7 @@ import transform_layer.services.data_service as data_service
 import numpy as np
 
 # data def 71
-def get_skipped_generation(data:'list[DataFrame]'):
+def get_skipped_generation(data:'dict[DataFrame]'):
 
     """ temp71_1 = base_members %>% 
     filter(head_of_house == "Yes") %>% 
@@ -61,14 +61,14 @@ def get_skipped_generation(data:'list[DataFrame]'):
     return end_result.to_json()
 
 # data def 72
-def get_demo_indv_gender(data:'list[DataFrame]'):
+def get_demo_indv_gender(data:'dict[DataFrame]'):
     members = data[data_service.KEY_MEMBER]
 
     members = members.groupby(['gender']).agg(n_indv=('gender','count')).reset_index()
     return members.to_json()
 
 # data def 73
-def get_demo_indv_age_groups(data:'list[DataFrame]'):
+def get_demo_indv_age_groups(data:'dict[DataFrame]'):
     members = data[data_service.KEY_MEMBER]
     age_bands = data[data_service.SKEY_AGE]
 
@@ -77,7 +77,7 @@ def get_demo_indv_age_groups(data:'list[DataFrame]'):
     return age_groups.to_json()
 
 # dat def 74
-def get_hh_has_age_groups(data:'list[DataFrame]'):
+def get_hh_has_age_groups(data:'dict[DataFrame]'):
     members = data[data_service.KEY_MEMBER]
     age_bands = data[data_service.SKEY_AGE]
 
@@ -92,7 +92,7 @@ def get_hh_has_age_groups(data:'list[DataFrame]'):
     return age_groups.to_json()
 
 # data def 77
-def get_demo_indv_ethnic(data:'list[DataFrame]'):
+def get_demo_indv_ethnic(data:'dict[DataFrame]'):
 
     """ temp77 = left_join(x = skeleton_dm_ethnic, y = base_members %>% 
     group_by(ethnic_id) %>% 
@@ -118,3 +118,34 @@ def get_demo_indv_ethnic(data:'list[DataFrame]'):
     )
 
     return ethnic.to_json()
+
+#data def 79
+def get_demo_indv_education(data:'dict[DataFrame]'):
+    members = data[data_service.KEY_MEMBER]
+    skeleton = data[data_service.SKEY_EDU]
+
+    members = members.groupby(by = 'education_id', as_index = False).agg(n_indv = ('research_member_key', 'count'))
+    members = skeleton.merge(members, on = 'education_id', how = 'left')
+    members = members.groupby(by = 'fa_rollup_education', as_index = False).agg(n_indv = ('n_indv', 'sum'))
+    return members.to_json()
+
+#data def 80
+def get_demo_indv_employment(data:'dict[DataFrame]'):
+    members = data[data_service.KEY_MEMBER]
+    skeleton = data[data_service.SKEY_EMP]
+
+    members = members.groupby(by = 'employment_id', as_index = False).agg(n_indv = ('research_member_key', 'count'))
+    members = skeleton.merge(members, on = 'employment_id', how = 'left')
+    #follup_employment is not an error(at least on this end of the system). The column was misspelled when it was created in the source database
+    members = members.groupby(by = 'fa_follup_employment', as_index = False).agg(n_indv = ('n_indv', 'sum'))
+    return members.to_json()
+
+#data def 81
+def get_demo_indv_health_insurnace(data:'dict[DataFrame]'):
+    members = data[data_service.KEY_MEMBER]
+    skeleton = data[data_service.SKEY_HEALTH]
+
+    members = members.groupby(by = 'healthcare_id', as_index = False).agg(n_indv = ('research_member_key', 'count'))
+    members = skeleton.merge(members, on = 'healthcare_id', how = 'left')
+    members = members.groupby(by = 'fa_rollup_healthcare', as_index = False).agg(n_indv = ('n_indv', 'sum'))
+    return members.to_json()

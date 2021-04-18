@@ -173,6 +173,9 @@ data_calc_function_switcher = {
         72: calc_family_members.get_demo_indv_gender,
         73: calc_family_members.get_demo_indv_age_groups,
         74: calc_family_members.get_hh_has_age_groups,
-        77: calc_family_members.get_demo_indv_ethnic
+        77: calc_family_members.get_demo_indv_ethnic,
+        79: calc_family_members.get_demo_indv_education,
+        80: calc_family_members.get_demo_indv_employment,
+        81: calc_family_members.get_demo_indv_health_insurnace
     }
 
