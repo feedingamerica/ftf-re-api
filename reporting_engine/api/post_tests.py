@@ -9,7 +9,7 @@ Testing the django POST and GET request
 """
 class PostTesting():
     """
-    Setting up test model instances for the test database that Django creates
+    Setting up test model instances for the test database that Django creates. In order to run these 'testserver' must be added to 'ALLOWED_HOSTS' in /reporting_engine/settings.py
     Test cases will be run from the shell so begin by running python manage.py shell, follow up with "from api.post_tests import PostTesting" and then run "PostTesting.test_call_tests()"
     If a test case passes nothing will be printed. If it fails the test case will give an Assertion Error
     """  		
@@ -43,12 +43,12 @@ class PostTesting():
             tc.assertTrue(rs != None, "Report Schedule did not save to database correctly")
             rs.delete()
 
-    #checking report_scope_value only under 9 because those do not have addins      
+    #checking for a post test failure, ensuring bad input fails      
     def test_post_fail(params):
         #Client and testcase initialization
         c = Client()
         tc = unittest.TestCase()
-        #Post response
+        #Post response with assertion that value error occurs
         response = c.post('/api/report_schedules/', {
                                                 "run_type": params[0],
 	                                            "timeframe_type": params[1],
@@ -61,19 +61,18 @@ class PostTesting():
                                                 }, 'application/json')
         #ensure that the report schedule does not save to the database  
         tc.assertEqual(response.status_code, 400)
-        rs = ReportSchedule.objects.filter(run_type_id = params[0], timeframe_type_id = params[1], report_scope_id = params[2], report_scope_value = params[3], control_type_id = params[4], reporting_dictionary_id = params[5], control_age_group_id = params[6], date_scheduled = params[7]).get()
-        tc.assertTre(rs.DoesNotExist())
-        rs.delete()
+        with tc.assertRaises(ValueError):
+            ReportSchedule.objects.filter(run_type_id = params[0], timeframe_type_id = params[1], report_scope_id = params[2], report_scope_value = params[3], control_type_id = params[4], reporting_dictionary_id = params[5], control_age_group_id = params[6], date_scheduled = params[7]).get()
     
     def test_call_tests():
         #This method calls all the test cases
-        test1 = [2, 3, 1, "99", 1, 1, 1, date.today()]
-        test2 = [2, 3, 1, "99", 1, 1, 1, date.today()]
+        test1 = [2, 3, 1, "98", 1, 1, 1, date.today()]
+        test2 = [2, 3, 1, "98", 1, 1, 1, date.today()]
         test3 = [2, 3, "fail", "99", 1, 1, 1, date.today()]
         PostTesting.test_post_pass(test1)
         print("Passing Post Test Successful")
         PostTesting.test_post_pass(test2)
         print("Duplicate Post Test Successful")
-        #PostTesting.test_post_fail(test3)
-        #print("Failure Post Test Successful")
+        PostTesting.test_post_fail(test3)
+        print("Failure Post Test Successful")
         #etc.
