@@ -1,9 +1,10 @@
 from celery import shared_task
 from .utils import get_data_definitions
 from transform_layer.calculations import CalculationDispatcher
-from .models import ReportSchedule, Report, ReportDataInt, ReportDataFloat
+from .models import ReportSchedule, Report, ReportDataInt, ReportDataFloat, ReportDataJson
 import datetime
 from datetime import date, timedelta
+import json
 
 # calculates report parameters, generates the report, and saves it to the reports database
 def generate_report_and_save(schedule):      
@@ -72,21 +73,30 @@ def one_time_report_generation(schedule_id):
 def save_report(schedule, results):
     # New report to the database
     dateCompleted = date.today().strftime('%Y-%m-%d')
-    new_report = Report(report_schedule = schedule, start_date = results['Scope']['startDate'], end_date = results['Scope']['endDate'], date_completed = dateCompleted)
-    # once we get changes from other teams, this will become...
-    # new_report = Report(report_schedule = schedule, start_date = results['Meta']['startDate'], end_date = results['Meta']['endDate'], date_completed = dateCompleted, no_data = results['Meta']['no_data'])
+
+    # checking if no_data is in the Meta dict of results
+    # this should always be there, but just in case a new data definition has been added but not taken into account when checking for data,
+    # or something else happens, checking for that field before using it to populate the new Report
+    if 'no_data' in results['Meta']:
+        new_report = Report(report_schedule = schedule, start_date = results['Meta']['startDate'], end_date = results['Meta']['endDate'], date_completed = dateCompleted, no_data = results['Meta']['no_data'])
+    else:
+        new_report = Report(report_schedule = schedule, start_date = results['Meta']['startDate'], end_date = results['Meta']['endDate'], date_completed = dateCompleted)
+    
+    # saving report to the database
     new_report.save()
 
-    # New rows to report_data_int/report_data_float
-    # once we get changes from other teams, add the below statement...
-    # if (results['Meta']['no_data'] == False):
-    for values in results['ReportInfo']:
-        if(values['dataDefType'] == 'integer'):
-            new_data_int = ReportDataInt(report = new_report, data_definition_id = values['dataDefId'], int_value = values['value'])
-            new_data_int.save()
-        elif(values['dataDefType'] == 'float'):
-            new_data_float = ReportDataFloat(report = new_report, data_definition_id = values['dataDefId'], float_value = values['value'])
-            new_data_float.save()
+    # New rows to report_data_int/report_data_float, if there are calculated values for this report
+    if ('no_data' in results['Meta'] and results['Meta']['no_data'] == False):
+        for values in results['ReportInfo']:
+            if(values['dataDefType'] == 'integer'):
+                new_data_int = ReportDataInt(report = new_report, data_definition_id = values['dataDefId'], int_value = values['value'])
+                new_data_int.save()
+            elif(values['dataDefType'] == 'float'):
+                new_data_float = ReportDataFloat(report = new_report, data_definition_id = values['dataDefId'], float_value = values['value'])
+                new_data_float.save()
+            elif(values['dataDefType'] == 'json'):
+                new_data_json = ReportDataJson(report = new_report, data_definition_id = values['dataDefId'], json_object = json.loads(values['value']))
+                new_data_json.save()
     
 
 # used for testing purposes
