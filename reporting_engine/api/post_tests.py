@@ -67,8 +67,8 @@ class PostTesting():
     #This method calls all the test cases
     def test_call_tests():
         #checking report_scope_id (the third item) only under 9 because those do not have addins      
-        test1 = [2, 3, 1, 97, 1, 1, 1, date.today()]
-        test2 = [2, 3, 1, 97, 1, 1, 1, date.today()]
+        test1 = [2, 3, 1, 98, 1, 1, 1, date.today()]
+        test2 = [2, 3, 1, 98, 1, 1, 1, date.today()]
         test3 = [2, 3, "fail", 99, 1, 1, 1, date.today()]
 
         PostTesting.test_post_pass(test1)
