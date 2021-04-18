@@ -48,12 +48,18 @@ def calculate_dates(schedule):
 
     return start_date, end_date
 
+@shared_task
+def test_task(param):
+    print(param)
+    print("Test task executed correctly.")
+
 # generates (and saves) recurring reports if they are due based on recurrence parameter
 @shared_task
 def periodic_report_generation(recurrence):
     for schedule in ReportSchedule.objects.all():
 	    if (schedule.timeframe_type.recurrence_type == recurrence):
 		    generate_report_and_save(schedule)
+
 
 # generates (and saves) a one-time report if it has been requested
 @shared_task
