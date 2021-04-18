@@ -69,6 +69,18 @@ class CalculationsTestCase(unittest.TestCase):
         resultFrame = pandas.read_json(result)
         assert_frame_equal(resultFrame, expected, rtol = REL_TOL)
 
+    #test data def 74
+    def test_get_hh_has_age_groups(self):
+        expected = pandas.read_csv(
+            os.path.join(__location__, './expected_results/test_family_members/family_members_hh_has_age_groups.csv')
+        )
+
+        data = TEST_DATA_SERVICE.get_data_for_definition(74)
+        func = calc.data_calc_function_switcher[74]
+        result = func(data)
+        resultFrame = pandas.read_json(result)
+        assert_frame_equal(resultFrame, expected, rtol = REL_TOL)
+
     #test data def 77
     def test_get_demo_indv_ethnic(self):
         expected = pandas.read_csv(
