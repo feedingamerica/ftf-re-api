@@ -2,7 +2,8 @@ from django.test import TestCase
 from django.db import connections
 import pandas
 from pandas.testing import assert_frame_equal, assert_series_equal
-from transform_layer.services.data_service import DataService
+from transform_layer.services.data_service import DataService, KEY_FAMILY, KEY_MEMBER, KEY_SERVICE
+import transform_layer.services.data_service as data_service
 import transform_layer.calculations as calc
 
 import json
@@ -33,7 +34,12 @@ base_services = pyreadr.read_r(os.path.join(__location__, './test_data/test_calc
 
 #substitue the call to TEST_DATA_SERVICE.get_data_for_definition with this
 #its the data that david used in his calculations
-BASE_DATA = [base_services, base_families, base_members]
+BASE_DATA = {
+    KEY_SERVICE: base_services,
+    KEY_FAMILY: base_families,
+    KEY_MEMBER : base_members
+}
+    
 
 class CalculationsTestCase(unittest.TestCase):
     #test for data def 32
