@@ -5,6 +5,7 @@ import json
 import numpy as np
 
 import transform_layer.calc_families as calc_families
+import transform_layer.services.data_service as data_service
 
 
 # data def 32
@@ -21,7 +22,7 @@ def get_new_families(data: 'list[DataFrame]'):
     added_families - new family count
     """
     
-    families = data[1]
+    families = data[data_service.KEY_FAMILY]
     families = families[families['timeframe_has_first_service_date']>0]
     return len(families)
 
@@ -39,7 +40,7 @@ def get_new_members(data: 'list[DataFrame]'):
     added_members - json of new member count
 
     """
-    members = data[2]
+    members = data[data_service.KEY_MEMBER]
     members = members[members['timeframe_has_first_service_date']>0]
     return len(members)
 
@@ -57,20 +58,20 @@ def get_new_members_to_old_families(data: 'list[DataFrame]'):
     added_members - json of new members added to families that already have been served
 
     """
-    members = data[2]
+    members = data[data_service.KEY_MEMBER]
     members = members[members['timeframe_has_first_service_date']>0]
     members = members[members['dim_families_timeframe_has_first_service_date']>0]
     return len(members)
 
 # data def 35
 def get_services_to_new_families(data: 'list[DataFrame]'):
-    families = data[1]
+    families = data[data_service.KEY_FAMILY]
     families = families[families['timeframe_has_first_service_date']>0]
     return families['num_services'].sum()
 
 #data def 36
 def get_families_first_service(data: 'list[DataFrame]'):
-    services = data[0]
+    services = data[data_service.KEY_SERVICE]
     services = services[services['is_first_service_date']>0]
     return len(services)
 
@@ -88,7 +89,7 @@ def get_new_families_freq_visits(data: 'list[DataFrame]'):
         added_members - json of number of services new families used
 
         """
-        families = data[1]
+        families = data[data_service.KEY_FAMILY]
         families = families[families['timeframe_has_first_service_date']>0]
         families = families.astype({'num_services': 'int64'})
         families = families.groupby(['num_services'])
@@ -102,14 +103,14 @@ def get_new_families_freq_visits(data: 'list[DataFrame]'):
 
 # data def 39
 def get_new_fam_household_composition(data: 'list[DataFrame]'):
-    families = data[1]
+    families = data[data_service.KEY_FAMILY]
     families = families[families['timeframe_has_first_service_date']>0].copy()
     return calc_families.get_household_composition(families)
     
 
 # data def 40
 def get_new_fam_composition_key_insight(data: 'list[DataFrame]'):
-    families = data[1]
+    families = data[data_service.KEY_FAMILY]
     families = families[families['timeframe_has_first_service_date']>0]
     result_dict = {
         "has_child_senior":0,
@@ -139,13 +140,13 @@ def get_new_fam_hh_size_dist_1_to_10(data):
     num_new_families - new family distribution counts 1 to 10
     """
 
-    families = data[1]
+    families = data[data_service.KEY_FAMILY]
     families = families[families['timeframe_has_first_service_date'] > 0].copy()
     return calc_families.get_household_size_distribution_1_to_10(families)
 
 #data def 42
 def get_new_fam_hh_size_dist_classic(data):
-    families = data[1]
+    families = data[data_service.KEY_FAMILY]
     families = families[families['timeframe_has_first_service_date'] > 0].copy()
     return calc_families.get_household_size_distribution_classic(families)
 
@@ -163,12 +164,12 @@ def get_relationship_length_fam_mean(data):
     mean_relationship_length - mean relationship length of families
     """
 
-    families = data[1]
+    families = data[data_service.KEY_FAMILY]
     return families['max_days_since_first_service'].mean()
 
 #data def 44
 def get_new_fam_dist_of_length_of_relationship(data: 'list[DataFrame]'):
-    families = data[1]
+    families = data[data_service.KEY_FAMILY]
     set_max = families['max_days_since_first_service'].max()
     width = set_max / 10
 
@@ -209,20 +210,30 @@ def get_new_fam_dist_of_length_of_relationship(data: 'list[DataFrame]'):
         values[9]: 9
     }
 
+    def applyMin(row):
+        min_values = [0, width, width*2, width*3, width*4, width*5, width*6, width*7, width*8, width*9]
+        return min_values[row]
+
+    def applyMax(row):
+        min_values = [width, width*2, width*3, width*4, width*5, width*6, width*7, width*8, width*9, set_max]
+        return min_values[row]
+        
     families['buckets'] = np.select(conditions, values)
     families = families.groupby('buckets').size().to_frame('count')
-    families = families.sort_values(by = 'buckets', key = lambda x: x.map(sort_buckets_dict))
+    families = families.sort_values(by = 'buckets', key = lambda x: x.map(sort_buckets_dict)).reset_index()
+    families['min'] = pd.Series(families.index).apply(lambda row: applyMin(row))
+    families['max'] = pd.Series(families.index).apply(lambda row: applyMax(row))
 
-    return families['count'].to_json()
+    return families.to_json()
 
 #data def 45
 def get_relationship_length_indv_mean(data):
-    members = data[2]
+    members = data[data_service.KEY_MEMBER]
     return members['max_days_since_first_service'].mean()
 
 # data def 46
 def get_new_fam_dist_of_length_of_relationships_for_individuals(data: 'list[DataFrame]'):
-    members = data[2]
+    members = data[data_service.KEY_MEMBER]
     set_max = members['max_days_since_first_service'].max()
     width = set_max / 10
 
@@ -263,10 +274,20 @@ def get_new_fam_dist_of_length_of_relationships_for_individuals(data: 'list[Data
         values[9]: 9
     }
 
+    def applyMin(row):
+        min_values = [0, width, width*2, width*3, width*4, width*5, width*6, width*7, width*8, width*9]
+        return min_values[row]
+
+    def applyMax(row):
+        min_values = [width, width*2, width*3, width*4, width*5, width*6, width*7, width*8, width*9, set_max]
+        return min_values[row]
+
     members['buckets'] = np.select(conditions, values)
     members = members.groupby('buckets').size().to_frame('count')
-    members = members.sort_values(by = 'buckets', key = lambda x: x.map(sort_buckets_dict))
+    members = members.sort_values(by = 'buckets', key = lambda x: x.map(sort_buckets_dict)).reset_index()
+    members['min'] = pd.Series(members.index).apply(lambda row: applyMin(row))
+    members['max'] = pd.Series(members.index).apply(lambda row: applyMax(row))
 
-    return members['count'].to_json()
+    return members.to_json()
 
 
