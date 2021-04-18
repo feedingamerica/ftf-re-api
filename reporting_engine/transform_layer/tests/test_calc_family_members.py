@@ -93,8 +93,6 @@ class CalculationsTestCase(unittest.TestCase):
         func = calc.data_calc_function_switcher[75]
         result = func(data)
         resultFrame = pandas.read_json(result)
-        print(resultFrame)
-        print(expected)
         assert_frame_equal(resultFrame, expected, rtol = REL_TOL)
 
     #test data def 77
