@@ -91,6 +91,29 @@ def get_hh_has_age_groups(data:'dict[DataFrame]'):
     )
     return age_groups.to_json()
 
+# data def 75
+def get_population_pyramid(data:'dict[DataFrame]'):
+    members = data[data_service.KEY_MEMBER]
+    age_bands = data[data_service.SKEY_AGE]
+    
+    # Duplicate each row in age_bands so that there are two of each row, one with a male and one with a female groupby_gender column value
+    # These steps are taken in order to display age groups in the output that have a value of 0 for n_indv
+    age_bands['groupby_gender'] = 'F'
+    temp:DataFrame = age_bands.copy()
+    temp['groupby_gender'] = 'M'
+    age_bands = pd.concat([age_bands, temp], ignore_index=True)
+
+    members = pd.merge(age_bands, members, how='left', left_on=['age_band_name_dash', 'groupby_gender'], right_on=['age_band_name_dash', 'gender'])
+    members['count'] = np.where(members['research_member_key'].notnull(), 1, 0)
+    members = members[(members['groupby_gender'] == 'M') | (members['groupby_gender'] == 'F')]
+    members = members.groupby(['min_age', 'age_band_name_dash', 'groupby_gender']).agg(n_indv=('count', 'sum')).unstack(fill_value=0).stack().reset_index()
+
+    return members.to_json()
+
+# data def 76
+def get_demo_indv_race(data:'dict[DataFrame]'):
+    pass
+
 # data def 77
 def get_demo_indv_ethnic(data:'dict[DataFrame]'):
 

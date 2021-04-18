@@ -963,8 +963,8 @@ def get_service_trends(request):
 def get_family_members(request):
     sample_dict = {
         "Meta": {
-            "startDate":"1/01/2020",
-            "endDate":"3/31/2021",
+            "startDate":"3/7/2021",
+            "endDate":"3/7/2021",
             "scope_field":"loc_id",
             "scope_field_value":6,
             "control_type_name":"Is Grocery Service",
@@ -997,6 +997,13 @@ def get_family_members(request):
                 "reportDictId":1,
                 "dataDefId":74,
                 "name":"hh_has_age_groups",
+                "dataDefType":"type2"
+            },
+            {
+                "reportScheduleId":1,
+                "reportDictId":1,
+                "dataDefId":75,
+                "name":"population_pyramid",
                 "dataDefType":"type2"
             },
             {
