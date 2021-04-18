@@ -107,6 +107,7 @@ def get_population_pyramid(data:'dict[DataFrame]'):
     members['count'] = np.where(members['research_member_key'].notnull(), 1, 0)
     members = members[(members['groupby_gender'] == 'M') | (members['groupby_gender'] == 'F')]
     members = members.groupby(['min_age', 'age_band_name_dash', 'groupby_gender']).agg(n_indv=('count', 'sum')).unstack(fill_value=0).stack().reset_index()
+    members = members.rename(columns={'groupby_gender': 'gender'})
 
     return members.to_json()
 

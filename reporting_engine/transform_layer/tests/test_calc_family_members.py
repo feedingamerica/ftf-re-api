@@ -82,6 +82,21 @@ class CalculationsTestCase(unittest.TestCase):
         resultFrame = pandas.read_json(result)
         assert_frame_equal(resultFrame, expected, rtol = REL_TOL)
 
+    #test data def 75
+    def test_get_population_pyramid(self):
+        expected = pandas.read_csv(
+            os.path.join(__location__, './expected_results/test_family_members/population_pyramid.csv'),
+            index_col = 0
+        )
+
+        data = TEST_DATA_SERVICE.get_data_for_definition(75)
+        func = calc.data_calc_function_switcher[75]
+        result = func(data)
+        resultFrame = pandas.read_json(result)
+        print(resultFrame)
+        print(expected)
+        assert_frame_equal(resultFrame, expected, rtol = REL_TOL)
+
     #test data def 77
     def test_get_demo_indv_ethnic(self):
         expected = pandas.read_csv(
