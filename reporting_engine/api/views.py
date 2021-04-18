@@ -1,12 +1,18 @@
+from django.shortcuts import render
+from django.views import View
 from django.http import HttpResponse
 from .models import Report, ReportSchedule, RunType, TimeframeType, ReportScope, ControlType, ReportingDictionary
 from rest_framework import viewsets, permissions
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes, authentication_classes
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
+from rest_framework.authentication import TokenAuthentication
+from rest_framework_api_key.permissions import HasAPIKey
+from rest_framework_api_key.models import APIKey
 from .serializers import *
 from .tasks import one_time_report_generation
-from datetime import datetime
+from datetime import datetime, timezone
 from addins import addin_helper
 import pandas as pd
 from django.db import connections
@@ -15,54 +21,57 @@ import json
 from django.http import JsonResponse
 from api.endpointreport import report_total
 
+#TODO add this to public endpoints @permission_classes([HasAPIKey])
+
 class ReportViewSet(viewsets.ModelViewSet):
     """
     API endpoint for Report table
     """
     queryset = Report.objects.all()
     serializer_class = ReportSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [HasAPIKey | permissions.IsAuthenticated ]
     http_method_names=['get']
 
 
 class RunTypeViewSet(viewsets.ModelViewSet):
     queryset = RunType.objects.all()
     serializer_class = RunTypeSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [HasAPIKey | permissions.IsAuthenticated]
     http_method_names=['get']
 
 class TimeframeTypeViewSet(viewsets.ModelViewSet):
     queryset = TimeframeType.objects.all()
     serializer_class = TimeframeTypeSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [HasAPIKey | permissions.IsAuthenticated]
     http_method_names=['get']
 
 
 class ReportScopeViewSet(viewsets.ModelViewSet):
     queryset = ReportScope.objects.all()
     serializer_class = ReportScopeSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [HasAPIKey | permissions.IsAuthenticated]
     http_method_names=['get']
 
 
 class ControlTypeViewSet(viewsets.ModelViewSet):
     queryset = ControlType.objects.all()
-    serializer_class = ControlTypeSerializer 
-    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = ControlTypeSerializer
+    permission_classes = [HasAPIKey | permissions.IsAuthenticated]
+
     http_method_names=['get']
 
 
 class ReportingDictionaryViewSet(viewsets.ModelViewSet):
     queryset = ReportingDictionary.objects.all()
     serializer_class = ReportingDictionarySerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [HasAPIKey | permissions.IsAuthenticated]
     http_method_names=['get']
 
 class ReportScheduleViewSet(viewsets.ModelViewSet):
     queryset = ReportSchedule.objects.all()
     serializer_class = ReportScheduleSerializer
     http_method_names=['get', 'post']
-    # permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [HasAPIKey | permissions.IsAuthenticated]
 
     def create(self, request):
         schedule_serializer = self.serializer_class(data=request.data)
@@ -87,6 +96,7 @@ class ReportScheduleViewSet(viewsets.ModelViewSet):
         return Response(schedule_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 # this gets a list of reports
+@permission_classes([HasAPIKey | permissions.IsAuthenticated])
 @api_view(['GET'])
 def get_reports(request, report_scope_id, report_scope_value):
     # getting the report's fields (note that all of these are optional report schedule parameters)
@@ -127,8 +137,33 @@ def get_reports(request, report_scope_id, report_scope_value):
     serializer = ReportSerializer(reports, many=True)
     return Response(serializer.data)
 
+    
+@api_view(['GET'])
+@permission_classes([HasAPIKey])
+def test_api_key(request):
+    """
+    Endpoint for testing if API Key authentication works
+    In the header of the GET request, make sure to supply "X-Api-Key" as the key, and your api key as the value.
+    """
+    #return Response("You are authorized to access this endpoint!")
+    return Response("API key worked")
+
+
+@api_view(['GET'])
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAdminUser])
+def test_admin_token_auth(request):
+    """
+    Endpoint to demonstrate limiting access to only those with API Key's and who have admin tokens. Use this for admin only endpoints.
+    In the header of the GET request, supply the following two key value pairs:
+    "Authorization": "Token [token]",
+    "X-Api-Key": "[your api key here]"
+    """
+    return Response("Admin token authentication worked")
+
 #this gets all the options for a report
 @api_view(['GET'])
+@permission_classes([HasAPIKey | permissions.IsAuthenticated])
 def report_options(request):
     #get all distinct dim_ages and use pandas to format it into json
     query= "select distinct age_grouping_id, age_grouping_name, start_age, end_age, age_band_name_to from source_beta.dim_ages" 
@@ -146,7 +181,8 @@ def report_options(request):
     return qs_json
 
 #this gets a specific report given a report_id
-@api_view(['GET'])	
+@api_view(['GET'])
+@permission_classes([HasAPIKey | permissions.IsAuthenticated])
 def get_report_total(request, report_id):
     report_json = report_total(report_id)
     return report_json

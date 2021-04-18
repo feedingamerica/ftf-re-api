@@ -3,8 +3,12 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.shortcuts import render
 from django.db import connections
+<<<<<<< HEAD
+from print_dict import print_dict, format_dict
+=======
 #from print_dict import print_dict, format_dict
 
+>>>>>>> master
 from .calculations import CalculationDispatcher
 from .services.data_service import DataService
 

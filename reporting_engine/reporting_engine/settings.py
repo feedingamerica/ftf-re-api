@@ -44,10 +44,18 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'api.apps.ApiConfig',
     'rest_framework',
+    'rest_framework.authtoken',
+    'rest_framework_api_key',
     'transform_layer',
     'django_celery_beat',
     'drf_yasg'
 ]
+
+REST_FRAMEWORK ={
+    "DEFAULT_PERMISSION_CLASSES": [
+        "rest_framework_api_key.permissions.HasAPIKey",
+    ]
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -78,7 +86,6 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'reporting_engine.wsgi.application'
-
 
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
@@ -154,6 +161,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
+#use the header "x-api-key" with your API Key
+API_KEY_CUSTOM_HEADER = "HTTP_X_API_KEY"
+
 
 #Celery configuration
 REDIS_HOST = os.getenv('REDIS_HOST')

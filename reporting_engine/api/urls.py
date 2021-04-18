@@ -1,7 +1,7 @@
 from django.urls import include, path, re_path
 from . import views
 from rest_framework import routers, permissions
-
+from rest_framework_api_key.permissions import HasAPIKey
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 
@@ -12,7 +12,7 @@ schema_view = get_schema_view(
 		description='Welcome to Swagger',
 		),
 	public=True,
-	permission_classes=(permissions.IsAuthenticated, ),
+	permission_classes=(permissions.IsAuthenticated,  ),
 	)
 
 router = routers.DefaultRouter()
@@ -26,6 +26,8 @@ router.register(r'report_schedules', views.ReportScheduleViewSet)
 
 
 urlpatterns = [
+    path('test-api-key', views.test_api_key, name='test_api_key'),
+    path('test-admin-token-auth', views.test_admin_token_auth, name='test_admin_token_auth'),
 	re_path(r'^doc(?P<format>\.json|\.yaml)$', 
 		schema_view.without_ui(cache_timeout=0), name='schema-json'),
 	path('doc/', schema_view.with_ui('swagger', cache_timeout=0),

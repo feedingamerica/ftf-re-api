@@ -5,6 +5,7 @@ billiard==3.6.3.0
 celery==5.0.5
 certifi==2020.12.5
 chardet==4.0.0
+cffi==1.14.5
 click==7.1.2
 click-didyoumean==0.0.3
 click-plugins==1.1.1
@@ -15,7 +16,10 @@ Django==3.1.6
 django-celery-beat==2.2.0
 django-timezone-field==4.1.1
 djangorestframework==3.12.2
+djangorestframework-api-key==2.*
 drf-yasg==1.20.0
+gevent==21.1.2
+greenlet==1.0.0
 idna==2.10
 inflection==0.5.1
 isort==5.7.0
@@ -33,6 +37,8 @@ print-dict==0.1.16
 prompt-toolkit==3.0.16
 pylint==2.7.2
 pyparsing==2.4.7
+pycparser==2.20
+pyreadr==0.4.0
 python-crontab==2.5.1
 python-dateutil==2.8.1
 python-dotenv==0.15.0
@@ -50,3 +56,5 @@ vine==5.0.0
 wcwidth==0.2.5
 wrapt==1.12.1
 yapf==0.30.0
+zope.event==4.5.0
+zope.interface==5.2.0

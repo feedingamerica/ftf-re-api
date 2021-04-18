@@ -86,4 +86,3 @@ If you would like to add a model to Swagger, you must create a serializer as see
   3. Expand the extensions pane and select python
   4. For Env File put the path as `${workspaceFolder}/reporting_engine/.env`
   5. Explanation: This will have VSCode load the .env file into its own environment variables. Since we specified the PYTHONPATH in the .env file, VSCode will know where to look for our packages. Otherwise you will get warnings in the IDE when referencing custom packages, like the services package in transform_layer.
-
