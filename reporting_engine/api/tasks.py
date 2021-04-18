@@ -1,9 +1,10 @@
 from celery import shared_task
 from .utils import get_data_definitions
 from transform_layer.calculations import CalculationDispatcher
-from .models import ReportSchedule, Report, ReportDataInt, ReportDataFloat
+from .models import ReportSchedule, Report, ReportDataInt, ReportDataFloat, ReportDataJson
 import datetime
 from datetime import date, timedelta
+import json
 
 # calculates report parameters, generates the report, and saves it to the reports database
 def generate_report_and_save(schedule):      
@@ -48,12 +49,18 @@ def calculate_dates(schedule):
 
     return start_date, end_date
 
+@shared_task
+def test_task(param):
+    print(param)
+    print("Test task executed correctly.")
+
 # generates (and saves) recurring reports if they are due based on recurrence parameter
 @shared_task
 def periodic_report_generation(recurrence):
     for schedule in ReportSchedule.objects.all():
 	    if (schedule.timeframe_type.recurrence_type == recurrence):
 		    generate_report_and_save(schedule)
+
 
 # generates (and saves) a one-time report if it has been requested
 @shared_task
@@ -87,6 +94,9 @@ def save_report(schedule, results):
             elif(values['dataDefType'] == 'float'):
                 new_data_float = ReportDataFloat(report = new_report, data_definition_id = values['dataDefId'], float_value = values['value'])
                 new_data_float.save()
+            elif(values['dataDefType'] == 'json'):
+                new_data_json = ReportDataJson(report = new_report, data_definition_id = values['dataDefId'], json_object = json.loads(values['value']))
+                new_data_json.save()
     
 
 # used for testing purposes

@@ -47,7 +47,7 @@ class ReportScopeViewSet(viewsets.ModelViewSet):
 
 class ControlTypeViewSet(viewsets.ModelViewSet):
     queryset = ControlType.objects.all()
-    serializer_class = ControlTypeSerializer
+    serializer_class = ControlTypeSerializer 
     permission_classes = [permissions.IsAuthenticated]
     http_method_names=['get']
 
@@ -125,7 +125,6 @@ def get_reports(request, report_scope_id, report_scope_value):
 
     # displaying the filtered list
     serializer = ReportSerializer(reports, many=True)
-
     return Response(serializer.data)
 
 #this gets all the options for a report

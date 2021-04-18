@@ -154,3 +154,11 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
+
+#Celery configuration
+REDIS_HOST = os.getenv('REDIS_HOST')
+REDIS_PORT = os.getenv('REDIS_PORT')
+REDIS_PW = os.getenv('REDIS_PW')
+REDIS_DATABASE_NUMBER = os.getenv('REDIS_DATABASE_NUMBER')
+CELERY_BROKER_URL = f'redis://{REDIS_PW + "@" if REDIS_PW else ""}{REDIS_HOST}:{REDIS_PORT}/{REDIS_DATABASE_NUMBER if REDIS_DATABASE_NUMBER else 0}'
+CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers:DatabaseScheduler"
