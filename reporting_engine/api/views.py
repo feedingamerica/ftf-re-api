@@ -41,7 +41,8 @@ class ReportScopeViewSet(viewsets.ModelViewSet):
 
 class ControlTypeViewSet(viewsets.ModelViewSet):
     queryset = ControlType.objects.all()
-    serializer_class = ControlTypeSerializer permission_classes = [permissions.IsAuthenticated]
+    serializer_class = ControlTypeSerializer 
+    permission_classes = [permissions.IsAuthenticated]
     http_method_names=['get']
 
 
