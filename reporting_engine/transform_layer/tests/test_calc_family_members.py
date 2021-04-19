@@ -29,6 +29,17 @@ __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file
 TEST_DATA_SERVICE = DataService(base_scope)
 class CalculationsTestCase(unittest.TestCase):
     
+    #test data def 69
+    def test_get_gender_summary(self):
+        expected = pandas.read_csv(
+            os.path.join(__location__, './expected_results/test_family_members/family_members_hoh_gender.csv')
+        ).fillna("")
+
+        data = TEST_DATA_SERVICE.get_data_for_definition(69)
+        func = calc.data_calc_function_switcher[69]
+        result = func(data)
+        resultFrame = pandas.read_json(result)
+        assert_frame_equal(resultFrame, expected, rtol = REL_TOL)
     #test data def 71
     def test_get_skipped_generation(self):
         expected = pandas.read_csv(
@@ -118,6 +129,20 @@ class CalculationsTestCase(unittest.TestCase):
 
         data = TEST_DATA_SERVICE.get_data_for_definition(77)
         func = calc.data_calc_function_switcher[77]
+        result = func(data)
+        resultFrame = pandas.read_json(result)
+        assert_frame_equal(resultFrame, expected, rtol = REL_TOL)
+    
+    #data def def 78
+    def test_get_demo_indv_military(self):
+        expected = pandas.read_csv(
+            os.path.join(__location__, './expected_results/test_family_members/family_members_demo_indv_military.csv')
+        ).fillna(0)
+        
+        expected = expected.astype({'n_indv':'int64'})
+
+        data = TEST_DATA_SERVICE.get_data_for_definition(78)
+        func = calc.data_calc_function_switcher[78]
         result = func(data)
         resultFrame = pandas.read_json(result)
         assert_frame_equal(resultFrame, expected, rtol = REL_TOL)
