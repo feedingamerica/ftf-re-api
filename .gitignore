@@ -79,10 +79,12 @@ celerybeat-schedule.*
 .env 
 .venv 
 env/ 
-venv/ 
+venv/
+virtualenv/ 
 ENV/ 
 env.bak/ 
 venv.bak/ 
+.vim
 
 # mkdocs documentation 
 /site 
@@ -108,5 +110,17 @@ Control.system-ca-bundle
 GitHub.sublime-settings 
 
 # Visual Studio Code # 
-.vscode/* 
+.vscode/ 
+!.vscode/settings.json 
+!.vscode/tasks.json 
+!.vscode/launch.json 
+!.vscode/extensions.json 
 .history
+
+# Xcode #
+.DS_Store
+*.xcworkspace/
+env.xik
+.DS_Store
+*.xcworkspace/
+env.xib
