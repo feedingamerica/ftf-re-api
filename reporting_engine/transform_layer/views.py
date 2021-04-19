@@ -981,6 +981,13 @@ def get_family_members(request):
             {
                 "reportScheduleId":1,
                 "reportDictId":1,
+                "dataDefId":70,
+                "name":"single_adult_w_children",
+                "dataDefType":"type2"
+            },
+            {
+                "reportScheduleId":1,
+                "reportDictId":1,
                 "dataDefId":71,
                 "name":"skipped_generation",
                 "dataDefType":"type2"

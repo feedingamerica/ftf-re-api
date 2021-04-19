@@ -40,6 +40,23 @@ class CalculationsTestCase(unittest.TestCase):
         result = func(data)
         resultFrame = pandas.read_json(result)
         assert_frame_equal(resultFrame, expected, rtol = REL_TOL)
+    
+    #test data def 70
+    def test_get_hoh_single_adult_w_children(self):
+        expected = pandas.read_csv(
+            os.path.join(__location__, './expected_results/test_family_members/family_members_single_adult_w_children.csv'),
+            index_col = 0
+        ).fillna(0).reset_index().drop(columns = 'index')
+        expected = expected.astype({'n_families':'int64', 'is_single_adult_w_children' : 'int64'})
+
+        data = TEST_DATA_SERVICE.get_data_for_definition(70)
+        func = calc.data_calc_function_switcher[70]
+        result = func(data)
+        resultFrame = pandas.read_json(result)
+        self.assertTrue(len(resultFrame) == len(expected))
+        resultFrame = resultFrame.sort_values(by=['n_families'], ignore_index=True)
+        expected = expected.sort_values(by=['n_families'], ignore_index=True)
+        assert_frame_equal(resultFrame[['is_single_adult_w_children','n_families']] , expected[['is_single_adult_w_children','n_families']], rtol = REL_TOL)
     #test data def 71
     def test_get_skipped_generation(self):
         expected = pandas.read_csv(
