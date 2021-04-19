@@ -1026,7 +1026,14 @@ def get_family_members(request):
                 "dataDefId":77,
                 "name":"demo_indv_ethnic",
                 "dataDefType":"type2"
-            }
+            },
+            {
+                "reportScheduleId":1,
+                "reportDictId":1,
+                "dataDefId":78,
+                "name":"demo_indv_military",
+                "dataDefType":"type2"
+            },
             
         ]
     }   

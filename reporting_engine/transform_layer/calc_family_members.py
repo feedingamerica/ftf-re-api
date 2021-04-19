@@ -159,6 +159,15 @@ def get_demo_indv_ethnic(data:'dict[DataFrame]'):
 
     return ethnic.to_json()
 
+#data def 78
+def get_demo_indv_military(data:'dict[DataFrame]'):
+    members = data[data_service.KEY_MEMBER]
+    mil = data[data_service.SKEY_MIL]
+    members = members.groupby(by = 'military_id', as_index = False).agg(n_indv = ('research_member_key', 'count'))
+    members = pd.merge(mil, members, how = "left", on = "military_id")
+    members = members.groupby('fa_rollup_military').agg(n_indv = ('n_indv', 'sum')).reset_index()
+    return members.to_json()
+
 #data def 79
 def get_demo_indv_education(data:'dict[DataFrame]'):
     members = data[data_service.KEY_MEMBER]

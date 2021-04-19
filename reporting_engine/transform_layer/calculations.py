@@ -177,6 +177,7 @@ data_calc_function_switcher = {
         75: calc_family_members.get_population_pyramid,
         76: calc_family_members.get_demo_indv_race,
         77: calc_family_members.get_demo_indv_ethnic,
+        78: calc_family_members.get_demo_indv_military,
         79: calc_family_members.get_demo_indv_education,
         80: calc_family_members.get_demo_indv_employment,
         81: calc_family_members.get_demo_indv_health_insurnace
