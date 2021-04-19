@@ -12,7 +12,7 @@ class ReportSerializer(serializers.ModelSerializer):
                   'end_date', 'date_completed']
 
 """
-Partly written by Drew DeLap, Josean Martinez, Ali Brugh, and Jeff Asa-Hauser.
+Written by Drew DeLap, Josean Martinez, Ali Brugh, and Jeff Asa-Hauser.
 """
 class ReportScheduleSerializer(serializers.ModelSerializer):
     #checks if report schedule exists in report_schedules
