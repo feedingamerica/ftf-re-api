@@ -113,7 +113,14 @@ def get_population_pyramid(data:'dict[DataFrame]'):
 
 # data def 76
 def get_demo_indv_race(data:'dict[DataFrame]'):
-    pass
+    members = data[data_service.KEY_MEMBER]
+    races = data[data_service.SKEY_RACE]
+    
+    members = pd.merge(races, members, how='left', on='race_id')
+    members['count'] = np.where(members['research_member_key'].notnull(), 1, 0)
+    members = members.groupby(['fa_rollup_race']).agg(n_indv=('count', 'sum')).reset_index()
+
+    return members.to_json()
 
 # data def 77
 def get_demo_indv_ethnic(data:'dict[DataFrame]'):
