@@ -4,14 +4,19 @@ import unittest
 from datetime import date
 
 """
-Testing the django POST request for report schedules
+This file contains testing for HTTP POST requests for report schedules. They must be run from the shell.
+
+Written by Drew DeLap, Jeff Asa-Hauser, Josean Martinez, and Ali Brugh.
 """
-class PostTesting():
-    """
-    Setting up test model instances for the test database that Django creates. In order to run these 'testserver' must be added to 'ALLOWED_HOSTS' in /reporting_engine/settings.py
-    Test cases will be run from the shell so begin by running "python manage.py shell", follow up with "from api.post_tests import PostTesting" and then run "PostTesting.test_call_tests()"
-    If a test case passes nothing will be printed. If it fails the test case will give an Assertion Error
-    """  	
+
+"""
+Testing the django POST request for report schedules
+
+In order to run these 'testserver' must be added to 'ALLOWED_HOSTS' in /reporting_engine/settings.py
+Test cases will be run from the shell so begin by running "python manage.py shell", follow up with "from api.post_tests import PostTesting" and then run "PostTesting.test_call_tests()"
+If a test case passes nothing will be printed. If it fails the test case will give an Assertion Error
+"""
+class PostTesting(): 	
     #checking for a post test success, ensuring valid input works	
     def test_post_pass(params):
         #Client and testcase initialization

@@ -169,10 +169,17 @@ data_calc_function_switcher = {
         66: calc_service_trends.get_service_summary_hod,
         67: calc_service_trends.get_service_summary_dowhod,
         68: calc_service_trends.get_service_trend_event,
+        69: calc_family_members.get_gender_summary,
         71: calc_family_members.get_skipped_generation,
         72: calc_family_members.get_demo_indv_gender,
         73: calc_family_members.get_demo_indv_age_groups,
         74: calc_family_members.get_hh_has_age_groups,
-        77: calc_family_members.get_demo_indv_ethnic
+        75: calc_family_members.get_population_pyramid,
+        76: calc_family_members.get_demo_indv_race,
+        77: calc_family_members.get_demo_indv_ethnic,
+        78: calc_family_members.get_demo_indv_military,
+        79: calc_family_members.get_demo_indv_education,
+        80: calc_family_members.get_demo_indv_employment,
+        81: calc_family_members.get_demo_indv_health_insurnace
     }
 

@@ -588,6 +588,8 @@ class DataService:
             dim_mem_education
         """
         skeleton = pd.read_sql(query_skeleton, conn)
+        skeleton = skeleton.astype({'education_id': 'int64'})
+        skeleton['fa_rollup_education'] = skeleton['fa_rollup_education'].str.strip()
         return skeleton
 
     def _get_mem_employment_skeleton(self):

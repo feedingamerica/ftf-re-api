@@ -6,6 +6,13 @@ import datetime
 from datetime import date, timedelta
 import json
 
+"""
+This file contains functions that generate and save both recurring and one time reports to the database.
+The functions that are marked with @shared_task are functions that Celery can access via the Admin.
+
+Written by Drew DeLap, Josean Martinez, Ali Brugh, and Jeff Asa-Hauser.
+"""
+
 # calculates report parameters, generates the report, and saves it to the reports database
 def generate_report_and_save(schedule):      
     # get the start and end date that defines the timeframe the report should be run for
@@ -22,7 +29,7 @@ def generate_report_and_save(schedule):
 
 # calculates start and end dates that a report should be run for, based on its timeframe type
 def calculate_dates(schedule): 
-    # the end date is the same for all timeframes except custom: the last day of the previous month
+    # the end date is the same for most timeframes: the last day of the previous month
     end_date = schedule.date_scheduled.replace(day = 1) - timedelta(days = 1)
  
     # calculating start date based on timeframe type
@@ -49,6 +56,7 @@ def calculate_dates(schedule):
 
     return start_date, end_date
 
+# smoke test for Celery
 @shared_task
 def test_task(param):
     print(param)

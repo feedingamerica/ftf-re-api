@@ -2041,8 +2041,8 @@
       "crontab_id": 1,
       "args": "[\"Monthly\"]",
       "enabled": 0,
-      "date_changed": "2021-04-16 14:21:33.729307+00:00",
-      "description": "Runs all report schedules that have a timeframe type whose recurrence is monthly. It runs according to the crontab schedule with pk 1 -- the fifth of every month, at 3 AM (UTC)."
+      "date_changed": "2021-04-19 16:58:43.823773+00:00",
+      "description": "Runs all report schedules that have a timeframe type whose recurrence is monthly. It runs according to the crontab schedule 0 3 5 * * -- the fifth of every month, at 3 AM (UTC)."
     }
   },
   {
@@ -2054,8 +2054,8 @@
       "crontab_id": 2,
       "args": "[\"Weekly\"]",
       "enabled": 0,
-      "date_changed": "2021-04-16 14:21:33.729307+00:00",
-      "description": "Runs all report schedules that have a timeframe type whose recurrence is weekly. It runs according to the crontab schedule with pk 2 -- every Sunday at 3 AM (UTC)."
+      "date_changed": "2021-04-19 16:58:43.823773+00:00",
+      "description": "Runs all report schedules that have a timeframe type whose recurrence is weekly. It runs according to the crontab schedule 0 3 * * 0 -- every Sunday at 3 AM (UTC)."
     }
   },
   {
@@ -2067,8 +2067,8 @@
       "crontab_id": 3,
       "args": "[\"Daily\"]",
       "enabled": 0,
-      "date_changed": "2021-04-16 14:21:33.729307+00:00",
-      "description": "Runs all report schedules that have a timeframe type whose recurrence is daily. It runs according to the crontab schedule with pk 3 -- every day at 3 AM (UTC)."
+      "date_changed": "2021-04-19 16:58:43.823773+00:00",
+      "description": "Runs all report schedules that have a timeframe type whose recurrence is daily. It runs according to the crontab schedule 0 3 * * * -- every day at 3 AM (UTC)."
     }
   }
 ]
