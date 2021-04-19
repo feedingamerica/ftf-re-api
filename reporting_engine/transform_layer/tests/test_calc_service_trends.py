@@ -92,6 +92,43 @@ class CalculationsTestCase(unittest.TestCase):
         self.assertTrue(len(resultFrame) == len(expected))
         assert_frame_equal(resultFrame, expected, rtol = REL_TOL)
 
+    #test data def 61
+    def test_get_service_trend_monthly_people_dup(self):
+        expected = pandas.read_csv(
+            os.path.join(__location__, './expected_results/test_calc_service_trends/service_trend_monthly_people.csv')
+        ).fillna(0)
+        data = data = TEST_DATA_SERVICE_2.get_data_for_definition(61)
+        func = calc.data_calc_function_switcher[61]
+        result = func(data)
+        resultFrame = pandas.read_json(result)
+        self.assertTrue(len(resultFrame) == len(expected))
+        assert_frame_equal(resultFrame, expected, rtol = REL_TOL)
+
+    #test data def 62
+    def test_get_service_trend_monthly_group_dup(self):
+        expected = pandas.read_csv(
+            os.path.join(__location__, './expected_results/test_calc_service_trends/service_trend_monthly_served_group.csv')
+        ).fillna(0)
+        data = data = TEST_DATA_SERVICE_2.get_data_for_definition(62)
+        func = calc.data_calc_function_switcher[62]
+        result = func(data)
+        resultFrame = pandas.read_json(result)
+        self.assertTrue(len(resultFrame) == len(expected))
+        assert_frame_equal(resultFrame, expected, rtol = REL_TOL)
+
+    
+    #test data def 63
+    def test_get_service_trend_service_category(self):
+        expected = pandas.read_csv(
+            os.path.join(__location__, './expected_results/test_calc_service_trends/service_trend_service_category.csv')
+        ).fillna(0)
+        data = data = TEST_DATA_SERVICE_2.get_data_for_definition(63)
+        func = calc.data_calc_function_switcher[63]
+        result = func(data)
+        resultFrame = pandas.read_json(result)
+        self.assertTrue(len(resultFrame) == len(expected))
+        assert_frame_equal(resultFrame, expected, rtol = REL_TOL)
+
     #test data def 64
     def test_get_service_trend_comparison(self):
         expected = pandas.read_csv(

@@ -9,7 +9,7 @@ import transform_layer.services.data_service as data_service
 
 
 # data def 32
-def get_new_families(data: 'list[DataFrame]'):
+def get_new_families(data: 'dict[DataFrame]'):
     """Calculate number of new families DataDef 32
 
     Arguments:
@@ -27,7 +27,7 @@ def get_new_families(data: 'list[DataFrame]'):
     return len(families)
 
 # data def 33
-def get_new_members(data: 'list[DataFrame]'):
+def get_new_members(data: 'dict[DataFrame]'):
     """Calculate number of new members DataDef 33
 
     Arguments:
@@ -45,7 +45,7 @@ def get_new_members(data: 'list[DataFrame]'):
     return len(members)
 
 # data def 34
-def get_new_members_to_old_families(data: 'list[DataFrame]'):
+def get_new_members_to_old_families(data: 'dict[DataFrame]'):
     """Calculate number of people served DataDef 34
 
     Arguments:
@@ -64,19 +64,19 @@ def get_new_members_to_old_families(data: 'list[DataFrame]'):
     return len(members)
 
 # data def 35
-def get_services_to_new_families(data: 'list[DataFrame]'):
+def get_services_to_new_families(data: 'dict[DataFrame]'):
     families = data[data_service.KEY_FAMILY]
     families = families[families['timeframe_has_first_service_date']>0]
     return families['num_services'].sum()
 
 #data def 36
-def get_families_first_service(data: 'list[DataFrame]'):
+def get_families_first_service(data: 'dict[DataFrame]'):
     services = data[data_service.KEY_SERVICE]
     services = services[services['is_first_service_date']>0]
     return len(services)
 
 # data def 37/38
-def get_new_families_freq_visits(data: 'list[DataFrame]'):
+def get_new_families_freq_visits(data: 'dict[DataFrame]'):
         """Calculate frequency of visits for new families DataDef 37
 
         Arguments:
@@ -102,14 +102,14 @@ def get_new_families_freq_visits(data: 'list[DataFrame]'):
         return families.to_json()
 
 # data def 39
-def get_new_fam_household_composition(data: 'list[DataFrame]'):
+def get_new_fam_household_composition(data: 'dict[DataFrame]'):
     families = data[data_service.KEY_FAMILY]
     families = families[families['timeframe_has_first_service_date']>0].copy()
     return calc_families.get_household_composition(families)
     
 
 # data def 40
-def get_new_fam_composition_key_insight(data: 'list[DataFrame]'):
+def get_new_fam_composition_key_insight(data: 'dict[DataFrame]'):
     families = data[data_service.KEY_FAMILY]
     families = families[families['timeframe_has_first_service_date']>0]
     result_dict = {
@@ -168,7 +168,7 @@ def get_relationship_length_fam_mean(data):
     return families['max_days_since_first_service'].mean()
 
 #data def 44
-def get_new_fam_dist_of_length_of_relationship(data: 'list[DataFrame]'):
+def get_new_fam_dist_of_length_of_relationship(data: 'dict[DataFrame]'):
     families = data[data_service.KEY_FAMILY]
     set_max = families['max_days_since_first_service'].max()
     width = set_max / 10
@@ -232,7 +232,7 @@ def get_relationship_length_indv_mean(data):
     return members['max_days_since_first_service'].mean()
 
 # data def 46
-def get_new_fam_dist_of_length_of_relationships_for_individuals(data: 'list[DataFrame]'):
+def get_new_fam_dist_of_length_of_relationships_for_individuals(data: 'dict[DataFrame]'):
     members = data[data_service.KEY_MEMBER]
     set_max = members['max_days_since_first_service'].max()
     width = set_max / 10

@@ -960,7 +960,7 @@ def get_service_trends(request):
 def get_family_members(request):
     sample_dict = {
         "Meta": {
-            "startDate":"1/01/2020",
+            "startDate":"1/1/2020",
             "endDate":"3/31/2021",
             "scope_field":"loc_id",
             "scope_field_value":6,
@@ -968,6 +968,13 @@ def get_family_members(request):
             "control_type_value":1
         },
         "ReportInfo": [
+            {
+                "reportScheduleId":1,
+                "reportDictId":1,
+                "dataDefId":69,
+                "name":"gender_summary",
+                "dataDefType":"type2"
+            },
             {
                 "reportScheduleId":1,
                 "reportDictId":1,
@@ -999,10 +1006,31 @@ def get_family_members(request):
             {
                 "reportScheduleId":1,
                 "reportDictId":1,
+                "dataDefId":75,
+                "name":"population_pyramid",
+                "dataDefType":"type2"
+            },
+            {
+                "reportScheduleId":1,
+                "reportDictId":1,
+                "dataDefId":76,
+                "name":"demo_indv_race",
+                "dataDefType":"type2"
+            },
+            {
+                "reportScheduleId":1,
+                "reportDictId":1,
                 "dataDefId":77,
                 "name":"demo_indv_ethnic",
                 "dataDefType":"type2"
-            }
+            },
+            {
+                "reportScheduleId":1,
+                "reportDictId":1,
+                "dataDefId":78,
+                "name":"demo_indv_military",
+                "dataDefType":"type2"
+            },
             
         ]
     }   
