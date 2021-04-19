@@ -5,6 +5,15 @@ import json
 import transform_layer.services.data_service as data_service
 import numpy as np
 
+#data def 69
+def get_gender_summary(data: 'dict[DataFrame]'):
+     members = data[data_service.KEY_MEMBER]
+     members = members[members['head_of_house'] == 'Yes']
+     members = members.groupby(['gender'])
+     members = members.agg(n_indv = ('gender', 'count')).reset_index()
+
+     return members.to_json()
+
 # data def 71
 def get_skipped_generation(data:'dict[DataFrame]'):
 

@@ -169,6 +169,7 @@ data_calc_function_switcher = {
         66: calc_service_trends.get_service_summary_hod,
         67: calc_service_trends.get_service_summary_dowhod,
         68: calc_service_trends.get_service_trend_event,
+        69: calc_family_members.get_gender_summary,
         71: calc_family_members.get_skipped_generation,
         72: calc_family_members.get_demo_indv_gender,
         73: calc_family_members.get_demo_indv_age_groups,
