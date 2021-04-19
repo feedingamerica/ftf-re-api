@@ -1,7 +1,9 @@
 from rest_framework import serializers
 from .models import Report, ReportSchedule, RunType, TimeframeType, ReportScope, ControlType, ReportingDictionary
 
-
+"""
+Partly written by Josean Martinez, Drew DeLap, Ali Brugh, and Jeff Asa-Hauser.
+"""
 class ReportSerializer(serializers.ModelSerializer):
     class Meta:
         model = Report
@@ -9,9 +11,10 @@ class ReportSerializer(serializers.ModelSerializer):
         fields = ['report_schedule', 'id', 'start_date',
                   'end_date', 'date_completed']
 
-
+"""
+Partly written by Drew DeLap, Josean Martinez, Ali Brugh, and Jeff Asa-Hauser.
+"""
 class ReportScheduleSerializer(serializers.ModelSerializer):
-
     #checks if report schedule exists in report_schedules
     def check_uniqueness(self):
         #for all the current schedules in ReportSchedule check for uniqueness, if report is unique return 0 otherwise return report.id of original
