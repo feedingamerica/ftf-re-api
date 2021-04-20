@@ -57,7 +57,9 @@
 6. Connect Django to DB and start Django Server
   - Navigate to 'ftf-re-api/reporting_engine/'
   - Make sure MySQL server is running
-  - Run: `python manage.py migrate`
+  - Create migrations: `python manage.py makemigrations`
+  - Run migrations: `python manage.py migrate`
+  - Load source data: `python manage.py loaddata data.json`
   - Start django server: `python manage.py runserver`
 7. If everything was successful, you should be able to navigate to http://localhost:8000 and see django's default index page
 8. To navigate to the admin site visit: 'http://localhost:8000/admin'
@@ -68,6 +70,10 @@
   
 **After these steps are finished, all you have to do when coming back to work on the project is to activate the python environment: `source ./venv/bin/activate` (Mac) or `.\venv\scripts\activate` (Windows) and then you can start the django server: `python manage.py runserver`**
 
+## Swagger Documentation
+Swager docs may be accessed by going to the url */api/doc*  
+
+If you would like to add a model to Swagger, you must create a serializer as seen in api/serializers.py
 
 
 

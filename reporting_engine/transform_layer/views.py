@@ -4,11 +4,8 @@ from django.http import HttpResponse
 from django.shortcuts import render
 from django.db import connections
 from print_dict import print_dict, format_dict
-
 from .calculations import CalculationDispatcher
 from .services.data_service import DataService
-
-
 
 def test_data_service(request, id):
     sample_dict = {
@@ -961,6 +958,13 @@ def get_family_members(request):
                 "reportDictId":1,
                 "dataDefId":69,
                 "name":"gender_summary",
+                "dataDefType":"type2"
+            },
+            {
+                "reportScheduleId":1,
+                "reportDictId":1,
+                "dataDefId":70,
+                "name":"single_adult_w_children",
                 "dataDefType":"type2"
             },
             {

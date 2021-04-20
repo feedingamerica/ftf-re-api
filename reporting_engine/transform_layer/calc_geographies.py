@@ -20,7 +20,10 @@ def get_geo_coverage(data: 'dict[DataFrame]'):
 
     num_has_geo = has_geo['n'].sum()
     sum = has_geo['n'].sum() + no_geo['n'].sum()
-    return np.round(num_has_geo / sum, 3)
+    if sum != 0:
+        return np.round(num_has_geo / sum, 3)
+    else:
+        return 0
 
 #data def 48
 def get_geo_breakdown_fam_state(data: 'dict[DataFrame]'):
