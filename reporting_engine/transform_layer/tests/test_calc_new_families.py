@@ -153,21 +153,15 @@ class CalculationsTestCase(unittest.TestCase):
 
     #test for data def 42
     def test_get_new_fam_hh_size_dist_classic(self):
-        expected = {
-            '1 - 3':3965,
-            '4 - 6':2040,
-            '7+':302
-        }
-        expected = pandas.Series(data = expected)
+        expected = pandas.DataFrame(data = {"classic_roll": ['1 - 3', '4 - 6', '7+'], "num_families": [3965,2040,302]})
 
         #data = TEST_DATA_SERVICE.get_data_for_definition(42)
         data = BASE_DATA
 
         func = calc.data_calc_function_switcher[42]
         result = func(data)
-        resultDict = json.loads(result)
-        resultFrame = pandas.Series(data = resultDict)
-        assert_series_equal(resultFrame, expected)
+        resultFrame = pandas.read_json(result)
+        assert_frame_equal(resultFrame, expected)
 
     #test for data def 43
     def test_get_relationship_length_indv_mean(self):
