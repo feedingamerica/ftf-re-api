@@ -45,7 +45,7 @@ def get_service_trend_monthy_visits_avg(data:'dict[DataFrame]'):
         n_families=('research_family_key','count'),
         n_services=('n_services','sum')
     )
-    trend['services_per_family'] = round(trend['n_services']/trend['n_families'], 2)
+    trend['services_per_family'] = round(trend['n_services'].divide(trend['n_families']), 2).replace(np.inf, 0)
     return trend.to_json()
 
 #data def 61

@@ -113,7 +113,7 @@ class CalculationsTestCase(unittest.TestCase):
         assert_frame_equal(resultFrame, expected, check_like = True)
 
     #test data def 53
-    def test_direction_traveled(self):
+    def test_get_direction_traveled(self):
         expected = pandas.read_csv(
             os.path.join(__location__, './expected_results/results_direction_traveled.csv'),
             index_col = 'direction'
@@ -139,7 +139,7 @@ class CalculationsTestCase(unittest.TestCase):
 
 
     #test data def 55
-    def test_sites_visited_distribution(self):
+    def test_get_sites_visited_distribution(self):
         expected = {
             "num_families": {
                 1 : 26133
@@ -153,7 +153,7 @@ class CalculationsTestCase(unittest.TestCase):
         assert_frame_equal(resultFrame, expected, check_like = True)
 
     #test data def 56
-    def test_dummy_trip_coverage(self):
+    def test_get_dummy_trip_coverage(self):
         expected = .9913
         data = BASE_DATA
         func = calc.data_calc_function_switcher[56]
