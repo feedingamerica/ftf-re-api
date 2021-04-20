@@ -13,10 +13,10 @@ from .services.data_service import DataService
 def test_data_service(request, id):
     sample_dict = {
         "Meta": {
-            "startDate":"01/01/2019",
-            "endDate":"1/31/2019",
-            "scope_field":"fb_id",
-            "scope_field_value":21,
+            "startDate":"4/01/2020",
+            "endDate":"3/31/2021",
+            "scope_field":"fips_tract",
+            "scope_field_value":21187970300,
             "control_type_name":"Is Grocery Service",
             "control_type_value":1
         },
@@ -24,32 +24,18 @@ def test_data_service(request, id):
             {
                 "reportScheduleId":1,
                 "reportDictId":1,
-                "dataDefId":1,
-                "name":"name_one",
-                "dataDefType":"type1"
-            },
-            {
-                "reportScheduleId":2,
-                "reportDictId":2,
-                "dataDefId":2,
-                "name":"name_two",
-                "dataDefType":"type1"
-            },
-            {
-                "reportScheduleId":3,
-                "reportDictId":3,
-                "dataDefId":3,
-                "name":"name_three",
+                "dataDefId":id,
+                "name":"test",
                 "dataDefType":"type1"
             }
         ]
     }
-    params = CalculationDispatcher.parse_request(sample_dict)
-    print_dict(params)
+    cd = CalculationDispatcher(sample_dict)
+    cd.run_calculations()
 
-    data = Data_Service.get_data_for_definition(id, params)
-    print(data)
-    return HttpResponse(str(id) + "\t" + str(data))
+    context = { 'report_output': format_dict(cd.request) }
+    return render(request, 'transformapi/get-report.html', context)
+
 
 def get_report_big_numbers(request):
     input_dict = {
@@ -93,7 +79,6 @@ def get_report_big_numbers(request):
         ]
     }
 
-    # params = parse_request(input_dict)
     cd = CalculationDispatcher(input_dict)
     cd.run_calculations()
 

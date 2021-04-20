@@ -1,4 +1,5 @@
-from .services.data_service import DataService
+from .services.data_service import DataService, KEY_SERVICE, KEY_MEMBER, KEY_FAMILY
+
 import transform_layer.calc_service_types as calc_service_types
 import transform_layer.calc_families as calc_families
 import transform_layer.calc_fact_services as calc_fact_services
@@ -90,15 +91,26 @@ class CalculationDispatcher:
 
     @staticmethod
     def has_data(data):
-        if type(data) is list:
-            # Check if services dataframe is empty
-            if data[0].empty:
-                return False
-        elif isinstance(data, pd.DataFrame):
-            if data.empty:
-                return False
-
-        return True
+        if isinstance(data, pd.DataFrame):
+            return not(len(data) == 0)
+        elif type(data) is dict:
+            keys_to_look_for = [KEY_SERVICE, KEY_FAMILY, KEY_MEMBER]
+            any_empty = False
+            i = 0
+            while(i < len(keys_to_look_for) and not(any_empty)):
+                key = keys_to_look_for[i]
+                data_frame = data.get(key)
+                if data_frame is not None:
+                    if isinstance(data_frame, pd.DataFrame):
+                        any_empty = any_empty or (len(data_frame) == 0)
+                    else: 
+                        #only dataframes should be stored in the 
+                        #dictionary of data passed to the calculations
+                        any_empty = True
+                i += 1
+            return not(any_empty)
+        else:
+            return False
 
 data_calc_function_switcher = {
         1: calc_fact_services.get_services_total,

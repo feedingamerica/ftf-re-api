@@ -204,5 +204,8 @@ def get_sites_visited_distribution(data):
 def get_dummy_trip_coverage(data):
     services = data[KEY_SERVICE]
     num_services = len(services)
-    services = services[services['dummy_trip'] == 1]
-    return round( len(services)/num_services, 4)
+    if num_services == 0:
+        return 0
+    else:
+        services = services[services['dummy_trip'] == 1]
+        return round( len(services)/num_services, 4)
