@@ -316,6 +316,9 @@ def get_demo1_mofc(request):
 
 
 def get_all_defs_typical(request):
+
+
+
     input_dict = {
         "Meta": {
             "startDate":"01/01/2020",
@@ -396,7 +399,20 @@ def get_all_defs_typical(request):
         "service_summary_dow",
         "service_summary_hod",
         "service_summary_dowhod",
-        "service_trend_event"
+        "service_trend_event",
+        "hoh_gender_summary",
+        "hoh_single_adult_w_children",
+        "skipped_generation",
+        "demo_indv_gender",
+        "demo_indv_age_groups",
+        "hh_has_age_groups",
+        "population_pyramid",
+        "demo_indv_race",
+        "demo_indv_ethnic",
+        "demo_indv_military",
+        "demo_indv_education",
+        "demo_indv_employment",
+        "demo_indv_health_insurance"
     ]
 
     num_defs = len(data_def_names)
