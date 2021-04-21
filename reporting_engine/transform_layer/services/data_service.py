@@ -1,6 +1,7 @@
 from pandas.core.frame import DataFrame
 import dateutil.parser as parser
 import pandas as pd
+import numpy as np
 from django.db import connections
 
 
@@ -385,6 +386,8 @@ class DataService:
         print(members_query)
         start_time = time.time()
         services = pd.read_sql(services_query, conn)
+        services = services.fillna(value = { 'hour_of_day': np.nan})
+
         families = pd.read_sql(families_query, conn)
         members = pd.read_sql(members_query, conn)
         print(str(time.time() - start_time), ' seconds to download new family services')
