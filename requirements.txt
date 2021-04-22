@@ -36,6 +36,7 @@ packaging==20.9
 pandas==1.2.2
 print-dict==0.1.16
 prompt-toolkit==3.0.16
+pyarrow==3.0.0
 pylint==2.7.2
 pyparsing==2.4.7
 pycparser==2.20

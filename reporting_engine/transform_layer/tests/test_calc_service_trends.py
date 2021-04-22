@@ -1,10 +1,11 @@
-from unittest.case import expectedFailure
 from django.test import TestCase
 from django.db import connections
 from numpy import int64
+import numpy
 import pandas
 from pandas.testing import assert_frame_equal, assert_series_equal
-from transform_layer.services.data_service import DataService
+
+from transform_layer.services.data_service import DataService, KEY_SERVICE, SKEY_HOD_DOW
 import transform_layer.calculations as calc
 
 import json
@@ -12,6 +13,7 @@ import math
 import unittest
 import os
 import pyreadr
+from unittest.case import expectedFailure
 
 REL_TOL = .01
 
@@ -141,7 +143,6 @@ class CalculationsTestCase(unittest.TestCase):
         func = calc.data_calc_function_switcher[64]
         result = func(data)
         resultFrame = pandas.read_json(result)
-        self.assertTrue(len(resultFrame) == len(expected))
         assert_frame_equal(resultFrame, expected, rtol = REL_TOL)
 
     # test data def 65
@@ -193,6 +194,20 @@ class CalculationsTestCase(unittest.TestCase):
         result = func(data)
         resultFrame = pandas.read_json(result)
         assert_frame_equal(resultFrame, expected, rtol = REL_TOL)
+
+    def test_get_service_summary_dowhod_no_times(self):
+        folder_path = os.path.join(__location__, 'test_data','test_calc_service_trends', 'edge_cases','no_time_data')
+        services = pandas.read_parquet(path = os.path.join(folder_path,'services.parquet'), engine = 'pyarrow')
+        skeleton_dowhod = pandas.read_parquet(path = os.path.join(folder_path,'skeleton_dowhod.parquet'), engine = 'pyarrow')
+        data = {
+            KEY_SERVICE : services,
+            SKEY_HOD_DOW : skeleton_dowhod
+        }
+        func = calc.data_calc_function_switcher[67]
+        result = func(data)
+        resultFrame = pandas.read_json(result)
+        self.assertTrue(numpy.count_nonzero(resultFrame['n_services'].to_numpy()) == 0)
+
     
     #test data def 68
     def test_get_service_trend_event(self):
