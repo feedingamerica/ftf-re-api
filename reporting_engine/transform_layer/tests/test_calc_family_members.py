@@ -29,6 +29,17 @@ __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file
 TEST_DATA_SERVICE = DataService(base_scope)
 class CalculationsTestCase(unittest.TestCase):
     
+    #test data def 69
+    def test_get_gender_summary(self):
+        expected = pandas.read_csv(
+            os.path.join(__location__, './expected_results/test_family_members/family_members_hoh_gender.csv')
+        ).fillna("")
+
+        data = TEST_DATA_SERVICE.get_data_for_definition(69)
+        func = calc.data_calc_function_switcher[69]
+        result = func(data)
+        resultFrame = pandas.read_json(result)
+        assert_frame_equal(resultFrame, expected, rtol = REL_TOL)
     #test data def 71
     def test_get_skipped_generation(self):
         expected = pandas.read_csv(
@@ -42,8 +53,9 @@ class CalculationsTestCase(unittest.TestCase):
         result = func(data)
         resultFrame = pandas.read_json(result)
         self.assertTrue(len(resultFrame) == len(expected))
-        assert_frame_equal(resultFrame.sort_values(by=['n_families'], ignore_index=True)[['is_single_senior_w_children','n_families']]
-        , expected.sort_values(by=['n_families'], ignore_index=True)[['is_single_senior_w_children','n_families']], rtol = REL_TOL)
+        resultFrame = resultFrame.sort_values(by=['n_families'], ignore_index=True)
+        expected = expected.sort_values(by=['n_families'], ignore_index=True)
+        assert_frame_equal(resultFrame[['is_single_senior_w_children','n_families']] , expected[['is_single_senior_w_children','n_families']], rtol = REL_TOL)
 
     #test data def 72
     def test_get_demo_indv_gender(self):
@@ -81,6 +93,32 @@ class CalculationsTestCase(unittest.TestCase):
         resultFrame = pandas.read_json(result)
         assert_frame_equal(resultFrame, expected, rtol = REL_TOL)
 
+    #test data def 75
+    def test_get_population_pyramid(self):
+        expected = pandas.read_csv(
+            os.path.join(__location__, './expected_results/test_family_members/population_pyramid.csv'),
+            index_col = 0
+        )
+
+        data = TEST_DATA_SERVICE.get_data_for_definition(75)
+        func = calc.data_calc_function_switcher[75]
+        result = func(data)
+        resultFrame = pandas.read_json(result)
+        assert_frame_equal(resultFrame, expected, rtol = REL_TOL)
+
+    #test data def 76
+    def test_get_demo_indv_race(self):
+        expected = pandas.read_csv(
+            os.path.join(__location__, './expected_results/test_family_members/demo_indv_race.csv'),
+            index_col = 0
+        )
+
+        data = TEST_DATA_SERVICE.get_data_for_definition(76)
+        func = calc.data_calc_function_switcher[76]
+        result = func(data)
+        resultFrame = pandas.read_json(result)
+        assert_frame_equal(resultFrame, expected, rtol = REL_TOL)
+
     #test data def 77
     def test_get_demo_indv_ethnic(self):
         expected = pandas.read_csv(
@@ -93,5 +131,63 @@ class CalculationsTestCase(unittest.TestCase):
         func = calc.data_calc_function_switcher[77]
         result = func(data)
         resultFrame = pandas.read_json(result)
-        self.assertTrue(len(resultFrame) == len(expected))
+        assert_frame_equal(resultFrame, expected, rtol = REL_TOL)
+    
+    #data def def 78
+    def test_get_demo_indv_military(self):
+        expected = pandas.read_csv(
+            os.path.join(__location__, './expected_results/test_family_members/family_members_demo_indv_military.csv')
+        ).fillna(0)
+        
+        expected = expected.astype({'n_indv':'int64'})
+
+        data = TEST_DATA_SERVICE.get_data_for_definition(78)
+        func = calc.data_calc_function_switcher[78]
+        result = func(data)
+        resultFrame = pandas.read_json(result)
+        assert_frame_equal(resultFrame, expected, rtol = REL_TOL)
+
+    #data def 79
+    def test_get_demo_indv_education(self):
+        expected = pandas.read_csv(
+            os.path.join(__location__, './expected_results/test_family_members/demo_indv_education.csv'),
+            index_col = 0
+        ).fillna(0).reset_index().drop(columns = 'index')
+        
+        expected = expected.astype({'n_indv':'int64'})
+
+        data = TEST_DATA_SERVICE.get_data_for_definition(79)
+        func = calc.data_calc_function_switcher[79]
+        result = func(data)
+        resultFrame = pandas.read_json(result)
+        assert_frame_equal(resultFrame, expected, rtol = REL_TOL)
+
+    #data def 80
+    def test_get_demo_indv_employment(self):
+        expected = pandas.read_csv(
+            os.path.join(__location__, './expected_results/test_family_members/demo_indv_employment.csv'),
+            index_col = 0
+        ).fillna(0).reset_index().drop(columns = 'index')
+        
+        expected = expected.astype({'n_indv':'int64'})
+
+        data = TEST_DATA_SERVICE.get_data_for_definition(80)
+        func = calc.data_calc_function_switcher[80]
+        result = func(data)
+        resultFrame = pandas.read_json(result)
+        assert_frame_equal(resultFrame, expected, rtol = REL_TOL)
+    
+    #data def 81
+    def test_get_demo_indv_health_insurance(self):
+        expected = pandas.read_csv(
+            os.path.join(__location__, './expected_results/test_family_members/demo_indv_health_insurance.csv'),
+            index_col = 0
+        ).fillna(0).reset_index().drop(columns = 'index')
+        
+        expected = expected.astype({'n_indv':'int64'})
+
+        data = TEST_DATA_SERVICE.get_data_for_definition(81)
+        func = calc.data_calc_function_switcher[81]
+        result = func(data)
+        resultFrame = pandas.read_json(result)
         assert_frame_equal(resultFrame, expected, rtol = REL_TOL)

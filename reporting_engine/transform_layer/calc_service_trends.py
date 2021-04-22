@@ -6,7 +6,7 @@ import transform_layer.services.data_service as data_service
 import numpy as np
 
 #data def 57
-def get_service_trend_time_month(data: 'list[DataFrame]'):
+def get_service_trend_time_month(data: 'dict[DataFrame]'):
     services = data[data_service.KEY_SERVICE]
     skeleton_month = data[data_service.SKEY_MONTH]
 
@@ -15,7 +15,7 @@ def get_service_trend_time_month(data: 'list[DataFrame]'):
     return trend.to_json()
 
 #data def 58
-def get_service_trend_time_week(data: 'list[DataFrame]'):
+def get_service_trend_time_week(data: 'dict[DataFrame]'):
     services = data[data_service.KEY_SERVICE]
     skeleton_week = data[data_service.SKEY_WEEK]
 
@@ -24,7 +24,7 @@ def get_service_trend_time_week(data: 'list[DataFrame]'):
     return trend.to_json()
 
 # data def 59
-def get_service_trend_time_day(data: 'list[DataFrame]'):
+def get_service_trend_time_day(data: 'dict[DataFrame]'):
     services = data[data_service.KEY_SERVICE]
     skeleton_day = data[data_service.SKEY_DAY]
 
@@ -33,7 +33,7 @@ def get_service_trend_time_day(data: 'list[DataFrame]'):
     return trend.to_json()
 
 # data def 60
-def get_service_trend_monthy_visits_avg(data:'list[DataFrame]'):
+def get_service_trend_monthy_visits_avg(data:'dict[DataFrame]'):
     services = data[data_service.KEY_SERVICE]
     skeleton_month = data[data_service.SKEY_MONTH]
 
@@ -49,7 +49,7 @@ def get_service_trend_monthy_visits_avg(data:'list[DataFrame]'):
     return trend.to_json()
 
 #data def 61
-def get_service_trend_monthly_people_dup(data: 'list[DataFrame]'):
+def get_service_trend_monthly_people_dup(data: 'dict[DataFrame]'):
     services = data[data_service.KEY_SERVICE]
     skeleton_month = data[data_service.SKEY_MONTH]
     trend:DataFrame = skeleton_month.merge(services, how='left', on = 'calendaryearmonth')
@@ -58,7 +58,7 @@ def get_service_trend_monthly_people_dup(data: 'list[DataFrame]'):
     return trend.to_json()
 
 #data def 62
-def get_service_trend_monthly_group_dup(data: 'list[DataFrame]'):
+def get_service_trend_monthly_group_dup(data: 'dict[DataFrame]'):
     services = data[data_service.KEY_SERVICE]
     skeleton_month = data[data_service.SKEY_MONTH]
     trend:DataFrame = skeleton_month.merge(services, how='left', on = 'calendaryearmonth')
@@ -69,7 +69,7 @@ def get_service_trend_monthly_group_dup(data: 'list[DataFrame]'):
     return trend.to_json()
 
 #data def 63
-def get_service_trend_service_category(data: 'list[DataFrame]'):
+def get_service_trend_service_category(data: 'dict[DataFrame]'):
     services = data[data_service.KEY_SERVICE]
     skeleton_month = data[data_service.SKEY_MONTH]
     trend:DataFrame = skeleton_month.merge(services, how='left', on = 'calendaryearmonth')
@@ -80,7 +80,7 @@ def get_service_trend_service_category(data: 'list[DataFrame]'):
 
 
 # data def 64
-def get_service_trend_comparison(data: 'list[DataFrame]'):
+def get_service_trend_comparison(data: 'dict[DataFrame]'):
     services = data[data_service.KEY_SERVICE]
     skeleton_day = data[data_service.SKEY_DAY]
 
@@ -95,7 +95,7 @@ def get_service_trend_comparison(data: 'list[DataFrame]'):
     return services.to_json()
 
 # data def 65
-def get_service_summary_dow(data: 'list[DataFrame]'):
+def get_service_summary_dow(data: 'dict[DataFrame]'):
     services = data[data_service.KEY_SERVICE]
     skeleton_daynameofweek = data[data_service.SKEY_DNOW]
     skeleton_daynameofweek.index = skeleton_daynameofweek.index + 1
@@ -116,7 +116,7 @@ def get_service_summary_dow(data: 'list[DataFrame]'):
     return services.to_json()
 
 #data def 66
-def get_service_summary_hod(data: 'list[DataFrame]'):
+def get_service_summary_hod(data: 'dict[DataFrame]'):
     services = data[data_service.KEY_SERVICE]
     hod_skeleton = data[data_service.SKEY_HOD]
     hourly_services = hod_skeleton.merge(services, how = 'left', on = 'hour_of_day')
@@ -126,7 +126,7 @@ def get_service_summary_hod(data: 'list[DataFrame]'):
     return hourly_services.to_json()
 
 # data def 67
-def get_service_summary_dowhod(data:'list[DataFrame]'):
+def get_service_summary_dowhod(data:'dict[DataFrame]'):
     services = data[data_service.KEY_SERVICE]
     skeleton_dowhod = data[data_service.SKEY_HOD_DOW]
     skeleton_dowhod = skeleton_dowhod.astype({'hour_of_day':'int64'})
@@ -141,7 +141,7 @@ def get_service_summary_dowhod(data:'list[DataFrame]'):
     return trend.to_json()
 
 # data def 68
-def get_service_trend_event(data:'list[DataFrame]'):
+def get_service_trend_event(data:'dict[DataFrame]'):
     services = data[data_service.KEY_SERVICE]
     skeleton_month = data[data_service.SKEY_MONTH]
     skeleton_month = skeleton_month.merge(pd.DataFrame(services['event_name'].unique()), how='cross')

@@ -67,6 +67,9 @@ class ReportingDictionaryViewSet(viewsets.ModelViewSet):
     permission_classes = [HasAPIKey | permissions.IsAuthenticated]
     http_method_names=['get']
 
+"""
+Written by Drew DeLap, Josean Martinez, Ali Brugh, and Jeff Asa-Hauser.
+"""
 class ReportScheduleViewSet(viewsets.ModelViewSet):
     queryset = ReportSchedule.objects.all()
     serializer_class = ReportScheduleSerializer
@@ -95,6 +98,9 @@ class ReportScheduleViewSet(viewsets.ModelViewSet):
             return Response(duplicate_schedule_serializer.data, status=status.HTTP_208_ALREADY_REPORTED)
         return Response(schedule_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+"""
+Written by Josean Martinez, Drew DeLap, Ali Brugh, and Jeff Asa-Hauser.
+"""
 # this gets a list of reports
 @permission_classes([HasAPIKey | permissions.IsAuthenticated])
 @api_view(['GET'])

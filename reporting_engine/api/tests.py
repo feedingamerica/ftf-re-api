@@ -6,6 +6,12 @@ from api.tasks import generate_report_and_save
 from api.tasks import calculate_dates
 
 """
+This file contains unit tests for functions in the api folder. As of 4-19-2021, it only contains tests for functions in tasks.py.
+
+Written by Ali Brugh, Drew DeLap, Josean Martinez, and Jeff Asa-Hauser.
+"""
+
+"""
 The tests in this file can be run using: python manage.py test api.tests
 This will run all of the tests, and Django will automatically create a test database, so nothing is added to the actual reports database
 
