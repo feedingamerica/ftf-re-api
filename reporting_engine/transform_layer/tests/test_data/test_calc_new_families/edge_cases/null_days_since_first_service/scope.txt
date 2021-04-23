@@ -1,0 +1,8 @@
+'Meta': {
+    'startDate': '2021-01-01', 
+    'endDate': '2021-03-31', 
+    'scope_field': 'state_id', 
+    'scope_field_value': 39, 
+    'control_type_name': 'Is Grocery Service', 
+    'control_age_group_id': 8
+}

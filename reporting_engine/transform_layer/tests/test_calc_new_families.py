@@ -153,21 +153,15 @@ class CalculationsTestCase(unittest.TestCase):
 
     #test for data def 42
     def test_get_new_fam_hh_size_dist_classic(self):
-        expected = {
-            '1 - 3':3965,
-            '4 - 6':2040,
-            '7+':302
-        }
-        expected = pandas.Series(data = expected)
+        expected = pandas.DataFrame(data = {"classic_roll": ['1 - 3', '4 - 6', '7+'], "num_families": [3965,2040,302]})
 
         #data = TEST_DATA_SERVICE.get_data_for_definition(42)
         data = BASE_DATA
 
         func = calc.data_calc_function_switcher[42]
         result = func(data)
-        resultDict = json.loads(result)
-        resultFrame = pandas.Series(data = resultDict)
-        assert_series_equal(resultFrame, expected)
+        resultFrame = pandas.read_json(result)
+        assert_frame_equal(resultFrame, expected)
 
     #test for data def 43
     def test_get_relationship_length_indv_mean(self):
@@ -177,6 +171,32 @@ class CalculationsTestCase(unittest.TestCase):
         func = calc.data_calc_function_switcher[43]
         result = func(data)
         self.assertTrue(math.isclose(round(result,4), expected))
+
+    #test for data def 44
+    def test_get_new_fam_dist_of_length_of_relationship(self):
+        data = BASE_DATA
+        func = calc.data_calc_function_switcher[44]
+        result = func(data)
+        resultFrame = pandas.read_json(result)
+        #should be ten bins
+        self.assertTrue(len(resultFrame) == 10)
+        #min should be zero
+        self.assertTrue(resultFrame.iloc[0]['min'] == 0)
+
+    #test for data def 44 with null_days_since_first_service
+    def test_get_new_fam_dist_of_length_of_relationship_wnulls(self):
+        path = os.path.join(__location__, 'test_data', 'test_calc_new_families', 'edge_cases', 'null_days_since_first_service', 'base_families.parquet')
+        families = pandas.read_parquet(path = path, engine = 'pyarrow')
+        data = {
+            KEY_FAMILY : families
+        }
+        func = calc.data_calc_function_switcher[44]
+        result = func(data)
+        resultFrame = pandas.read_json(result)
+        #should be ten bins
+        self.assertTrue(len(resultFrame) == 10)
+        #min should be zero
+        self.assertTrue(resultFrame.iloc[0]['min'] == 0)
 
     #test for data def 45
     def test_get_relationship_length_indv_mean(self):

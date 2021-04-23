@@ -34,7 +34,10 @@ def get_services_per_uhh_avg(data):
     """
     services = get_services_total(data)
     families = get_undup_hh_total(data)
-    return services/families
+    if families != 0:
+        return services/families
+    else:
+        return 0
 
 #data def 5
 def get_wminor(data):

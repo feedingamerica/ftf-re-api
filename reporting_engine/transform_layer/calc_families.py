@@ -57,6 +57,7 @@ def get_household_size_distribution_1_to_10(data):
 
     families = data
     families.avg_fam_size = families.avg_fam_size.round()
+    familes = families.astype({"avg_fam_size": "int64"})
     families['avg_fam_size_roll'] = np.where(families['avg_fam_size'] > 9, 10, families['avg_fam_size'])
     families['avg_fam_size_roll'] = np.where(families['avg_fam_size_roll'] == 0, 1, families['avg_fam_size_roll'])
     families = families.groupby('avg_fam_size_roll').agg(num_families = ('avg_fam_size_roll', 'count')).reset_index()
@@ -71,29 +72,37 @@ def get_household_size_distribution_1_to_10(data):
 #data def 31
 def get_household_size_distribution_classic(data):
 
-    families = data.groupby('avg_fam_size').count()
+    families = data
+    families.avg_fam_size = families.avg_fam_size.round()
+    families = families.astype({"avg_fam_size": "int64"})
+    families = families.groupby('avg_fam_size').agg(num_families = ('research_family_key', 'count')).reset_index()
+    
+    conditions = [(families['avg_fam_size'] < 4), (families['avg_fam_size'] < 7), (families['avg_fam_size'] >= 7)]
+    choices = ['1 - 3', '4 - 6', '7+']
+    families['classic_roll'] = np.select(conditions, choices)
+    families = families.groupby('classic_roll').agg(num_families = ('num_families', 'sum')).reset_index()
 
-    """ for i in range(len(families)):
-        """
 
-    framework_dict = families.to_dict()
-    framework_dict = framework_dict['research_family_key']
+    # framework_dict = families.to_dict()
+    # framework_dict = framework_dict['research_family_key']
 
-    return_dict = {
-        '1 - 3':0,
-        '4 - 6':0,
-        '7+':0
-    }
+    # return_dict = {
+    #     '1 - 3':0,
+    #     '4 - 6':0,
+    #     '7+':0
+    # }
 
-    for key in framework_dict:
-        if key >= 0 and key < 3.5:
-            return_dict['1 - 3'] = return_dict['1 - 3'] + framework_dict[key]
-        elif key >= 3.5 and key < 6.5:
-            return_dict['4 - 6'] = return_dict['4 - 6'] + framework_dict[key]
-        elif key >= 6.5:
-            return_dict['7+'] = return_dict['7+'] + framework_dict[key]
+    # for key in framework_dict:
+    #     if key >= 0 and key < 3.5:
+    #         return_dict['1 - 3'] = return_dict['1 - 3'] + framework_dict[key]
+    #     elif key >= 3.5 and key < 6.5:
+    #         return_dict['4 - 6'] = return_dict['4 - 6'] + framework_dict[key]
+    #     elif key >= 6.5:
+    #         return_dict['7+'] = return_dict['7+'] + framework_dict[key]
 
-    return json.dumps(return_dict)
+    # return json.dumps(return_dict)
+
+    return families.to_json()
 
 
 

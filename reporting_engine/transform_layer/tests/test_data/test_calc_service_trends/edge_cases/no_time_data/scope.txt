@@ -1,0 +1,8 @@
+"Meta": {
+            "startDate":"01/03/2012",
+            "endDate":"01/03/2012",
+            "scope_field":"hierarchy_id",
+            "scope_field_value":2,
+            "control_type_name":"Everything",
+            "control_type_value":1
+        }

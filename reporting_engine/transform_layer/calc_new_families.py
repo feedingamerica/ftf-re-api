@@ -170,6 +170,7 @@ def get_relationship_length_fam_mean(data):
 #data def 44
 def get_new_fam_dist_of_length_of_relationship(data: 'dict[DataFrame]'):
     families = data[data_service.KEY_FAMILY]
+    families.dropna(axis = 0,subset = ['max_days_since_first_service'], inplace = True)
     set_max = families['max_days_since_first_service'].max()
     width = set_max / 10
 
@@ -219,7 +220,9 @@ def get_new_fam_dist_of_length_of_relationship(data: 'dict[DataFrame]'):
         return min_values[row]
         
     families['buckets'] = np.select(conditions, values)
+
     families = families.groupby('buckets').size().to_frame('count')
+
     families = families.sort_values(by = 'buckets', key = lambda x: x.map(sort_buckets_dict)).reset_index()
     families['min'] = pd.Series(families.index).apply(lambda row: applyMin(row))
     families['max'] = pd.Series(families.index).apply(lambda row: applyMax(row))
@@ -234,6 +237,7 @@ def get_relationship_length_indv_mean(data):
 # data def 46
 def get_new_fam_dist_of_length_of_relationships_for_individuals(data: 'dict[DataFrame]'):
     members = data[data_service.KEY_MEMBER]
+    members.dropna(axis = 0,subset = ['max_days_since_first_service'], inplace = True)
     set_max = members['max_days_since_first_service'].max()
     width = set_max / 10
 
