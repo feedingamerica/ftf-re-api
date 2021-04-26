@@ -48,7 +48,8 @@ INSTALLED_APPS = [
     'rest_framework_api_key',
     'transform_layer',
     'django_celery_beat',
-    'drf_yasg'
+    'drf_yasg',
+    'django_extensions'
 ]
 
 REST_FRAMEWORK ={

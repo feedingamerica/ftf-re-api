@@ -15,8 +15,9 @@ import unittest
 
 
 
-class CalculationsTestCase(unittest.TestCase):
+class SkeletonsTestCase(unittest.TestCase):
 
+    #skeletons tests
     def test_get_monthly_date_skeleton(self):
         test_scope = {
                 "startDate":"01/01/2020",
@@ -58,3 +59,4 @@ class CalculationsTestCase(unittest.TestCase):
         ds = DataService(test_scope)
         d_skeleton = ds._get_daily_date_skeleton()
         self.assertTrue(len(d_skeleton) == 365)
+

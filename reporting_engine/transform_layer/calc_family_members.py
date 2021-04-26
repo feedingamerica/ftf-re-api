@@ -13,7 +13,29 @@ def get_gender_summary(data: 'dict[DataFrame]'):
      members = members.agg(n_indv = ('gender', 'count')).reset_index()
 
      return members.to_json()
+# data def 70
+def get_hoh_single_adult_w_children(data: 'dict[DataFrame]'):
+   
+    members1 = data[data_service.KEY_MEMBER]
+    members1 = members1[members1['head_of_house'] == 'Yes']
+    members1 = members1[['research_family_key','gender','current_age']]
+    members2 = data[data_service.KEY_MEMBER]
 
+    members2['is_child'] = np.where(members2['current_age'] < 18, 1, 0)
+    members2['is_adult'] = np.where(members2['current_age'] >= 18, 1, 0)
+    members2 = members2.groupby('research_family_key', as_index=False).agg(
+        n_children=('is_child','sum'),
+        n_adult=('is_adult','sum')
+    )
+    members2 = members2[members2['n_adult'] == 1]
+    members2 = members2[members2['n_children'] > 0]
+    members2['is_single_adult_w_children'] = 1
+    end_result = members1.merge(members2, how='left', on='research_family_key').fillna(0)
+    end_result = end_result.groupby(['is_single_adult_w_children','gender'], as_index=False).agg(
+        n_families=('research_family_key','count')
+    )
+
+    return end_result.to_json()
 # data def 71
 def get_skipped_generation(data:'dict[DataFrame]'):
 

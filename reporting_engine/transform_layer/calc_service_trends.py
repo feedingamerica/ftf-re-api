@@ -45,7 +45,7 @@ def get_service_trend_monthy_visits_avg(data:'dict[DataFrame]'):
         n_families=('research_family_key','count'),
         n_services=('n_services','sum')
     )
-    trend['services_per_family'] = round(trend['n_services']/trend['n_families'], 2)
+    trend['services_per_family'] = round(trend['n_services'].divide(trend['n_families']), 2).replace(np.inf, 0)
     return trend.to_json()
 
 #data def 61
@@ -129,15 +129,15 @@ def get_service_summary_hod(data: 'dict[DataFrame]'):
 def get_service_summary_dowhod(data:'dict[DataFrame]'):
     services = data[data_service.KEY_SERVICE]
     skeleton_dowhod = data[data_service.SKEY_HOD_DOW]
-    skeleton_dowhod = skeleton_dowhod.astype({'hour_of_day':'int64'})
     
     services = services[['research_service_key','dummy_time', 'dayofweek', 'hour_of_day']]
     services = services[services['dummy_time'] == 1]
-    services = services.astype({'hour_of_day':'int64'})
     services = services.groupby(['dayofweek','hour_of_day'], as_index=False, dropna = False).size()
     services = services.rename(columns={"size": "n_services"})
     trend = skeleton_dowhod.merge(services, how='left', left_on = ['dayofweek','hour_of_day'], right_on = ['dayofweek','hour_of_day'] )
+    
     trend = trend.fillna(0)
+    trend = trend.astype({'hour_of_day':'int64', 'n_services' : 'int64'})
     return trend.to_json()
 
 # data def 68

@@ -1,6 +1,7 @@
 from pandas.core.frame import DataFrame
 import dateutil.parser as parser
 import pandas as pd
+import numpy as np
 from django.db import connections
 
 
@@ -385,8 +386,27 @@ class DataService:
         print(members_query)
         start_time = time.time()
         services = pd.read_sql(services_query, conn)
+        services.fillna(value = { 
+            'hour_of_day': np.nan, 
+            'fips_cnty_event': np.nan,
+            'latitude_fs': np.nan, 
+            'longitude_fs': np.nan,
+            'fips_cnty_fs': np.nan
+        }, inplace= True)
+
         families = pd.read_sql(families_query, conn)
+        families.fillna(value = {
+            'fips_state': np.nan,
+            'fips_cnty': np.nan,
+            'fips_zcta' : np.nan
+        }, inplace=True)
         members = pd.read_sql(members_query, conn)
+        members.fillna(value = {
+            'fips_state': np.nan,
+            'fips_cnty': np.nan,
+            'fips_zcta': np.nan,
+            'age_band_name_dash': ''
+        },inplace=True)
         print(str(time.time() - start_time), ' seconds to download new family services')
         mem_usage = services.memory_usage(deep=True).sum() + families.memory_usage(deep=True).sum() + members.memory_usage(deep=True).sum()
         print(str(mem_usage), 'bytes for new family services')
