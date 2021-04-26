@@ -30,7 +30,7 @@ SECRET_KEY = 't#ln4n!lc!--)6p970v(i3+k53s-ld$$52*mhp*s65qu2de&$3'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['engine.freshtrak.com','beta-engine.freshtrak.com']
+ALLOWED_HOSTS = ['127.0.0.1','localhost','engine.freshtrak.com','beta-engine.freshtrak.com']
 
 
 # Application definition
