@@ -1,3 +1,6 @@
+# reporting engine
+reporting_engine/reporting_engine/settings.py
+
 # Django #
 *.log
 *.pot
